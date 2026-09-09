@@ -1,0 +1,57 @@
+
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--font-family);
+}
+
+.app-shell {
+  width: min(48rem, calc(100% - 2rem));
+  margin: clamp(3rem, 10vw, 8rem) auto;
+}
+
+.app-shell h1 {
+  margin: 0;
+  font-size: clamp(3rem, 10vw, 6rem);
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+}
+
+.eyebrow {
+  margin-block-end: var(--spacing-3);
+  color: var(--link-color);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lede {
+  max-width: 38rem;
+  margin-block: var(--spacing-6);
+  color: var(--text-color-hover);
+  font-size: clamp(1.125rem, 3vw, 1.5rem);
+  line-height: 1.5;
+}
+
+.status-panel {
+  padding: var(--spacing-5);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background: var(--overlay-background);
+}
+
+.status-panel h2 {
+  margin-block: 0 var(--spacing-2);
+}
+
+.status-panel p {
+  margin: 0;
+  line-height: 1.6;
+}
