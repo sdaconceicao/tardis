@@ -13,11 +13,11 @@ describe("getServerEnv", () => {
 		});
 	});
 
-	it("rejects short auth cookie secrets", () => {
+	it("rejects short auth secrets", () => {
 		expect(() =>
 			getServerEnv({
 				DATABASE_URL: "postgresql://example.test/tardis",
-				NEON_AUTH_COOKIE_SECRET: "too-short",
+				BETTER_AUTH_SECRET: "too-short",
 			}),
 		).toThrow();
 	});

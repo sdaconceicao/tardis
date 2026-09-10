@@ -10,33 +10,257 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiAvailabilityRouteImport } from './routes/api/availability'
+import { Route as ApiDocsRouteImport } from './routes/api/docs'
+import { Route as ApiOpenapiDotjsonRouteImport } from './routes/api/openapi[.]json'
+import { Route as ApiTagsRouteImport } from './routes/api/tags'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiEventsIndexRouteImport } from './routes/api/events/index'
+import { Route as ApiEventsEventIdRouteImport } from './routes/api/events/$eventId'
+import { Route as ApiPlacesIndexRouteImport } from './routes/api/places/index'
+import { Route as ApiPlacesPlaceIdRouteImport } from './routes/api/places/$placeId'
+import { Route as ApiV1SplatRouteImport } from './routes/api/v1/$'
+import { Route as ApiPlacesPlaceIdHoursRouteImport } from './routes/api/places/$placeId/hours'
+import { Route as ApiEventsEventIdOccurrencesIndexRouteImport } from './routes/api/events/$eventId/occurrences/index'
+import { Route as ApiEventsEventIdOccurrencesOccurrenceIdRouteImport } from './routes/api/events/$eventId/occurrences/$occurrenceId'
+import { Route as ApiEventsEventIdRecurrencesIndexRouteImport } from './routes/api/events/$eventId/recurrences/index'
+import { Route as ApiEventsEventIdRecurrencesRecurrenceIdRouteImport } from './routes/api/events/$eventId/recurrences/$recurrenceId'
+import { Route as ApiPlacesPlaceIdExceptionsIndexRouteImport } from './routes/api/places/$placeId/exceptions/index'
+import { Route as ApiPlacesPlaceIdExceptionsDateRouteImport } from './routes/api/places/$placeId/exceptions/$date'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAvailabilityRoute = ApiAvailabilityRouteImport.update({
+  id: '/api/availability',
+  path: '/api/availability',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDocsRoute = ApiDocsRouteImport.update({
+  id: '/api/docs',
+  path: '/api/docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOpenapiDotjsonRoute = ApiOpenapiDotjsonRouteImport.update({
+  id: '/api/openapi.json',
+  path: '/api/openapi.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTagsRoute = ApiTagsRouteImport.update({
+  id: '/api/tags',
+  path: '/api/tags',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiEventsIndexRoute = ApiEventsIndexRouteImport.update({
+  id: '/api/events/',
+  path: '/api/events/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiEventsEventIdRoute = ApiEventsEventIdRouteImport.update({
+  id: '/api/events/$eventId',
+  path: '/api/events/$eventId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPlacesIndexRoute = ApiPlacesIndexRouteImport.update({
+  id: '/api/places/',
+  path: '/api/places/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPlacesPlaceIdRoute = ApiPlacesPlaceIdRouteImport.update({
+  id: '/api/places/$placeId',
+  path: '/api/places/$placeId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiV1SplatRoute = ApiV1SplatRouteImport.update({
+  id: '/api/v1/$',
+  path: '/api/v1/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPlacesPlaceIdHoursRoute = ApiPlacesPlaceIdHoursRouteImport.update({
+  id: '/hours',
+  path: '/hours',
+  getParentRoute: () => ApiPlacesPlaceIdRoute,
+} as any)
+const ApiEventsEventIdOccurrencesIndexRoute =
+  ApiEventsEventIdOccurrencesIndexRouteImport.update({
+    id: '/occurrences/',
+    path: '/occurrences/',
+    getParentRoute: () => ApiEventsEventIdRoute,
+  } as any)
+const ApiEventsEventIdOccurrencesOccurrenceIdRoute =
+  ApiEventsEventIdOccurrencesOccurrenceIdRouteImport.update({
+    id: '/occurrences/$occurrenceId',
+    path: '/occurrences/$occurrenceId',
+    getParentRoute: () => ApiEventsEventIdRoute,
+  } as any)
+const ApiEventsEventIdRecurrencesIndexRoute =
+  ApiEventsEventIdRecurrencesIndexRouteImport.update({
+    id: '/recurrences/',
+    path: '/recurrences/',
+    getParentRoute: () => ApiEventsEventIdRoute,
+  } as any)
+const ApiEventsEventIdRecurrencesRecurrenceIdRoute =
+  ApiEventsEventIdRecurrencesRecurrenceIdRouteImport.update({
+    id: '/recurrences/$recurrenceId',
+    path: '/recurrences/$recurrenceId',
+    getParentRoute: () => ApiEventsEventIdRoute,
+  } as any)
+const ApiPlacesPlaceIdExceptionsIndexRoute =
+  ApiPlacesPlaceIdExceptionsIndexRouteImport.update({
+    id: '/exceptions/',
+    path: '/exceptions/',
+    getParentRoute: () => ApiPlacesPlaceIdRoute,
+  } as any)
+const ApiPlacesPlaceIdExceptionsDateRoute =
+  ApiPlacesPlaceIdExceptionsDateRouteImport.update({
+    id: '/exceptions/$date',
+    path: '/exceptions/$date',
+    getParentRoute: () => ApiPlacesPlaceIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/availability': typeof ApiAvailabilityRoute
+  '/api/docs': typeof ApiDocsRoute
+  '/api/openapi.json': typeof ApiOpenapiDotjsonRoute
+  '/api/tags': typeof ApiTagsRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/events/$eventId': typeof ApiEventsEventIdRouteWithChildren
+  '/api/places/$placeId': typeof ApiPlacesPlaceIdRouteWithChildren
+  '/api/v1/$': typeof ApiV1SplatRoute
+  '/api/events/': typeof ApiEventsIndexRoute
+  '/api/places/': typeof ApiPlacesIndexRoute
+  '/api/places/$placeId/hours': typeof ApiPlacesPlaceIdHoursRoute
+  '/api/events/$eventId/occurrences/$occurrenceId': typeof ApiEventsEventIdOccurrencesOccurrenceIdRoute
+  '/api/events/$eventId/recurrences/$recurrenceId': typeof ApiEventsEventIdRecurrencesRecurrenceIdRoute
+  '/api/places/$placeId/exceptions/$date': typeof ApiPlacesPlaceIdExceptionsDateRoute
+  '/api/events/$eventId/occurrences/': typeof ApiEventsEventIdOccurrencesIndexRoute
+  '/api/events/$eventId/recurrences/': typeof ApiEventsEventIdRecurrencesIndexRoute
+  '/api/places/$placeId/exceptions/': typeof ApiPlacesPlaceIdExceptionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/availability': typeof ApiAvailabilityRoute
+  '/api/docs': typeof ApiDocsRoute
+  '/api/openapi.json': typeof ApiOpenapiDotjsonRoute
+  '/api/tags': typeof ApiTagsRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/events/$eventId': typeof ApiEventsEventIdRouteWithChildren
+  '/api/places/$placeId': typeof ApiPlacesPlaceIdRouteWithChildren
+  '/api/v1/$': typeof ApiV1SplatRoute
+  '/api/events': typeof ApiEventsIndexRoute
+  '/api/places': typeof ApiPlacesIndexRoute
+  '/api/places/$placeId/hours': typeof ApiPlacesPlaceIdHoursRoute
+  '/api/events/$eventId/occurrences/$occurrenceId': typeof ApiEventsEventIdOccurrencesOccurrenceIdRoute
+  '/api/events/$eventId/recurrences/$recurrenceId': typeof ApiEventsEventIdRecurrencesRecurrenceIdRoute
+  '/api/places/$placeId/exceptions/$date': typeof ApiPlacesPlaceIdExceptionsDateRoute
+  '/api/events/$eventId/occurrences': typeof ApiEventsEventIdOccurrencesIndexRoute
+  '/api/events/$eventId/recurrences': typeof ApiEventsEventIdRecurrencesIndexRoute
+  '/api/places/$placeId/exceptions': typeof ApiPlacesPlaceIdExceptionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/availability': typeof ApiAvailabilityRoute
+  '/api/docs': typeof ApiDocsRoute
+  '/api/openapi.json': typeof ApiOpenapiDotjsonRoute
+  '/api/tags': typeof ApiTagsRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/events/$eventId': typeof ApiEventsEventIdRouteWithChildren
+  '/api/places/$placeId': typeof ApiPlacesPlaceIdRouteWithChildren
+  '/api/v1/$': typeof ApiV1SplatRoute
+  '/api/events/': typeof ApiEventsIndexRoute
+  '/api/places/': typeof ApiPlacesIndexRoute
+  '/api/places/$placeId/hours': typeof ApiPlacesPlaceIdHoursRoute
+  '/api/events/$eventId/occurrences/$occurrenceId': typeof ApiEventsEventIdOccurrencesOccurrenceIdRoute
+  '/api/events/$eventId/recurrences/$recurrenceId': typeof ApiEventsEventIdRecurrencesRecurrenceIdRoute
+  '/api/places/$placeId/exceptions/$date': typeof ApiPlacesPlaceIdExceptionsDateRoute
+  '/api/events/$eventId/occurrences/': typeof ApiEventsEventIdOccurrencesIndexRoute
+  '/api/events/$eventId/recurrences/': typeof ApiEventsEventIdRecurrencesIndexRoute
+  '/api/places/$placeId/exceptions/': typeof ApiPlacesPlaceIdExceptionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/api/availability'
+    | '/api/docs'
+    | '/api/openapi.json'
+    | '/api/tags'
+    | '/api/auth/$'
+    | '/api/events/$eventId'
+    | '/api/places/$placeId'
+    | '/api/v1/$'
+    | '/api/events/'
+    | '/api/places/'
+    | '/api/places/$placeId/hours'
+    | '/api/events/$eventId/occurrences/$occurrenceId'
+    | '/api/events/$eventId/recurrences/$recurrenceId'
+    | '/api/places/$placeId/exceptions/$date'
+    | '/api/events/$eventId/occurrences/'
+    | '/api/events/$eventId/recurrences/'
+    | '/api/places/$placeId/exceptions/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/api/availability'
+    | '/api/docs'
+    | '/api/openapi.json'
+    | '/api/tags'
+    | '/api/auth/$'
+    | '/api/events/$eventId'
+    | '/api/places/$placeId'
+    | '/api/v1/$'
+    | '/api/events'
+    | '/api/places'
+    | '/api/places/$placeId/hours'
+    | '/api/events/$eventId/occurrences/$occurrenceId'
+    | '/api/events/$eventId/recurrences/$recurrenceId'
+    | '/api/places/$placeId/exceptions/$date'
+    | '/api/events/$eventId/occurrences'
+    | '/api/events/$eventId/recurrences'
+    | '/api/places/$placeId/exceptions'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/availability'
+    | '/api/docs'
+    | '/api/openapi.json'
+    | '/api/tags'
+    | '/api/auth/$'
+    | '/api/events/$eventId'
+    | '/api/places/$placeId'
+    | '/api/v1/$'
+    | '/api/events/'
+    | '/api/places/'
+    | '/api/places/$placeId/hours'
+    | '/api/events/$eventId/occurrences/$occurrenceId'
+    | '/api/events/$eventId/recurrences/$recurrenceId'
+    | '/api/places/$placeId/exceptions/$date'
+    | '/api/events/$eventId/occurrences/'
+    | '/api/events/$eventId/recurrences/'
+    | '/api/places/$placeId/exceptions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiAvailabilityRoute: typeof ApiAvailabilityRoute
+  ApiDocsRoute: typeof ApiDocsRoute
+  ApiOpenapiDotjsonRoute: typeof ApiOpenapiDotjsonRoute
+  ApiTagsRoute: typeof ApiTagsRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiEventsEventIdRoute: typeof ApiEventsEventIdRouteWithChildren
+  ApiPlacesPlaceIdRoute: typeof ApiPlacesPlaceIdRouteWithChildren
+  ApiV1SplatRoute: typeof ApiV1SplatRoute
+  ApiEventsIndexRoute: typeof ApiEventsIndexRoute
+  ApiPlacesIndexRoute: typeof ApiPlacesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +272,174 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/availability': {
+      id: '/api/availability'
+      path: '/api/availability'
+      fullPath: '/api/availability'
+      preLoaderRoute: typeof ApiAvailabilityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/docs': {
+      id: '/api/docs'
+      path: '/api/docs'
+      fullPath: '/api/docs'
+      preLoaderRoute: typeof ApiDocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/openapi.json': {
+      id: '/api/openapi.json'
+      path: '/api/openapi.json'
+      fullPath: '/api/openapi.json'
+      preLoaderRoute: typeof ApiOpenapiDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/tags': {
+      id: '/api/tags'
+      path: '/api/tags'
+      fullPath: '/api/tags'
+      preLoaderRoute: typeof ApiTagsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/events/': {
+      id: '/api/events/'
+      path: '/api/events'
+      fullPath: '/api/events/'
+      preLoaderRoute: typeof ApiEventsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/events/$eventId': {
+      id: '/api/events/$eventId'
+      path: '/api/events/$eventId'
+      fullPath: '/api/events/$eventId'
+      preLoaderRoute: typeof ApiEventsEventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/places/': {
+      id: '/api/places/'
+      path: '/api/places'
+      fullPath: '/api/places/'
+      preLoaderRoute: typeof ApiPlacesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/places/$placeId': {
+      id: '/api/places/$placeId'
+      path: '/api/places/$placeId'
+      fullPath: '/api/places/$placeId'
+      preLoaderRoute: typeof ApiPlacesPlaceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/v1/$': {
+      id: '/api/v1/$'
+      path: '/api/v1/$'
+      fullPath: '/api/v1/$'
+      preLoaderRoute: typeof ApiV1SplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/places/$placeId/hours': {
+      id: '/api/places/$placeId/hours'
+      path: '/hours'
+      fullPath: '/api/places/$placeId/hours'
+      preLoaderRoute: typeof ApiPlacesPlaceIdHoursRouteImport
+      parentRoute: typeof ApiPlacesPlaceIdRoute
+    }
+    '/api/events/$eventId/occurrences/': {
+      id: '/api/events/$eventId/occurrences/'
+      path: '/occurrences'
+      fullPath: '/api/events/$eventId/occurrences/'
+      preLoaderRoute: typeof ApiEventsEventIdOccurrencesIndexRouteImport
+      parentRoute: typeof ApiEventsEventIdRoute
+    }
+    '/api/events/$eventId/occurrences/$occurrenceId': {
+      id: '/api/events/$eventId/occurrences/$occurrenceId'
+      path: '/occurrences/$occurrenceId'
+      fullPath: '/api/events/$eventId/occurrences/$occurrenceId'
+      preLoaderRoute: typeof ApiEventsEventIdOccurrencesOccurrenceIdRouteImport
+      parentRoute: typeof ApiEventsEventIdRoute
+    }
+    '/api/events/$eventId/recurrences/': {
+      id: '/api/events/$eventId/recurrences/'
+      path: '/recurrences'
+      fullPath: '/api/events/$eventId/recurrences/'
+      preLoaderRoute: typeof ApiEventsEventIdRecurrencesIndexRouteImport
+      parentRoute: typeof ApiEventsEventIdRoute
+    }
+    '/api/events/$eventId/recurrences/$recurrenceId': {
+      id: '/api/events/$eventId/recurrences/$recurrenceId'
+      path: '/recurrences/$recurrenceId'
+      fullPath: '/api/events/$eventId/recurrences/$recurrenceId'
+      preLoaderRoute: typeof ApiEventsEventIdRecurrencesRecurrenceIdRouteImport
+      parentRoute: typeof ApiEventsEventIdRoute
+    }
+    '/api/places/$placeId/exceptions/': {
+      id: '/api/places/$placeId/exceptions/'
+      path: '/exceptions'
+      fullPath: '/api/places/$placeId/exceptions/'
+      preLoaderRoute: typeof ApiPlacesPlaceIdExceptionsIndexRouteImport
+      parentRoute: typeof ApiPlacesPlaceIdRoute
+    }
+    '/api/places/$placeId/exceptions/$date': {
+      id: '/api/places/$placeId/exceptions/$date'
+      path: '/exceptions/$date'
+      fullPath: '/api/places/$placeId/exceptions/$date'
+      preLoaderRoute: typeof ApiPlacesPlaceIdExceptionsDateRouteImport
+      parentRoute: typeof ApiPlacesPlaceIdRoute
+    }
   }
 }
 
+interface ApiEventsEventIdRouteChildren {
+  ApiEventsEventIdOccurrencesOccurrenceIdRoute: typeof ApiEventsEventIdOccurrencesOccurrenceIdRoute
+  ApiEventsEventIdRecurrencesRecurrenceIdRoute: typeof ApiEventsEventIdRecurrencesRecurrenceIdRoute
+  ApiEventsEventIdOccurrencesIndexRoute: typeof ApiEventsEventIdOccurrencesIndexRoute
+  ApiEventsEventIdRecurrencesIndexRoute: typeof ApiEventsEventIdRecurrencesIndexRoute
+}
+
+const ApiEventsEventIdRouteChildren: ApiEventsEventIdRouteChildren = {
+  ApiEventsEventIdOccurrencesOccurrenceIdRoute:
+    ApiEventsEventIdOccurrencesOccurrenceIdRoute,
+  ApiEventsEventIdRecurrencesRecurrenceIdRoute:
+    ApiEventsEventIdRecurrencesRecurrenceIdRoute,
+  ApiEventsEventIdOccurrencesIndexRoute: ApiEventsEventIdOccurrencesIndexRoute,
+  ApiEventsEventIdRecurrencesIndexRoute: ApiEventsEventIdRecurrencesIndexRoute,
+}
+
+const ApiEventsEventIdRouteWithChildren =
+  ApiEventsEventIdRoute._addFileChildren(ApiEventsEventIdRouteChildren)
+
+interface ApiPlacesPlaceIdRouteChildren {
+  ApiPlacesPlaceIdHoursRoute: typeof ApiPlacesPlaceIdHoursRoute
+  ApiPlacesPlaceIdExceptionsDateRoute: typeof ApiPlacesPlaceIdExceptionsDateRoute
+  ApiPlacesPlaceIdExceptionsIndexRoute: typeof ApiPlacesPlaceIdExceptionsIndexRoute
+}
+
+const ApiPlacesPlaceIdRouteChildren: ApiPlacesPlaceIdRouteChildren = {
+  ApiPlacesPlaceIdHoursRoute: ApiPlacesPlaceIdHoursRoute,
+  ApiPlacesPlaceIdExceptionsDateRoute: ApiPlacesPlaceIdExceptionsDateRoute,
+  ApiPlacesPlaceIdExceptionsIndexRoute: ApiPlacesPlaceIdExceptionsIndexRoute,
+}
+
+const ApiPlacesPlaceIdRouteWithChildren =
+  ApiPlacesPlaceIdRoute._addFileChildren(ApiPlacesPlaceIdRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiAvailabilityRoute: ApiAvailabilityRoute,
+  ApiDocsRoute: ApiDocsRoute,
+  ApiOpenapiDotjsonRoute: ApiOpenapiDotjsonRoute,
+  ApiTagsRoute: ApiTagsRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiEventsEventIdRoute: ApiEventsEventIdRouteWithChildren,
+  ApiPlacesPlaceIdRoute: ApiPlacesPlaceIdRouteWithChildren,
+  ApiV1SplatRoute: ApiV1SplatRoute,
+  ApiEventsIndexRoute: ApiEventsIndexRoute,
+  ApiPlacesIndexRoute: ApiPlacesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

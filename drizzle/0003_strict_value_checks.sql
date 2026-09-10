@@ -1,0 +1,6 @@
+ALTER TABLE "place_prices" DROP CONSTRAINT "place_prices_amount_check";--> statement-breakpoint
+ALTER TABLE "event_prices" DROP CONSTRAINT "event_prices_amount_check";--> statement-breakpoint
+ALTER TABLE "event_recurrences" DROP CONSTRAINT "event_recurrence_mode_check";--> statement-breakpoint
+ALTER TABLE "place_prices" ADD CONSTRAINT "place_prices_amount_check" CHECK (amount >= 0 AND amount <> 'NaN'::numeric AND currency ~ '^[A-Z]{3}$');--> statement-breakpoint
+ALTER TABLE "event_prices" ADD CONSTRAINT "event_prices_amount_check" CHECK (amount >= 0 AND amount <> 'NaN'::numeric AND currency ~ '^[A-Z]{3}$');--> statement-breakpoint
+ALTER TABLE "event_recurrences" ADD CONSTRAINT "event_recurrence_mode_check" CHECK (("event_recurrences"."mode" = 'scheduled' AND "event_recurrences"."rrule" IS NOT NULL AND "event_recurrences"."interval_months" IS NULL) OR ("event_recurrences"."mode" = 'expected' AND "event_recurrences"."rrule" IS NULL AND "event_recurrences"."interval_months" IS NOT NULL AND "event_recurrences"."interval_months" > 0));
