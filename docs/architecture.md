@@ -2,12 +2,15 @@
 
 ## Shape
 
-Tardis is a modular monolith deployed as one TanStack Start application on
-Vercel. TanStack server functions are the backend-for-frontend (BFF); the MVP
-does not need a second API deployment or microservices.
+Tardis is designed as one TanStack Start application for Vercel. The current
+checkout has a frontend shell, database client setup, a PostGIS migration,
+identity contracts, and a provider-neutral routing service boundary. Domain
+tables, event/place/planning modules, server functions, and a live routing
+provider have not been implemented. The diagram and flows below describe the
+target architecture.
 
 ```text
-Browser (React + Lago styles + MapLibre)
+Browser (React + Lago styles; MapLibre planned)
                  |
         TanStack server functions
                  |
@@ -25,7 +28,7 @@ small without tying domain code to the BFF.
 
 ## Module boundaries
 
-The initial capabilities are:
+The planned capabilities are:
 
 - `identity`: resolves the current actor and applies authorization policy.
 - `events`: owns recurring event definitions, dated occurrences, exceptions,
@@ -74,15 +77,16 @@ with approximate distance and a clear degraded state.
 
 ## Scaling and extraction
 
-Vercel scales stateless BFF invocations horizontally. Neon supplies pooled,
-serverless database connectivity; spatial indexes and bounded queries do most
-of the MVP scaling work. Authentication remains a lightweight concern at the
-edge of each protected request.
+The intended deployment uses stateless BFF invocations and Neon's serverless
+database connection. Spatial indexes and bounded queries should handle the
+initial data volume. Authentication will be checked at the edge of protected
+requests when those requests exist.
 
-Routing has its own contract, provider adapter, validation, and failure model.
+Routing has a contract, validation, and unavailable-result types. A provider
+adapter, caching, quotas, and concurrency control remain future work.
 No route or domain module may call OpenRouteService directly. Start with an
-in-process implementation. Add caching, quotas, and concurrency control at the
-routing service boundary when real traffic demands them.
+in-process implementation when routing is connected. Add caching, quotas, and
+concurrency control at the routing service boundary when traffic demands them.
 
 To extract routing later:
 
@@ -108,6 +112,6 @@ tokens. Do not add a local wrapper component for every Lago primitive; add an
 application component only when it carries real product behavior or repeated
 composition.
 
-MapLibre owns interactive map rendering. Map style URLs are public browser
-configuration, while database credentials and routing API keys remain
-server-only.
+MapLibre is the planned interactive map renderer; the current map is a
+placeholder. Map style URLs are public browser configuration, while database
+credentials and routing API keys remain server-only.

@@ -17,6 +17,9 @@ functions form the BFF. Organize business capabilities as modules with explicit
 public contracts and keep framework-specific request handling outside domain
 logic.
 
+This records the chosen architecture. The current checkout has a frontend shell
+and initial contracts; the domain modules and BFF endpoints are still planned.
+
 ## Consequences
 
 - Local development and deployment remain simple.

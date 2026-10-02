@@ -23,6 +23,9 @@ importers:
       drizzle-orm:
         specifier: ^0.45.2
         version: 0.45.2(@neondatabase/serverless@1.1.0)
+      lucide-react:
+        specifier: ^1.43.0
+        version: 1.43.0(react@19.2.8)
       maplibre-gl:
         specifier: ^6.8.0
         version: 6.8.0

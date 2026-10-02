@@ -11,10 +11,11 @@ eventually need independent caching and scaling.
 
 ## Decision
 
-Expose routing through a provider-neutral `RoutingService`. The initial service
-runs in the monolith and delegates to an OpenRouteService adapter. Callers use
-normalized coordinates, travel profiles, metrics, geometry, and explicit
-unavailable states. Requests are bounded before reaching the provider.
+Expose routing through a provider-neutral `RoutingService`. The service boundary
+and request validation exist in the monolith; an OpenRouteService adapter is
+planned but not implemented. Callers use normalized coordinates, travel
+profiles, metrics, geometry, and explicit unavailable states. Requests are
+bounded before reaching the provider.
 
 Routes, server functions, and domain modules must not import the provider
 adapter or OpenRouteService response types directly.
