@@ -12,13 +12,13 @@ consistency costs before those needs are measured.
 
 ## Decision
 
-Build one TanStack Start application deployed on Vercel. TanStack server
-functions form the BFF. Organize business capabilities as modules with explicit
+Build one TanStack Start application deployed on Vercel. TanStack HTTP routes
+and server functions form the BFF. Organize business capabilities as modules with explicit
 public contracts and keep framework-specific request handling outside domain
 logic.
 
-This records the chosen architecture. The current checkout has a frontend shell
-and initial contracts; the domain modules and BFF endpoints are still planned.
+This records the chosen architecture. The current checkout includes the frontend
+shell, domain modules, and HTTP endpoints; a live routing provider is still planned.
 
 ## Consequences
 

@@ -14,3 +14,6 @@ dist-ssr
 __unconfig*
 todos.json
 coverage
+
+# Copied from swagger-ui-dist by dev/build scripts
+/public/api-docs/

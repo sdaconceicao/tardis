@@ -4,12 +4,12 @@ Status: Proposed, 2026-09-10; reviewed against the checkout on 2026-10-02.
 The configuration and profiles below are design choices, not implemented
 settings. The proposal uses a local all-country/all-category profile and a
 capacity-limited Neon Free profile for selected US destinations. Remaining
-within Neon Free is a capacity goal, not a verified outcome. No places module,
-importer, supporting infrastructure, or schedule is implemented.
+within Neon Free is a capacity goal, not a verified outcome. The places module
+exists, but no Overture importer, supporting infrastructure, or schedule exists.
 
 ## Recommendation and architecture fit
 
-Use Overture as a periodically refreshed source for the planned places module.
+Use Overture as a periodically refreshed source for the existing places module.
 Serve future discovery from PostgreSQL/PostGIS, locally or on Neon. Run ingestion
 as a separate batch entry point built from the same repository, sharing the
 places module's import contract. The TanStack application remains the public
@@ -196,19 +196,19 @@ open at the requested instant. Unknown hours and prices stay unknown.
 [Place schema](https://docs.overturemaps.org/schema/reference/places/place/).
 
 Preserve multilingual names and structured addresses in source metadata; use a
-deterministic display-name and address policy for the proposed domain columns.
+deterministic display-name and address policy for the existing domain columns.
 Keep source categories separately from human-authored tags. Map source taxonomy
 to Tardis filters through versioned configuration; importing must not replace a
 place's manually assigned tags.
 
 ## Domain and persistence changes
 
-No `places` table or `owner_id` column exists yet. Design the future table with
+The current `places.owner_id` requires a Better Auth user. Introduce
 `management_kind = user | catalog` and nullable `owner_id`, with a database check
 requiring an owner for user records and no owner for catalog records. Catalog
-records should be public, while ordinary owner-only writes reject them. The
-trusted import entry point handles catalog writes without manufacturing a login
-account. Add a migration plan if user-owned rows exist by implementation time.
+records are public. Existing rows migrate to `user`; ordinary owner-only writes
+must continue rejecting catalog records. The trusted import entry point handles
+catalog writes without manufacturing a login account.
 
 Keep Tardis UUIDs as canonical place IDs and map Overture GERS IDs separately.
 This preserves event references across imports and permits reviewed identity
@@ -234,7 +234,7 @@ users. If curated corrections to name/location become a requirement, add an
 explicit override layer with precedence over source values before enabling
 those edits; the importer must not guess whether a value was hand edited.
 
-Implement immutable-location behavior: changed coordinates or
+Preserve the existing immutable-location behavior: changed coordinates or
 address create a new location and update the place's reference. Existing events
 and occurrences retain their saved location and timezone. Do not mutate a shared
 location row and silently move historical events. Reclaim only unreferenced old
@@ -337,25 +337,26 @@ back the entire shared application database.
 
 ## Discovery and API work required
 
-An import alone will not make imported places useful: the planning and discovery
-APIs are still proposed. Define availability to return only known matching
-opening intervals, and offer unknown-hours places through the proposed
-discovery contract, clearly labeled. Follow the separation of browsing and
-availability in the public discovery proposal.
+An import alone will not make imported places useful in the current planner:
+`findAvailablePlaces` only returns known matching opening intervals. Keep this
+strict meaning for availability and offer unknown-hours places through the
+proposed discovery contract, clearly labeled. Follow the separation of browsing
+and availability in the public discovery proposal.
 
-Implement nearby searches with indexed SQL joins and eligibility filters before
-bounded pagination. In strict availability mode, exclude missing schedules and
-evaluate schedule eligibility before result pagination; do not let a catalog of
-unknown-hours records crowd out known-open places. Test dense locations and
-preserve correct pagination.
+The current `nearbyLocations` materializes nearby location IDs, and place
+availability rejects more than 500 candidates. Replace that path with indexed
+SQL joins and eligibility filters before bounded pagination. In strict
+availability mode, exclude missing schedules and evaluate schedule eligibility
+before result pagination; do not let a catalog of unknown-hours records crowd
+out known-open places. Test dense locations and preserve correct pagination.
 
 Discovery should require bounds or center/radius, apply lifecycle/category/
 quality filters in SQL, use stable cursor pagination, and batch detail
 enrichment. For global, national, and broad regional views, return server-side aggregates or cached
 cluster tiles; never send millions of points to MapLibre. Define counts and
 freshness explicitly, especially when aggregated results lag a running import.
-Use shared eligibility rules for lists and clusters. Define and document the
-first public API contract before exposing discovery.
+Use shared eligibility rules for lists and clusters. Keep the existing API
+contract compatible and document additive discovery responses in OpenAPI.
 
 Expose provider attribution, catalog freshness, operational status, and unknown
 hours through explicit public response fields. Preserve per-source license
@@ -404,7 +405,7 @@ storage; staying below the storage allowance alone does not ensure staying withi
 
 Set a separate small worker connection pool and cap concurrency to protect API
 latency. Use a server-side ingestion credential; keep it out of browser bundles
-and public trigger routes. Build on the existing PostgreSQL client setup and
+and public trigger routes. Start with the existing PostgreSQL system and
 measure before adding a search engine, broker, or separate places database.
 
 Alert on failed/stalled batches, incomplete manifests, source schema changes,

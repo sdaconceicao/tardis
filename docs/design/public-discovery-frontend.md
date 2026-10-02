@@ -2,9 +2,9 @@
 
 Status: Design proposal, 2026-09-10. The layouts use fictional sample listings;
 they are not a working frontend or live event data. The current app has map and
-calendar placeholders, but no event/place schema, discovery API, or live data.
-This proposal predates that shell; any referenced domain behavior still needs
-implementation.
+calendar placeholders. The [event/place design](event-place-schema.md) and
+[API guide](../api/domain-endpoints.md) describe the implemented schema and
+HTTP endpoints. Date-range discovery and national map browsing remain proposed.
 
 Earlier interactive wireframes (not stored in this repository) cover mobile and
 desktop, with alternate
@@ -219,14 +219,15 @@ hover or dragging. Avoid thousands of individual marker tab stops.
 
 ## Backend work required for these layouts
 
-No availability, event collection, occurrence detail, or discovery endpoint is
-implemented in this checkout. The event/place schema and planning module also
-remain future work. Correct discovery will require date-range and viewport
-queries, national clusters, and the proposed card metadata.
+The existing `/api/v1/availability` handles a concrete instant within a maximum
+100 km radius. It does not support date ranges, viewport searches, national
+clusters, or all of the proposed card metadata. Event collections return event
+identities; stored occurrence collections omit virtual recurring editions.
+Fetching those collections alone cannot power correct discovery.
 
 Propose a public discovery read contract owned by the planning capability,
-using public entry points of events, places, and taxonomy once those modules
-exist. Keep this within the planned modular monolith. Endpoint names below are
+using public entry points of events, places, and taxonomy. Keep this within the
+existing modular monolith. Endpoint names below are
 proposals, not implemented routes:
 
 - `GET /api/v1/discovery`: bounds or center/radius; date range OR instant;
@@ -260,7 +261,7 @@ the place's current address. Batch card enrichment to avoid per-card requests.
    DiscoveryToolbar, ResultsPanel, DiscoveryCard, and OccurrenceDetails; avoid
    introducing a separate generic component-wrapper layer.
 4. Connect searches, location handling, URL state, selection, and failure states.
-   Add time availability once its endpoint and contract are implemented.
+   Add time availability using the existing endpoint where its contract fits.
 5. Check 320/390px phones, tablet portrait/landscape, and desktop; keyboard and
    screen-reader journeys; permission denial; sparse and dense regions; DST and
    overnight schedules; multi-day deduplication; and Back restoration.
