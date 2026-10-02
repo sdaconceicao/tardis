@@ -4,21 +4,42 @@ An open-source day planner for recurring events and places of interest. Tardis
 combines event dates, daily opening hours, a user's location, and travel times
 to help answer: “What can I do today?”
 
-The project starts as a modular monolith: TanStack Start serves the React app
-and backend-for-frontend, domain data lives in Neon/PostGIS, and routing is an
-in-process service with a provider-neutral contract so it can move to a
-separate deployment when demand justifies it.
+The project is a modular monolith. TanStack Start serves the React app and HTTP
+API; domain modules store events and places in PostgreSQL/PostGIS. A
+provider-neutral routing contract exists, but no routing provider is connected
+yet.
 
 ## Local development
 
 ```bash
 cp .env.example .env.local
 pnpm install
-pnpm dev
+pnpm start:dev
 ```
 
 Set `DATABASE_URL` in `.env.local` before using database-backed features. The
 initial shell can run without connecting to the database.
+
+## Frontend shell
+
+The Sky Atlas theme uses Lago components and tokens, with Josefin Sans headings,
+Source Sans 3 body text, and light/dark palettes. The striped brand mark is a
+placeholder logo. Appearance follows the system initially and remembers the
+user's light/dark choice.
+
+Navigation is implemented with TanStack Router and Lago links: Map (`/`),
+Calendar (`/calendar?view=week`, `month`, or `agenda`), Saved (`/saved`),
+My events (`/my-events`), About & help (`/about`), and account placeholders
+(`/login`, `/signup`). Add event leads to the signup placeholder.
+
+These are placeholder sections: maps, event data, location/date controls,
+authentication, saving, and event creation are not connected. No credentials
+are collected. The discovery list sits beside the main view on desktop and
+below it on phones.
+
+Lago reference: [Storybook](https://main--6a4eb38660443c1eee94713d.chromatic.com/).
+
+## Validation
 
 Useful checks:
 
@@ -48,14 +69,16 @@ availability searches, and local integration tests.
 
 - `src/routes`: pages and thin TanStack HTTP BFF endpoints
 - `src/modules`: business capabilities such as identity, events, and places
-- `src/services`: infrastructure-facing capabilities, beginning with routing
+- `src/services`: infrastructure-facing capabilities; routing has no live provider
 - `src/db`: shared database client and schema composition
 - `drizzle`: ordered database migrations
 - `docs/adr`: accepted architectural decisions
 - `docs/operations`: cost and operational guardrails
 
 See [docs/architecture.md](docs/architecture.md) for module rules, request
-flows, and the routing extraction path.
+flows, and the routing extraction path. The files in `docs/design` record design
+choices; [the API guide](docs/api/domain-endpoints.md) describes the implemented
+HTTP contract.
 
 ## Deploy to Vercel
 

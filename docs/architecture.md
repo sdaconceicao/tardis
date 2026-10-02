@@ -2,12 +2,14 @@
 
 ## Shape
 
-Tardis is a modular monolith deployed as one TanStack Start application on
-Vercel. TanStack server routes and server functions form the backend-for-frontend (BFF); the MVP
-does not need a second API deployment or microservices.
+Tardis is a modular monolith built as one TanStack Start application for Vercel.
+TanStack server routes form the backend-for-frontend (BFF). Event, place,
+identity, planning, and HTTP API modules are implemented; the browser map and
+calendar remain placeholders. Routing has a provider-neutral contract but no
+live provider. The diagram and planning flow below include planned pieces.
 
 ```text
-Browser (React + Lago styles + MapLibre)
+Browser (React + Lago styles; MapLibre planned)
                  |
         TanStack BFF endpoints
                  |
@@ -25,7 +27,7 @@ small without tying domain code to the BFF.
 
 ## Module boundaries
 
-The initial capabilities are:
+The capabilities and their intended boundaries are:
 
 - `identity`: resolves the current actor and applies authorization policy.
 - `events`: owns recurring event definitions, dated occurrences, exceptions,
@@ -74,15 +76,15 @@ with approximate distance and a clear degraded state.
 
 ## Scaling and extraction
 
-Vercel scales stateless BFF invocations horizontally. Neon supplies pooled,
-serverless database connectivity; spatial indexes and bounded queries do most
-of the MVP scaling work. Authentication remains a lightweight concern at the
-edge of each protected request.
+The intended deployment uses stateless BFF invocations and a pooled PostgreSQL
+connection. Spatial indexes and bounded queries should handle the initial data
+volume. Better Auth sessions protect private reads and writes.
 
-Routing has its own contract, provider adapter, validation, and failure model.
+Routing has a contract, validation, and unavailable-result types. A provider
+adapter, caching, quotas, and concurrency control remain future work.
 No route or domain module may call OpenRouteService directly. Start with an
-in-process implementation. Add caching, quotas, and concurrency control at the
-routing service boundary when real traffic demands them.
+in-process implementation when routing is connected. Add caching, quotas, and
+concurrency control at the routing service boundary when traffic demands them.
 
 To extract routing later:
 
@@ -108,15 +110,15 @@ tokens. Do not add a local wrapper component for every Lago primitive; add an
 application component only when it carries real product behavior or repeated
 composition.
 
-MapLibre owns interactive map rendering. Map style URLs are public browser
-configuration, while database credentials and routing API keys remain
-server-only.
+MapLibre is the planned interactive map renderer; the current map is a
+placeholder. Map style URLs are public browser configuration, while database
+credentials and routing API keys remain server-only.
 
 ## Initial domain implementation
 
 REST handlers under `src/routes/api` delegate to module entry points and use
 Better Auth session identity. The identity module hosts Better Auth with a
-Drizzle adapter, following the existing `pa-libertybells-250` integration.
+Drizzle adapter.
 Neon hosts PostgreSQL; Neon Auth is not required. Domain writes use interactive
 Drizzle transactions through `pg` and the pooled database URL. The DB schema
 composition imports module-owned tables; schema-level foreign keys are the
