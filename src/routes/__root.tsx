@@ -1,9 +1,8 @@
 import lagoCss from "@code-x/lago/styles?url";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
-import { Compass } from "lucide-react";
-import { AppLink, AppShell } from "../components/app-shell";
-import { PlaceholderPage } from "../components/placeholder-page";
-import appCss from "../styles.css?url";
+import { AppShell } from "../components/AppShell/AppShell";
+import appCss from "../styles/global.css?url";
+import { NotFoundPage } from "./-components/NotFoundPage/NotFoundPage";
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -40,19 +39,7 @@ export const Route = createRootRoute({
 		],
 	}),
 	shellComponent: RootDocument,
-	notFoundComponent: () => (
-		<PlaceholderPage
-			eyebrow="Off the beaten path"
-			title="Page not found"
-			description="This destination isn’t on the map. Head back to explore."
-			icon={Compass}
-			comingSoon={false}
-		>
-			<AppLink to="/" className="primary-link">
-				Back to explore
-			</AppLink>
-		</PlaceholderPage>
-	),
+	notFoundComponent: NotFoundPage,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {

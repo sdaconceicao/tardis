@@ -1,0 +1,9 @@
+---
+description: Unit Testing Standards
+globs: **/*.test.ts,**/*.test.tsx
+alwaysApply: false
+---
+
+# Unit Testing Standards
+
+Read and follow '../../docs/rules/testing-unit-standards.md'

@@ -1,0 +1,24 @@
+name: tardis
+
+services:
+  postgres:
+    image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_DB: tardis
+      POSTGRES_USER: tardis
+      POSTGRES_PASSWORD: tardis_local
+    ports:
+      - "127.0.0.1:5435:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./scripts/postgres/init-test-db.sql:/docker-entrypoint-initdb.d/001-test-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tardis -d tardis"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  postgres-data:

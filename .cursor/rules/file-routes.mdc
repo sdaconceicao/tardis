@@ -1,0 +1,10 @@
+---
+description: File Routes
+globs: src/route/**/*.tsx
+alwaysApply: false
+---
+
+
+# File Routes
+
+Read and follow '../../docs/rules/file-routes.md';

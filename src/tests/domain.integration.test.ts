@@ -80,9 +80,15 @@ suite("PostGIS domain integration", () => {
 		await db.$client.end();
 	});
 	it("supports Better Auth sign-up, verified sessions, and sign-out", async () => {
+		const email = `${randomUUID()}@example.test`;
+		const password = "a-strong-test-password-123!";
+		const verificationLinks: string[] = [];
 		const auth = createAuth(db, {
 			baseURL: "http://localhost:3000",
 			secret: "tardis-test-secret-at-least-thirty-two-characters",
+			verificationEmail: async (_to, url) => {
+				verificationLinks.push(url);
+			},
 		});
 		const response = await auth.handler(
 			new Request("http://localhost:3000/api/auth/sign-up/email", {
@@ -93,13 +99,31 @@ suite("PostGIS domain integration", () => {
 				},
 				body: JSON.stringify({
 					name: "Test",
-					email: `${randomUUID()}@example.test`,
-					password: "a-strong-test-password-123!",
+					email,
+					password,
 				}),
 			}),
 		);
 		expect(response.status).toBe(200);
-		const cookie = response.headers
+		expect(response.headers.getSetCookie().join(" ")).not.toContain(
+			"session_token",
+		);
+		expect(verificationLinks).toHaveLength(1);
+		const signInRequest = () =>
+			new Request("http://localhost:3000/api/auth/sign-in/email", {
+				method: "POST",
+				headers: {
+					origin: "http://localhost:3000",
+					"content-type": "application/json",
+				},
+				body: JSON.stringify({ email, password }),
+			});
+		expect((await auth.handler(signInRequest())).status).toBe(403);
+		const verified = await auth.handler(new Request(verificationLinks[0]));
+		expect(verified.status).toBeLessThan(400);
+		const signedIn = await auth.handler(signInRequest());
+		expect(signedIn.status).toBe(200);
+		const cookie = signedIn.headers
 			.getSetCookie()
 			.map((c) => c.split(";")[0])
 			.join("; ");

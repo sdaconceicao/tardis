@@ -1,0 +1,74 @@
+.eyebrow {
+	font-size: 0.75rem;
+	line-height: 1.5;
+	text-transform: uppercase;
+	letter-spacing: 0.18em;
+	color: var(--atlas-muted);
+	margin-bottom: 10px;
+}
+
+.previewNote {
+	color: var(--atlas-muted);
+	font-size: 0.8rem;
+}
+
+.placeholderPage {
+	flex: 1;
+	width: min(100%, 880px);
+	margin-inline: auto;
+	text-align: center;
+	padding: clamp(45px, 8vw, 95px) 24px;
+}
+
+.placeholderPage h1 {
+	font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.decoRule {
+	width: 100px;
+	height: 6px;
+	margin: 24px auto 40px;
+	border-block: 1px solid var(--atlas-trim);
+}
+
+.placeholderSymbol {
+	width: 80px;
+	height: 80px;
+	margin: 0 auto 24px;
+	display: grid;
+	place-items: center;
+	border: 1px solid var(--atlas-trim);
+	border-radius: 50%;
+	background: var(--atlas-sidebar);
+}
+
+.placeholderSymbol svg {
+	width: 32px;
+	height: 32px;
+}
+
+.placeholderDescription {
+	max-width: 450px;
+	margin: 0 auto;
+	font-size: 1.1rem;
+	color: var(--atlas-muted);
+}
+
+.placeholderActions {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 24px;
+	margin-top: 32px;
+}
+
+.placeholderActions a {
+	min-height: 44px;
+	display: inline-flex;
+	align-items: center;
+}
+
+.placeholderPage .previewNote {
+	margin-top: 32px;
+}

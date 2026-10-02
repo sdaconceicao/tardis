@@ -1,0 +1,38 @@
+.eyebrow {
+	font-size: 0.75rem;
+	line-height: 1.5;
+	text-transform: uppercase;
+	letter-spacing: 0.18em;
+	color: var(--atlas-muted);
+	margin-bottom: 10px;
+}
+
+.discoveryToolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 20px;
+	padding: 32px 30px 14px;
+}
+
+.discoveryToolbar :global(.react-aria-Button) {
+	white-space: nowrap;
+}
+
+@media (max-width: 1000px) {
+	.discoveryToolbar {
+		padding-inline: 24px;
+	}
+}
+
+@media (max-width: 650px) {
+	.discoveryToolbar {
+		padding: 25px 20px 14px;
+		gap: 14px;
+	}
+
+	.discoveryToolbar h1 {
+		max-width: 300px;
+	}
+}

@@ -1,0 +1,211 @@
+.authLayout {
+	flex: 1;
+	display: grid;
+	align-items: center;
+	padding: 24px 16px 40px;
+	background: var(--background-color);
+}
+
+.layout {
+	width: 100%;
+	max-width: 500px;
+	margin-inline: auto;
+	display: grid;
+	border: 1px solid var(--atlas-trim);
+	border-top: 5px double var(--atlas-trim);
+	background: var(--atlas-sidebar);
+}
+
+.intro {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding: 28px;
+	border-bottom: 1px solid var(--atlas-trim);
+}
+
+.kicker {
+	color: var(--tint);
+	font-size: 0.73rem;
+	font-weight: 700;
+	letter-spacing: 0.17em;
+	text-transform: uppercase;
+}
+
+.introTitle {
+	font-size: 2.3rem;
+	line-height: 1.08;
+	margin: 12px 0;
+}
+
+.introCopy,
+.introRule,
+.introTagline {
+	display: none;
+}
+
+.card {
+	padding: 26px 20px;
+	background: var(--background-color);
+}
+
+.cardHeading {
+	margin-bottom: 27px;
+}
+
+.cardIcon {
+	width: 46px;
+	height: 46px;
+	display: grid;
+	place-items: center;
+	background: var(--atlas-soft);
+	border: 1px solid var(--atlas-trim);
+	border-radius: 50%;
+	color: var(--text-color);
+	margin-bottom: 21px;
+}
+
+.cardIcon svg {
+	width: 20px;
+	height: 20px;
+}
+
+.heading {
+	font-size: 2rem;
+	margin: 7px 0 5px;
+}
+
+.headingCopy,
+.sentCopy {
+	color: var(--atlas-muted);
+	font-size: 0.95rem;
+}
+
+.form {
+	display: grid;
+	gap: 17px;
+}
+
+.field {
+	width: 100%;
+}
+
+.field input {
+	width: 100%;
+}
+
+.submit {
+	width: 100%;
+	margin-top: 5px;
+}
+
+.submitLink {
+	width: 100%;
+	min-height: 48px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 9px;
+	margin-top: 23px;
+	border-radius: var(--radius);
+	background: var(--highlight-background);
+	color: var(--highlight-foreground);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.submitLink:hover {
+	background: var(--atlas-action-hover);
+	color: var(--highlight-foreground);
+}
+
+.submitLink:focus-visible,
+.switchLink:focus-visible {
+	outline: 2px solid var(--focus-ring-color);
+	outline-offset: 2px;
+}
+
+.switch {
+	margin-top: 25px;
+	text-align: center;
+	color: var(--atlas-muted);
+	font-size: 0.9rem;
+}
+
+.switchLink,
+.textButton {
+	color: var(--link-color-pressed);
+	font-weight: 700;
+	text-decoration: underline;
+}
+
+.feedback {
+	margin-bottom: 15px;
+}
+
+.sent {
+	text-align: center;
+}
+
+.sentIcon {
+	width: 48px;
+	height: 48px;
+	color: var(--tint);
+}
+
+.sentCopy {
+	margin: 15px 0;
+	overflow-wrap: anywhere;
+}
+
+.sentCopy strong {
+	color: var(--text-color);
+}
+
+@media (min-width: 960px) {
+	.authLayout {
+		padding: clamp(32px, 6vw, 82px) 24px;
+	}
+
+	.layout {
+		max-width: 1020px;
+		grid-template-columns: minmax(0, 1fr) minmax(350px, 430px);
+	}
+
+	.intro {
+		padding: clamp(32px, 5vw, 65px);
+		border-right: 1px solid var(--atlas-trim);
+		border-bottom: 0;
+	}
+
+	.introTitle {
+		font-size: clamp(2.5rem, 4.2vw, 4.2rem);
+		margin: 24px 0 18px;
+	}
+
+	.introCopy {
+		display: block;
+		font-size: 1.12rem;
+		color: var(--atlas-muted);
+		max-width: 370px;
+	}
+
+	.introRule {
+		display: block;
+		width: 96px;
+		height: 5px;
+		border-block: 1px solid var(--atlas-trim);
+		margin: 38px 0 20px;
+	}
+
+	.introTagline {
+		display: block;
+		color: var(--atlas-muted);
+		font-size: 0.73rem;
+		letter-spacing: 0.2em;
+	}
+
+	.card {
+		padding: clamp(28px, 4vw, 43px);
+	}
+}

@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 
 const config = defineConfig({
 	resolve: { tsconfigPaths: true },
+	ssr: { noExternal: ["rrule"] },
 	plugins: [nitro(), tanstackStart(), viteReact()],
 });
 

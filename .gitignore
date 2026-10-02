@@ -17,3 +17,7 @@ coverage
 
 # Copied from swagger-ui-dist by dev/build scripts
 /public/api-docs/
+
+# Playwright output
+/test-results/
+/playwright-report/

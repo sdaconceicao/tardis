@@ -1,0 +1,52 @@
+.authSocialButtons {
+	width: 100%;
+}
+
+.divider {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 25px 0 17px;
+	color: var(--atlas-muted);
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	white-space: nowrap;
+}
+
+.divider::before,
+.divider::after {
+	content: "";
+	height: 1px;
+	flex: 1;
+	background: var(--border-color);
+}
+
+.buttons {
+	display: grid;
+	gap: 10px;
+}
+
+.buttons button {
+	width: 100%;
+}
+
+.googleMark {
+	font:
+		700 1.1rem Arial,
+		sans-serif;
+	color: #c04432;
+}
+
+.facebookMark {
+	font:
+		700 1.25rem Arial,
+		sans-serif;
+	color: #4167a5;
+}
+
+@media (min-width: 481px) {
+	.buttons {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
