@@ -3,13 +3,13 @@
 ## Shape
 
 Tardis is a modular monolith deployed as one TanStack Start application on
-Vercel. TanStack server functions are the backend-for-frontend (BFF); the MVP
+Vercel. TanStack server routes and server functions form the backend-for-frontend (BFF); the MVP
 does not need a second API deployment or microservices.
 
 ```text
 Browser (React + Lago styles + MapLibre)
                  |
-        TanStack server functions
+        TanStack BFF endpoints
                  |
        Application/domain modules
           |                 |
@@ -18,7 +18,7 @@ Browser (React + Lago styles + MapLibre)
                  OpenRouteService adapter
 ```
 
-The server-function layer owns HTTP concerns: authentication, input parsing,
+The BFF endpoint layer owns HTTP concerns: authentication, input parsing,
 response shaping, and status mapping. Business rules belong in modules and
 must not depend on TanStack request primitives. This keeps the UI-facing API
 small without tying domain code to the BFF.
@@ -111,3 +111,32 @@ composition.
 MapLibre owns interactive map rendering. Map style URLs are public browser
 configuration, while database credentials and routing API keys remain
 server-only.
+
+## Initial domain implementation
+
+REST handlers under `src/routes/api` delegate to module entry points and use
+Better Auth session identity. The identity module hosts Better Auth with a
+Drizzle adapter, following the existing `pa-libertybells-250` integration.
+Neon hosts PostgreSQL; Neon Auth is not required. Domain writes use interactive
+Drizzle transactions through `pg` and the pooled database URL. The DB schema
+composition imports module-owned tables; schema-level foreign keys are the
+explicit exception to the runtime module-import boundary.
+
+Events have occurrences and days, with one continuous interval per day. Place
+hours remain relational. Availability combines spatial filtering, indexed
+stored event-day intervals, bounded recurrence expansion, and seasonal hours.
+Database constraints enforce venue visibility and schedule consistency alongside
+application validation. See [the API guide](api/domain-endpoints.md).
+
+### HTTP contracts
+
+`src/http/operations.server.ts` registers domain operations once for both
+`/api/v1` and the compatible unversioned aliases. Routes delegate to that
+registry; business rules stay inside module services. Request schemas are
+owned by modules, while explicit JSON response schemas live in
+`src/http/responses.ts`. The registry generates OpenAPI at
+`/api/openapi.json`, with locally served Swagger UI at `/api/docs`. Better
+Auth keeps its own catch-all and generated authentication specification.
+CORS uses an exact origin allowlist shared with Better Auth. Protected
+requests accept either a cookie with an allowed Origin or a verified signed
+bearer session; invalid bearer credentials never fall back to cookies.

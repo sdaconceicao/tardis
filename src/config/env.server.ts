@@ -11,8 +11,8 @@ const optionalSecret = z.preprocess(
 
 const serverEnvSchema = z.object({
 	DATABASE_URL: z.string().min(1),
-	NEON_AUTH_BASE_URL: optionalUrl,
-	NEON_AUTH_COOKIE_SECRET: z.preprocess(
+	BETTER_AUTH_URL: optionalUrl,
+	BETTER_AUTH_SECRET: z.preprocess(
 		emptyStringToUndefined,
 		z.string().min(32).optional(),
 	),

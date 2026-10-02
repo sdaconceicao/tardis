@@ -35,12 +35,18 @@ Database migrations use Drizzle:
 pnpm db:migrate
 ```
 
-The first migration enables PostGIS and requires a PostgreSQL role allowed to
-create the extension.
+Migrations enable PostGIS and `btree_gist`, then create the domain and Better Auth
+tables. The migration role must be allowed to create these extensions. Drizzle
+loads `.env.local` and `.env`; application startup never migrates implicitly.
+
+Set `BETTER_AUTH_URL` and `BETTER_AUTH_SECRET` to enable email/password auth.
+The domain API uses session cookies for writes and private reads. See
+[the endpoint guide](docs/api/domain-endpoints.md) for requests, recurrence,
+availability searches, and local integration tests.
 
 ## Architecture
 
-- `src/routes`: pages and thin TanStack server-function BFF endpoints
+- `src/routes`: pages and thin TanStack HTTP BFF endpoints
 - `src/modules`: business capabilities such as identity, events, and places
 - `src/services`: infrastructure-facing capabilities, beginning with routing
 - `src/db`: shared database client and schema composition
@@ -64,3 +70,9 @@ static assets. The included `vercel.json` makes framework detection explicit.
 
 Variables prefixed with `VITE_` are included in the browser bundle. Keep secrets
 unprefixed so they remain server-only.
+
+The public HTTP contract is versioned at `/api/v1`. Open `/api/docs` for
+interactive Swagger documentation or `/api/openapi.json` for the OpenAPI
+specification. External frontend origins are configured with
+`API_ALLOWED_ORIGINS`; cookie and signed Better Auth bearer sessions are
+supported. See [the API guide](docs/api/domain-endpoints.md).
