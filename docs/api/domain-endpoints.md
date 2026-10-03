@@ -266,15 +266,19 @@ with a maintained availability projection.
 ## Validation and testing
 
 `pnpm check`, `pnpm typecheck`, `pnpm test`, `pnpm build`, and `pnpm db:check`.
-The normal test command skips database integration without `TEST_DATABASE_URL`.
-For full database tests, point it at a disposable PostGIS database whose name
-ends in `_test`, then run `pnpm test:db`. Tests migrate and add test records.
+The normal Vitest command skips database integration without
+`TEST_DATABASE_URL`. Point `TEST_DATABASE_URL` at a disposable PostGIS database
+whose name ends in `_test`, then run `pnpm test:db`. That suite applies migrations
+and checks the domain services, auth persistence, and database constraints.
 
-For actual HTTP checks, run the production server with a disposable local test
-DB and matching Better Auth configuration, with
-`API_ALLOWED_ORIGINS=http://localhost:4321`, then set `TEST_API_URL` to its local
-origin and run `pnpm test:api`. This signs up test users and exercises all 23
-domain operations, bearer revocation, CORS, legacy paths and Swagger assets.
+The Playwright API project checks real HTTP routes, including authenticated
+domain writes, bearer revocation, CORS, ownership, and legacy paths. It requires
+the app and test runner to use the same disposable PostGIS database. Set
+`DATABASE_URL`, `TEST_DATABASE_URL`, `TEST_API_URL`, `BETTER_AUTH_URL`, and
+`BETTER_AUTH_SECRET`, plus test values for `RESEND_API_KEY` and
+`RESEND_FROM_EMAIL` and `API_ALLOWED_ORIGINS=http://localhost:4321`. Run
+`pnpm exec playwright test test/e2e/api --project=api`. CI provisions PostGIS and
+runs both suites automatically.
 
 The generated geography column requires `geography(Point,4326)` as an SQL type;
 Drizzle Kit 0.31 emits quotes around the entire custom type, so migration 0001

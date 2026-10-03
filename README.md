@@ -55,9 +55,13 @@ pnpm test:e2e
 pnpm build
 ```
 
-The Playwright suite starts the local app and runs the account flows in Chromium,
-Firefox, and WebKit. It mocks auth responses so no Resend or OAuth credentials
-are needed for browser tests.
+The Playwright suite starts the local app and runs browser flows in Chromium,
+Firefox, and WebKit. Browser tests mock auth responses. The API project also
+checks real HTTP routes against a disposable PostGIS database when
+`TEST_DATABASE_URL`, `TEST_API_URL`, and `BETTER_AUTH_SECRET` are set. CI provides
+these values and runs both the database integration and API suites without
+Resend or OAuth credentials. Playwright specs live in `test/e2e`; the database
+integration suite lives in `test/integration`.
 
 Database migrations use Drizzle:
 

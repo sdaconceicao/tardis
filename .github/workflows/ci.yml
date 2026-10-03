@@ -12,6 +12,20 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    services:
+      postgres:
+        image: postgis/postgis:17-3.5
+        env:
+          POSTGRES_DB: tardis_test
+          POSTGRES_USER: tardis
+          POSTGRES_PASSWORD: tardis_local
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U tardis -d tardis_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -25,8 +39,21 @@ jobs:
       - run: pnpm check
       - run: pnpm typecheck
       - run: pnpm test
+      - name: Run PostGIS integration tests
+        run: pnpm test:db
+        env:
+          TEST_DATABASE_URL: postgresql://tardis:tardis_local@127.0.0.1:5432/tardis_test
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium firefox webkit
       - name: Run Playwright tests
         run: pnpm test:e2e
+        env:
+          DATABASE_URL: postgresql://tardis:tardis_local@127.0.0.1:5432/tardis_test
+          TEST_DATABASE_URL: postgresql://tardis:tardis_local@127.0.0.1:5432/tardis_test
+          BETTER_AUTH_URL: http://localhost:3006
+          BETTER_AUTH_SECRET: ci-only-auth-secret-at-least-thirty-two-characters
+          RESEND_API_KEY: ci-fake-key
+          RESEND_FROM_EMAIL: Tardis <test@example.com>
+          API_ALLOWED_ORIGINS: http://localhost:4321
+          TEST_API_URL: http://localhost:3006
       - run: pnpm build

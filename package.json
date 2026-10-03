@@ -26,8 +26,7 @@
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:check": "drizzle-kit check",
-		"test:db": "node --env-file-if-exists=.env.local ./node_modules/vitest/vitest.mjs run src/tests/domain.integration.test.ts",
-		"test:api": "node scripts/smoke-api.mjs",
+		"test:db": "node --env-file-if-exists=.env.local ./node_modules/vitest/vitest.mjs run test/integration/domain.integration.test.ts",
 		"test:e2e": "playwright test"
 	},
 	"dependencies": {

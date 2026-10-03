@@ -58,7 +58,7 @@ await page.getByTestId("submit-button").click();
 ### File Organization
 
 ```
-tests/
+test/e2e/
 ├── auth/
 │   ├── login.spec.ts
 │   └── register.spec.ts
@@ -309,7 +309,7 @@ test("should login successfully", async ({ page }) => {
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-  testDir: "./tests",
+  testDir: "./test/e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

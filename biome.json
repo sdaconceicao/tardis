@@ -9,6 +9,7 @@
 		"ignoreUnknown": false,
 		"includes": [
 			"**/src/**/*",
+			"**/test/integration/**/*",
 			"**/.vscode/**/*",
 			"**/*.config.ts",
 			"**/index.html",

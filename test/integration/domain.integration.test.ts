@@ -2,34 +2,34 @@ import { randomUUID } from "node:crypto";
 import { and, eq, sql } from "drizzle-orm";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { createDatabase } from "../db/client.server";
-import * as schema from "../db/schema";
+import { createDatabase } from "../../src/db/client.server";
+import * as schema from "../../src/db/schema";
 import {
 	eventInputSchema,
 	occurrenceInputSchema,
 	recurrenceInputSchema,
-} from "../modules/events/contracts";
+} from "../../src/modules/events/contracts";
 import {
 	cancelOccurrence,
 	createRecurrence,
 	getEvent,
 	saveEvent,
 	saveOccurrence,
-} from "../modules/events/service.server";
-import { createAuth } from "../modules/identity/auth.server";
+} from "../../src/modules/events/service.server";
+import { createAuth } from "../../src/modules/identity/auth.server";
 import {
 	exceptionSchema,
 	placeInputSchema,
 	scheduleSchema,
-} from "../modules/places/contracts";
+} from "../../src/modules/places/contracts";
 import {
 	getPlace,
 	replaceSchedules,
 	saveException,
 	savePlace,
-} from "../modules/places/service.server";
-import { findAvailability } from "../modules/planning/index.server";
-import { availabilitySchema } from "../shared/validation";
+} from "../../src/modules/places/service.server";
+import { findAvailability } from "../../src/modules/planning/index.server";
+import { availabilitySchema } from "../../src/shared/validation";
 
 const databaseUrl = process.env.TEST_DATABASE_URL;
 const suite = describe.skipIf(!databaseUrl);
