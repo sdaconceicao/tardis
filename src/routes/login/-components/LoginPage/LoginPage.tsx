@@ -62,6 +62,13 @@ export function LoginPage() {
 					isRequired
 					size="lg"
 				/>
+				<AppLink
+					to="/forgot-password"
+					search={{ next }}
+					className={css.forgotLink}
+				>
+					Forgot password?
+				</AppLink>
 				{form.message && (
 					<Alert
 						variant={form.messageKind}

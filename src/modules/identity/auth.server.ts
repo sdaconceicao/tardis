@@ -7,6 +7,7 @@ import { getServerEnv } from "../../config/env.server";
 import { type Database, getDatabase } from "../../db/client.server";
 import { DomainError } from "../../shared/errors";
 import type { Actor } from "./contracts";
+import { sendPasswordResetEmail } from "./password-reset-email.server";
 import * as schema from "./schema";
 import { sendVerificationEmail } from "./verification-email.server";
 
@@ -16,6 +17,7 @@ export function createAuth(
 		baseURL: string;
 		secret: string;
 		verificationEmail?: (to: string, url: string) => Promise<void>;
+		passwordResetEmail?: (to: string, url: string) => Promise<void>;
 		google?: { clientId: string; clientSecret: string };
 		facebook?: { clientId: string; clientSecret: string };
 	},
@@ -27,6 +29,18 @@ export function createAuth(
 		emailAndPassword: {
 			enabled: true,
 			requireEmailVerification: Boolean(config.verificationEmail),
+			revokeSessionsOnPasswordReset: true,
+			...(config.passwordResetEmail
+				? {
+						sendResetPassword: async ({
+							user,
+							url,
+						}: {
+							user: { email: string };
+							url: string;
+						}) => config.passwordResetEmail?.(user.email, url),
+					}
+				: {}),
 		},
 		...(config.verificationEmail
 			? {
@@ -70,6 +84,8 @@ export function getAuth() {
 		baseURL: env.BETTER_AUTH_URL,
 		secret: env.BETTER_AUTH_SECRET,
 		verificationEmail: (to, url) => sendVerificationEmail(emailConfig, to, url),
+		passwordResetEmail: (to, url) =>
+			sendPasswordResetEmail(emailConfig, to, url),
 		...(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
 			? {
 					google: {

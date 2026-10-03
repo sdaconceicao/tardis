@@ -13,3 +13,7 @@ export function safeAuthDestination(search: string): string {
 export function verificationCallbackURL(next: string): string {
 	return `/login?verified=1&next=${encodeURIComponent(next)}`;
 }
+
+export function passwordResetURL(next: string): string {
+	return `/reset-password?next=${encodeURIComponent(next)}`;
+}

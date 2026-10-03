@@ -148,6 +148,81 @@ suite("PostGIS domain integration", () => {
 			await auth.api.getSession({ headers: new Headers({ cookie }) }),
 		).toBeNull();
 	});
+	it("uses a one-time password reset link and revokes existing sessions", async () => {
+		const email = `${randomUUID()}@example.test`;
+		const oldPassword = "old-test-password-123!";
+		const newPassword = "new-test-password-456!";
+		const resetLinks: string[] = [];
+		const auth = createAuth(db, {
+			baseURL: "http://localhost:3000",
+			secret: "tardis-test-secret-at-least-thirty-two-characters",
+			passwordResetEmail: async (_to, url) => {
+				resetLinks.push(url);
+			},
+		});
+		const post = (path: string, body: object) =>
+			auth.handler(
+				new Request(`http://localhost:3000/api/auth/${path}`, {
+					method: "POST",
+					headers: {
+						origin: "http://localhost:3000",
+						"content-type": "application/json",
+					},
+					body: JSON.stringify(body),
+				}),
+			);
+		const signedUp = await post("sign-up/email", {
+			name: "Reset Test",
+			email,
+			password: oldPassword,
+		});
+		expect(signedUp.status).toBe(200);
+		const cookie = signedUp.headers
+			.getSetCookie()
+			.map((part) => part.split(";")[0])
+			.join("; ");
+		expect(cookie).toContain("session_token");
+		expect(
+			(
+				await post("request-password-reset", {
+					email: `${randomUUID()}@example.test`,
+					redirectTo: "/reset-password?next=%2Fsaved",
+				})
+			).status,
+		).toBe(200);
+		expect(resetLinks).toHaveLength(0);
+		expect(
+			(
+				await post("request-password-reset", {
+					email,
+					redirectTo: "/reset-password?next=%2Fsaved",
+				})
+			).status,
+		).toBe(200);
+		expect(resetLinks).toHaveLength(1);
+		const callback = await auth.handler(new Request(resetLinks[0]));
+		expect(callback.status).toBe(302);
+		const destination = new URL(callback.headers.get("location") ?? "");
+		expect(destination.pathname).toBe("/reset-password");
+		expect(destination.searchParams.get("next")).toBe("/saved");
+		const token = destination.searchParams.get("token");
+		expect(token).toBeTruthy();
+		expect((await post("reset-password", { token, newPassword })).status).toBe(
+			200,
+		);
+		expect((await post("reset-password", { token, newPassword })).status).toBe(
+			400,
+		);
+		expect(
+			await auth.api.getSession({ headers: new Headers({ cookie }) }),
+		).toBeNull();
+		expect(
+			(await post("sign-in/email", { email, password: oldPassword })).status,
+		).toBe(401);
+		expect(
+			(await post("sign-in/email", { email, password: newPassword })).status,
+		).toBe(200);
+	});
 	it("finds fair days at opening, excludes closing and unknown hours", async () => {
 		const event = await saveEvent(db, actor, eventInput());
 		const occurrence = await saveOccurrence(

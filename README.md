@@ -83,7 +83,9 @@ local database volume and all its data.
 Set `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `RESEND_API_KEY`, and
 `RESEND_FROM_EMAIL` to enable email/password auth. Signups send a verification
 link through Resend; users must verify before signing in. The signup page can
-resend the link. Use a sender address on a domain verified in Resend.
+resend the link. The login page links to a password reset request form, and
+one-time reset links are sent through Resend. Use a sender address on a domain
+verified in Resend.
 
 For social login, add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, or
 `FACEBOOK_CLIENT_ID` and `FACEBOOK_CLIENT_SECRET`. Register these exact callback
