@@ -19,6 +19,7 @@
 			"**/vercel.json",
 			"!**/src/routeTree.gen.ts",
 			"!**/node_modules/**/*",
+			"!**/coverage/**/*",
 			"!**/.output/**/*"
 		]
 	},
