@@ -5,7 +5,14 @@ import {
 } from "../modules/events/contracts";
 import { openingIntervalsAt } from "../modules/places/availability.server";
 import { assertPriceWindows, occurrencePricesAt } from "./prices";
-import { containsTime, dayTimes } from "./time";
+import {
+	addDays,
+	containsTime,
+	dayTimes,
+	localClock,
+	localDate,
+	minuteInstant,
+} from "./time";
 import { priceSchema } from "./validation";
 
 describe("availability time semantics", () => {
@@ -142,5 +149,67 @@ describe("availability time semantics", () => {
 				days: [{ dayOffset: 0, timeKind: "all_day" }],
 			}).success,
 		).toBe(false);
+	});
+});
+
+describe("pure time helpers", () => {
+	it("uses the requested zone for local dates and clock fields", () => {
+		const instant = new Date("2026-09-19T02:15:00Z");
+		expect(localDate(instant, "America/New_York")).toBe("2026-09-18");
+		expect(localClock(instant, "America/New_York")).toEqual({
+			date: "2026-09-18",
+			weekday: 5,
+			minute: 22 * 60 + 15,
+		});
+		expect(localClock(instant, "UTC")).toEqual({
+			date: "2026-09-19",
+			weekday: 6,
+			minute: 2 * 60 + 15,
+		});
+	});
+
+	it("adds calendar days across leap days and year boundaries", () => {
+		expect(addDays("2024-02-28", 1)).toBe("2024-02-29");
+		expect(addDays("2026-01-01", -1)).toBe("2025-12-31");
+	});
+
+	it("rejects ambiguous and nonexistent wall times unless compatibility is requested", () => {
+		expect(() => minuteInstant("2026-03-08", 150, "America/New_York")).toThrow(
+			RangeError,
+		);
+		expect(
+			minuteInstant(
+				"2026-03-08",
+				150,
+				"America/New_York",
+				"compatible",
+			).toISOString(),
+		).toBe("2026-03-08T07:30:00.000Z");
+		expect(() => minuteInstant("2026-11-01", 90, "America/New_York")).toThrow(
+			RangeError,
+		);
+		expect(
+			minuteInstant(
+				"2026-11-01",
+				90,
+				"America/New_York",
+				"compatible",
+			).toISOString(),
+		).toBe("2026-11-01T05:30:00.000Z");
+	});
+
+	it("requires both timed bounds and treats an interval as half open", () => {
+		expect(() => dayTimes("2026-09-18", "timed", null, 600, "UTC")).toThrow(
+			RangeError,
+		);
+		expect(() =>
+			dayTimes("2026-09-18", "timed", 540, undefined, "UTC"),
+		).toThrow(RangeError);
+		const start = new Date("2026-09-18T09:00:00Z");
+		const end = new Date("2026-09-18T10:00:00Z");
+		expect(containsTime(start, end, start)).toBe(true);
+		expect(containsTime(start, end, end)).toBe(false);
+		expect(containsTime(null, end, start)).toBe(false);
+		expect(containsTime(start, null, start)).toBe(false);
 	});
 });

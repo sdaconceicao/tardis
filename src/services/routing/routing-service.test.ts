@@ -57,4 +57,41 @@ describe("routing service", () => {
 		).rejects.toThrow();
 		expect(provider.getMatrix).not.toHaveBeenCalled();
 	});
+
+	it("validates direction coordinates before calling the provider", async () => {
+		const provider = createProvider();
+		const service = createRoutingService(provider);
+		await expect(
+			service.getDirections({
+				origin,
+				destination: { longitude: 180, latitude: -90 },
+				profile: "wheelchair",
+			}),
+		).resolves.toMatchObject({ status: "available" });
+		expect(provider.getDirections).toHaveBeenCalledTimes(1);
+		await expect(
+			service.getDirections({
+				origin,
+				destination: { longitude: 181, latitude: 0 },
+				profile: "walking",
+			}),
+		).rejects.toThrow();
+		expect(provider.getDirections).toHaveBeenCalledTimes(1);
+	});
+
+	it("passes provider unavailability through to callers", async () => {
+		const provider = createProvider();
+		vi.mocked(provider.getMatrix).mockResolvedValue({
+			status: "unavailable",
+			reason: "quota",
+		});
+		const service = createRoutingService(provider);
+		await expect(
+			service.getMatrix({
+				origin,
+				destinations: [origin],
+				profile: "cycling",
+			}),
+		).resolves.toEqual({ status: "unavailable", reason: "quota" });
+	});
 });
