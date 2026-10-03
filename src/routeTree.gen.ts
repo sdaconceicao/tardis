@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AccountRouteRouteImport } from './routes/account/route'
 import { Route as CalendarRouteRouteImport } from './routes/calendar/route'
 import { Route as ForgotPasswordRouteRouteImport } from './routes/forgot-password/route'
 import { Route as LoginRouteRouteImport } from './routes/login/route'
@@ -17,6 +18,8 @@ import { Route as ResetPasswordRouteRouteImport } from './routes/reset-password/
 import { Route as SavedRouteRouteImport } from './routes/saved/route'
 import { Route as SignupRouteRouteImport } from './routes/signup/route'
 import { Route as homeIndexRouteImport } from './routes/(home)/index'
+import { Route as AccountIndexRouteImport } from './routes/account/index'
+import { Route as AccountPasswordRouteRouteImport } from './routes/account/password/route'
 import { Route as ApiAvailabilityRouteRouteImport } from './routes/api/availability/route'
 import { Route as ApiDocsRouteRouteImport } from './routes/api/docs/route'
 import { Route as ApiOpenapiDotjsonRouteRouteImport } from './routes/api/openapi[.]json/route'
@@ -35,6 +38,11 @@ import { Route as ApiEventsEventIdRecurrencesRecurrenceIdRouteRouteImport } from
 import { Route as ApiPlacesPlaceIdExceptionsIndexRouteImport } from './routes/api/places/$placeId/exceptions/index'
 import { Route as ApiPlacesPlaceIdExceptionsDateRouteRouteImport } from './routes/api/places/$placeId/exceptions/$date/route'
 
+const AccountRouteRoute = AccountRouteRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CalendarRouteRoute = CalendarRouteRouteImport.update({
   id: '/calendar',
   path: '/calendar',
@@ -74,6 +82,16 @@ const homeIndexRoute = homeIndexRouteImport.update({
   id: '/(home)/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AccountIndexRoute = AccountIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AccountRouteRoute,
+} as any)
+const AccountPasswordRouteRoute = AccountPasswordRouteRouteImport.update({
+  id: '/password',
+  path: '/password',
+  getParentRoute: () => AccountRouteRoute,
 } as any)
 const ApiAvailabilityRouteRoute = ApiAvailabilityRouteRouteImport.update({
   id: '/api/availability',
@@ -169,6 +187,7 @@ const ApiPlacesPlaceIdExceptionsDateRouteRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/account': typeof AccountRouteRouteWithChildren
   '/calendar': typeof CalendarRouteRoute
   '/forgot-password': typeof ForgotPasswordRouteRoute
   '/login': typeof LoginRouteRoute
@@ -176,11 +195,13 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRouteRoute
   '/saved': typeof SavedRouteRoute
   '/signup': typeof SignupRouteRoute
+  '/account/password': typeof AccountPasswordRouteRoute
   '/api/availability': typeof ApiAvailabilityRouteRoute
   '/api/docs': typeof ApiDocsRouteRoute
   '/api/openapi.json': typeof ApiOpenapiDotjsonRouteRoute
   '/api/tags': typeof ApiTagsRouteRoute
   '/': typeof homeIndexRoute
+  '/account/': typeof AccountIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRouteRoute
   '/api/events/$eventId': typeof ApiEventsEventIdRouteRouteWithChildren
   '/api/places/$placeId': typeof ApiPlacesPlaceIdRouteRouteWithChildren
@@ -203,11 +224,13 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRouteRoute
   '/saved': typeof SavedRouteRoute
   '/signup': typeof SignupRouteRoute
+  '/account/password': typeof AccountPasswordRouteRoute
   '/api/availability': typeof ApiAvailabilityRouteRoute
   '/api/docs': typeof ApiDocsRouteRoute
   '/api/openapi.json': typeof ApiOpenapiDotjsonRouteRoute
   '/api/tags': typeof ApiTagsRouteRoute
   '/': typeof homeIndexRoute
+  '/account': typeof AccountIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRouteRoute
   '/api/events/$eventId': typeof ApiEventsEventIdRouteRouteWithChildren
   '/api/places/$placeId': typeof ApiPlacesPlaceIdRouteRouteWithChildren
@@ -224,6 +247,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/account': typeof AccountRouteRouteWithChildren
   '/calendar': typeof CalendarRouteRoute
   '/forgot-password': typeof ForgotPasswordRouteRoute
   '/login': typeof LoginRouteRoute
@@ -231,11 +255,13 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRouteRoute
   '/saved': typeof SavedRouteRoute
   '/signup': typeof SignupRouteRoute
+  '/account/password': typeof AccountPasswordRouteRoute
   '/api/availability': typeof ApiAvailabilityRouteRoute
   '/api/docs': typeof ApiDocsRouteRoute
   '/api/openapi.json': typeof ApiOpenapiDotjsonRouteRoute
   '/api/tags': typeof ApiTagsRouteRoute
   '/(home)/': typeof homeIndexRoute
+  '/account/': typeof AccountIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRouteRoute
   '/api/events/$eventId': typeof ApiEventsEventIdRouteRouteWithChildren
   '/api/places/$placeId': typeof ApiPlacesPlaceIdRouteRouteWithChildren
@@ -253,6 +279,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/account'
     | '/calendar'
     | '/forgot-password'
     | '/login'
@@ -260,11 +287,13 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/saved'
     | '/signup'
+    | '/account/password'
     | '/api/availability'
     | '/api/docs'
     | '/api/openapi.json'
     | '/api/tags'
     | '/'
+    | '/account/'
     | '/api/auth/$'
     | '/api/events/$eventId'
     | '/api/places/$placeId'
@@ -287,11 +316,13 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/saved'
     | '/signup'
+    | '/account/password'
     | '/api/availability'
     | '/api/docs'
     | '/api/openapi.json'
     | '/api/tags'
     | '/'
+    | '/account'
     | '/api/auth/$'
     | '/api/events/$eventId'
     | '/api/places/$placeId'
@@ -307,6 +338,7 @@ export interface FileRouteTypes {
     | '/api/places/$placeId/exceptions'
   id:
     | '__root__'
+    | '/account'
     | '/calendar'
     | '/forgot-password'
     | '/login'
@@ -314,11 +346,13 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/saved'
     | '/signup'
+    | '/account/password'
     | '/api/availability'
     | '/api/docs'
     | '/api/openapi.json'
     | '/api/tags'
     | '/(home)/'
+    | '/account/'
     | '/api/auth/$'
     | '/api/events/$eventId'
     | '/api/places/$placeId'
@@ -335,6 +369,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AccountRouteRoute: typeof AccountRouteRouteWithChildren
   CalendarRouteRoute: typeof CalendarRouteRoute
   ForgotPasswordRouteRoute: typeof ForgotPasswordRouteRoute
   LoginRouteRoute: typeof LoginRouteRoute
@@ -357,6 +392,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/calendar': {
       id: '/calendar'
       path: '/calendar'
@@ -412,6 +454,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof homeIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/account/': {
+      id: '/account/'
+      path: '/'
+      fullPath: '/account/'
+      preLoaderRoute: typeof AccountIndexRouteImport
+      parentRoute: typeof AccountRouteRoute
+    }
+    '/account/password': {
+      id: '/account/password'
+      path: '/password'
+      fullPath: '/account/password'
+      preLoaderRoute: typeof AccountPasswordRouteRouteImport
+      parentRoute: typeof AccountRouteRoute
     }
     '/api/availability': {
       id: '/api/availability'
@@ -535,6 +591,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AccountRouteRouteChildren {
+  AccountPasswordRouteRoute: typeof AccountPasswordRouteRoute
+  AccountIndexRoute: typeof AccountIndexRoute
+}
+
+const AccountRouteRouteChildren: AccountRouteRouteChildren = {
+  AccountPasswordRouteRoute: AccountPasswordRouteRoute,
+  AccountIndexRoute: AccountIndexRoute,
+}
+
+const AccountRouteRouteWithChildren = AccountRouteRoute._addFileChildren(
+  AccountRouteRouteChildren,
+)
+
 interface ApiEventsEventIdRouteRouteChildren {
   ApiEventsEventIdOccurrencesOccurrenceIdRouteRoute: typeof ApiEventsEventIdOccurrencesOccurrenceIdRouteRoute
   ApiEventsEventIdRecurrencesRecurrenceIdRouteRoute: typeof ApiEventsEventIdRecurrencesRecurrenceIdRouteRoute
@@ -575,6 +645,7 @@ const ApiPlacesPlaceIdRouteRouteWithChildren =
   )
 
 const rootRouteChildren: RootRouteChildren = {
+  AccountRouteRoute: AccountRouteRouteWithChildren,
   CalendarRouteRoute: CalendarRouteRoute,
   ForgotPasswordRouteRoute: ForgotPasswordRouteRoute,
   LoginRouteRoute: LoginRouteRoute,

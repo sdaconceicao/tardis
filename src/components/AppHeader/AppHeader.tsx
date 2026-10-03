@@ -1,4 +1,3 @@
-import { Avatar } from "@code-x/lago";
 import { useLocation } from "@tanstack/react-router";
 import {
 	CalendarDays,
@@ -8,6 +7,7 @@ import {
 	UserRound,
 } from "lucide-react";
 import { useSession } from "../../modules/identity/auth-client";
+import { AccountMenu } from "../AccountMenu/AccountMenu";
 import { AppearanceButton } from "../AppearanceButton/AppearanceButton";
 import { AppLink } from "../AppLink/AppLink";
 import actionCss from "../AppLink/AppLink.module.css";
@@ -16,9 +16,6 @@ import css from "./AppHeader.module.css";
 export function AppHeader() {
 	const location = useLocation();
 	const { data: session } = useSession();
-	const accountName = session?.user
-		? session.user.name.trim() || session.user.email
-		: "";
 	const pathname = location.pathname;
 	const isDiscovery = pathname === "/" || pathname === "/calendar";
 	return (
@@ -56,17 +53,7 @@ export function AppHeader() {
 					</AppLink>
 					<AppearanceButton />
 					{session?.user ? (
-						<AppLink
-							to="/my-events"
-							className={css.accountLink}
-							aria-label={`Account: ${accountName}`}
-						>
-							<Avatar
-								src={session.user.image ?? undefined}
-								name={accountName}
-								size="md"
-							/>
-						</AppLink>
+						<AccountMenu user={session.user} />
 					) : (
 						<AppLink
 							to="/login"

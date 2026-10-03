@@ -1,0 +1,79 @@
+.trigger {
+	display: inline-grid;
+	place-items: center;
+	width: 44px;
+	height: 44px;
+	min-width: 44px;
+	padding: 0;
+	border: 1px solid var(--border-color);
+	border-radius: 50%;
+	color: var(--text-color);
+}
+
+.trigger:hover {
+	background: var(--atlas-soft);
+}
+
+:global(.sheet):has(.body) {
+	top: 0;
+	height: 100dvh;
+	padding-block: 0;
+}
+
+.body {
+	display: grid;
+	align-content: start;
+	gap: 24px;
+}
+
+.profile {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding-block: 8px 24px;
+	border-bottom: 1px solid var(--border-color);
+}
+
+.profileText {
+	display: grid;
+	min-width: 0;
+	gap: 2px;
+}
+
+.profileText strong,
+.profileText span {
+	overflow-wrap: anywhere;
+}
+
+.profileText span {
+	color: var(--atlas-muted);
+	font-size: 0.875rem;
+}
+
+.actions {
+	display: grid;
+	gap: 4px;
+}
+
+.action {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 12px;
+	width: 100%;
+	min-height: 44px;
+	padding: 10px 12px;
+	border-radius: 4px;
+	color: var(--text-color);
+	text-decoration: none;
+	font: inherit;
+}
+
+.action:hover {
+	background: var(--atlas-soft);
+}
+
+.action svg {
+	width: 18px;
+	height: 18px;
+}

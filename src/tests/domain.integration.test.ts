@@ -223,6 +223,68 @@ suite("PostGIS domain integration", () => {
 			(await post("sign-in/email", { email, password: newPassword })).status,
 		).toBe(200);
 	});
+	it("persists account name and avatar updates and changes the password", async () => {
+		const email = `${randomUUID()}@example.test`;
+		const oldPassword = "old-account-password-123!";
+		const newPassword = "new-account-password-456!";
+		const image =
+			"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aD1sAAAAASUVORK5CYII=";
+		const auth = createAuth(db, {
+			baseURL: "http://localhost:3000",
+			secret: "tardis-test-secret-at-least-thirty-two-characters",
+		});
+		const post = (path: string, body: object, cookie?: string) =>
+			auth.handler(
+				new Request(`http://localhost:3000/api/auth/${path}`, {
+					method: "POST",
+					headers: {
+						origin: "http://localhost:3000",
+						"content-type": "application/json",
+						...(cookie ? { cookie } : {}),
+					},
+					body: JSON.stringify(body),
+				}),
+			);
+		const signedUp = await post("sign-up/email", {
+			name: "Ada Lovelace",
+			email,
+			password: oldPassword,
+		});
+		expect(signedUp.status).toBe(200);
+		const cookie = signedUp.headers
+			.getSetCookie()
+			.map((part) => part.split(";")[0])
+			.join("; ");
+		expect(cookie).toContain("session_token");
+		expect(
+			(await post("update-user", { name: "Grace Hopper", image }, cookie))
+				.status,
+		).toBe(200);
+		const session = await auth.api.getSession({
+			headers: new Headers({ cookie }),
+		});
+		expect(session?.user.name).toBe("Grace Hopper");
+		expect(session?.user.image).toBe(image);
+		expect(
+			(
+				await post(
+					"change-password",
+					{
+						currentPassword: oldPassword,
+						newPassword,
+						revokeOtherSessions: true,
+					},
+					cookie,
+				)
+			).status,
+		).toBe(200);
+		expect(
+			(await post("sign-in/email", { email, password: oldPassword })).status,
+		).toBe(401);
+		expect(
+			(await post("sign-in/email", { email, password: newPassword })).status,
+		).toBe(200);
+	});
 	it("finds fair days at opening, excludes closing and unknown hours", async () => {
 		const event = await saveEvent(db, actor, eventInput());
 		const occurrence = await saveOccurrence(

@@ -1,0 +1,64 @@
+.profile {
+	display: grid;
+	min-width: 0;
+	gap: 24px;
+}
+
+.section {
+	display: grid;
+	gap: 16px;
+}
+
+.section + .section {
+	padding-top: 24px;
+	border-top: 1px solid var(--border-color);
+}
+
+.section h2 {
+	font-size: 1.35rem;
+}
+
+.section p {
+	color: var(--atlas-muted);
+}
+
+.form {
+	display: grid;
+	justify-items: start;
+	gap: 18px;
+}
+
+.nameField {
+	width: 100%;
+}
+
+.emailRow {
+	display: grid;
+	gap: 4px;
+	width: 100%;
+	padding-top: 14px;
+	border-top: 1px solid var(--border-color);
+}
+
+.emailRow span {
+	color: var(--atlas-muted);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.emailRow strong {
+	font-weight: 500;
+	overflow-wrap: anywhere;
+}
+
+.passwordLink {
+	justify-self: start;
+	color: var(--link-color-pressed);
+	font-weight: 700;
+}
+
+.save {
+	justify-self: start;
+}

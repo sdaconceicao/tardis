@@ -2,7 +2,6 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AppHeader } from "./AppHeader";
-import css from "./AppHeader.module.css";
 
 const { sessionState } = vi.hoisted(() => ({
 	sessionState: {
@@ -14,6 +13,7 @@ const { sessionState } = vi.hoisted(() => ({
 
 vi.mock("@tanstack/react-router", () => ({
 	useLocation: () => ({ pathname: "/calendar", searchStr: "?view=week" }),
+	useNavigate: () => vi.fn(),
 }));
 vi.mock("../../modules/identity/auth-client", () => ({
 	useSession: () => ({ data: sessionState.current }),
@@ -66,9 +66,10 @@ describe("AppHeader account control", () => {
 			},
 		};
 		render(<AppHeader />);
-		const link = screen.getByRole("link", { name: "Account: Ada Lovelace" });
-		expect(link.getAttribute("href")).toBe("/my-events");
-		expect(link.classList.contains(css.accountLink)).toBe(true);
+		const button = screen.getByRole("button", {
+			name: "Open account menu for Ada Lovelace",
+		});
+		expect(button).toBeTruthy();
 		const image = screen.getByRole("img", { name: "Ada Lovelace" });
 		expect(image.tagName).toBe("IMG");
 		expect(image.getAttribute("src")).toBe("https://example.com/ada.png");
@@ -96,7 +97,9 @@ describe("AppHeader account control", () => {
 		};
 		render(<AppHeader />);
 		expect(
-			screen.getByRole("link", { name: "Account: ada.lovelace@example.com" }),
+			screen.getByRole("button", {
+				name: "Open account menu for ada.lovelace@example.com",
+			}),
 		).toBeTruthy();
 		expect(screen.getByText("AL")).toBeTruthy();
 	});
