@@ -1,0 +1,47 @@
+.appShell {
+	min-height: 100svh;
+	display: flex;
+	flex-direction: column;
+}
+
+.appContent {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.skipLink {
+	position: absolute;
+	left: 16px;
+	top: -100px;
+	z-index: 10;
+	padding: 12px 20px;
+	background: var(--background-color);
+}
+
+.skipLink:focus {
+	top: 12px;
+}
+
+.appFooter {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 12px;
+	padding: 16px 32px;
+	border-top: 1px solid var(--atlas-trim);
+	background: var(--atlas-sidebar);
+	font-size: 0.75rem;
+	color: var(--atlas-muted);
+}
+
+.footerDivider {
+	padding-inline: 10px;
+	color: var(--atlas-trim);
+}
+
+@media (max-width: 650px) {
+	.appFooter {
+		padding: 16px 20px;
+	}
+}

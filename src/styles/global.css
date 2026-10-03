@@ -1,0 +1,169 @@
+@layer reset {
+	* {
+		box-sizing: border-box;
+	}
+	body {
+		margin: 0;
+	}
+	h1,
+	h2,
+	h3,
+	p {
+		margin: 0;
+	}
+}
+
+:root {
+	--font-family: "Source Sans 3", system-ui, sans-serif;
+	--font-display: "Josefin Sans", sans-serif;
+	--font-size: 1rem;
+	--font-size-sm: 0.875rem;
+	--tint: #ac3226;
+	--gray: #566866;
+	--background-color: #f7f0df;
+	--text-color: #153b45;
+	--text-color-hover: #153b45;
+	--text-color-placeholder: #566866;
+	--text-color-disabled: #6c7064;
+	--link-color: #153b45;
+	--link-color-pressed: #ac3226;
+	--border-color: #c8b998;
+	--border-color-hover: #9c792b;
+	--border-color-disabled: #c8b998;
+	--field-background: #f7f0df;
+	--field-text-color: #153b45;
+	--overlay-background: #f7f0df;
+	--highlight-background: #ac3226;
+	--highlight-foreground: #fff7e6;
+	--focus-ring-color: #ac3226;
+	--radius: 2px;
+	--radius-sm: 2px;
+	--radius-lg: 2px;
+	--atlas-muted: #566866;
+	--atlas-sidebar: #eee4cd;
+	--atlas-soft: #eae0ca;
+	--atlas-trim: #9c792b;
+	--atlas-nav: #153b45;
+	--atlas-nav-text: #f7f0df;
+	--atlas-map: #c3d3d0;
+	--atlas-map-grid: #9db5b4;
+	--atlas-action-hover: #8e281f;
+}
+
+:root.dark-mode {
+	--tint: #efad81;
+	--background-color: #14262c;
+	--text-color: #efebd9;
+	--text-color-hover: #efebd9;
+	--text-color-placeholder: #b6c5be;
+	--text-color-disabled: #acb8b1;
+	--link-color: #efebd9;
+	--link-color-pressed: #efad81;
+	--border-color: #456069;
+	--border-color-hover: #cab366;
+	--border-color-disabled: #456069;
+	--field-background: #14262c;
+	--field-text-color: #efebd9;
+	--overlay-background: #1a3038;
+	--highlight-background: #efad81;
+	--highlight-foreground: #2c2119;
+	--focus-ring-color: #efad81;
+	--atlas-muted: #b6c5be;
+	--atlas-sidebar: #1a3038;
+	--atlas-soft: #1d343d;
+	--atlas-trim: #cab366;
+	--atlas-nav: #d5c391;
+	--atlas-nav-text: #1b343b;
+	--atlas-map: #1a353e;
+	--atlas-map-grid: #2e4c54;
+	--atlas-action-hover: #f9c49f;
+}
+
+body {
+	background: var(--background-color);
+	color: var(--text-color);
+	font: 1rem / 1.5 var(--font-family);
+}
+
+svg {
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+}
+
+h1,
+h2 {
+	font-family: var(--font-display);
+	font-weight: 500;
+	line-height: 1.2;
+	text-wrap: balance;
+}
+
+h1 {
+	font-size: clamp(1.65rem, 2.5vw, 2.25rem);
+}
+
+h2 {
+	font-size: 1.65rem;
+}
+
+a:focus-visible {
+	outline: 2px solid var(--focus-ring-color);
+	outline-offset: 4px;
+}
+
+.react-aria-Link[data-focus-visible] {
+	outline: 2px solid var(--focus-ring-color);
+	outline-offset: 4px;
+}
+
+.react-aria-Button[data-disabled] {
+	--button-background: var(--atlas-soft);
+	--button-text: var(--text-color-disabled);
+	--button-border: var(--border-color-disabled);
+	--button-gradient-size: 0px;
+	--button-highlight: transparent;
+	--button-shadow: transparent;
+}
+
+@media (forced-colors: active) {
+	:root {
+		--background-color: Canvas;
+		--text-color: CanvasText;
+		--atlas-muted: CanvasText;
+		--atlas-sidebar: Canvas;
+		--atlas-soft: Canvas;
+		--atlas-map: Canvas;
+		--atlas-map-grid: GrayText;
+		--atlas-trim: ButtonBorder;
+		--border-color: ButtonBorder;
+		--atlas-nav: Highlight;
+		--atlas-nav-text: HighlightText;
+		--highlight-background: Highlight;
+		--highlight-foreground: HighlightText;
+		--atlas-action-hover: Highlight;
+		--tint: LinkText;
+		--focus-ring-color: Highlight;
+	}
+}
+
+@media (forced-colors: active) {
+	:root.dark-mode {
+		--background-color: Canvas;
+		--text-color: CanvasText;
+		--atlas-muted: CanvasText;
+		--atlas-sidebar: Canvas;
+		--atlas-soft: Canvas;
+		--atlas-map: Canvas;
+		--atlas-map-grid: GrayText;
+		--atlas-trim: ButtonBorder;
+		--border-color: ButtonBorder;
+		--atlas-nav: Highlight;
+		--atlas-nav-text: HighlightText;
+		--highlight-background: Highlight;
+		--highlight-foreground: HighlightText;
+		--atlas-action-hover: Highlight;
+		--tint: LinkText;
+		--focus-ring-color: Highlight;
+	}
+}

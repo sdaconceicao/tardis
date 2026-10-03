@@ -1,0 +1,52 @@
+.discoveryLayout {
+	min-width: 0;
+}
+
+.discoveryMain {
+	min-width: 0;
+}
+
+.discoveryLayout {
+	display: grid;
+	grid-template-columns: 300px minmax(0, 1fr);
+	flex: 1;
+}
+
+.discoveryMain {
+	display: flex;
+	flex-direction: column;
+}
+
+.discoveryMeta {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 0 30px 24px;
+	font-size: 0.8rem;
+	color: var(--atlas-muted);
+}
+
+@media (max-width: 1000px) {
+	.discoveryLayout {
+		grid-template-columns: 250px minmax(0, 1fr);
+	}
+}
+
+@media (max-width: 650px) {
+	.discoveryLayout {
+		display: flex;
+		flex-direction: column;
+	}
+}
+
+@media (max-width: 650px) {
+	.discoveryMain {
+		order: -1;
+	}
+}
+
+@media (max-width: 650px) {
+	.discoveryMeta {
+		padding-inline: 20px;
+	}
+}

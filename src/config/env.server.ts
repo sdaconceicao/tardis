@@ -16,6 +16,12 @@ const serverEnvSchema = z.object({
 		emptyStringToUndefined,
 		z.string().min(32).optional(),
 	),
+	RESEND_API_KEY: optionalSecret,
+	RESEND_FROM_EMAIL: optionalSecret,
+	GOOGLE_CLIENT_ID: optionalSecret,
+	GOOGLE_CLIENT_SECRET: optionalSecret,
+	FACEBOOK_CLIENT_ID: optionalSecret,
+	FACEBOOK_CLIENT_SECRET: optionalSecret,
 	OPENROUTESERVICE_API_KEY: optionalSecret,
 });
 

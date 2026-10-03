@@ -1,0 +1,9 @@
+---
+description: E2E Testing Standards with Playwright
+globs: **/*.spec.ts,**/*.e2e.ts
+alwaysApply: false
+---
+
+# E2E Testing Standards with Playwright
+
+Read and follow '../../docs/rules/testing-e2e-standards.md'

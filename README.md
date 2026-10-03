@@ -12,13 +12,18 @@ yet.
 ## Local development
 
 ```bash
-cp .env.example .env.local
 pnpm install
+docker compose up -d --wait
+cp .env.example .env.local
+pnpm db:migrate
 pnpm start:dev
 ```
 
-Set `DATABASE_URL` in `.env.local` before using database-backed features. The
-initial shell can run without connecting to the database.
+The Compose service runs PostgreSQL/PostGIS on localhost port 5435. It holds
+separate `tardis` and `tardis_test` databases. The example environment points
+to both; use a pooled Neon `DATABASE_URL` for deployed environments. Set a
+unique `BETTER_AUTH_SECRET` in `.env.local` before using account features. The
+dev app runs at `http://localhost:3006`, matching the example auth URL.
 
 ## Frontend shell
 
@@ -29,12 +34,11 @@ user's light/dark choice.
 
 Navigation is implemented with TanStack Router and Lago links: Map (`/`),
 Calendar (`/calendar?view=week`, `month`, or `agenda`), Saved (`/saved`),
-My events (`/my-events`), About & help (`/about`), and account placeholders
-(`/login`, `/signup`). Add event leads to the signup placeholder.
+My events (`/my-events`), About & help (`/about`), and account pages
+(`/login`, `/signup`). Add event leads to signup.
 
 These are placeholder sections: maps, event data, location/date controls,
-authentication, saving, and event creation are not connected. No credentials
-are collected. The discovery list sits beside the main view on desktop and
+saving, and event creation are not connected. The discovery list sits beside the main view on desktop and
 below it on phones.
 
 Lago reference: [Storybook](https://main--6a4eb38660443c1eee94713d.chromatic.com/).
@@ -47,8 +51,17 @@ Useful checks:
 pnpm check
 pnpm typecheck
 pnpm test
+pnpm test:e2e
 pnpm build
 ```
+
+The Playwright suite starts the local app and runs browser flows in Chromium,
+Firefox, and WebKit. Browser tests mock auth responses. The API project also
+checks real HTTP routes against a disposable PostGIS database when
+`TEST_DATABASE_URL`, `TEST_API_URL`, and `BETTER_AUTH_SECRET` are set. CI provides
+these values and runs both the database integration and API suites without
+Resend or OAuth credentials. Playwright specs live in `test/e2e`; the database
+integration suite lives in `test/integration`.
 
 Database migrations use Drizzle:
 
@@ -60,7 +73,30 @@ Migrations enable PostGIS and `btree_gist`, then create the domain and Better Au
 tables. The migration role must be allowed to create these extensions. Drizzle
 loads `.env.local` and `.env`; application startup never migrates implicitly.
 
-Set `BETTER_AUTH_URL` and `BETTER_AUTH_SECRET` to enable email/password auth.
+Run the integration suite against the separate test database:
+
+```bash
+pnpm test:db
+```
+
+`test:db` reads `TEST_DATABASE_URL` from `.env.local` when it is not already
+set in the shell. Its database name must end in `_test`. `docker compose down`
+stops Postgres and keeps both databases; `docker compose down -v` removes the
+local database volume and all its data.
+
+Set `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `RESEND_API_KEY`, and
+`RESEND_FROM_EMAIL` to enable email/password auth. Signups send a verification
+link through Resend; users must verify before signing in. The signup page can
+resend the link. The login page links to a password reset request form, and
+one-time reset links are sent through Resend. Use a sender address on a domain
+verified in Resend.
+
+For social login, add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, or
+`FACEBOOK_CLIENT_ID` and `FACEBOOK_CLIENT_SECRET`. Register these exact callback
+URLs with the providers: `<BETTER_AUTH_URL>/api/auth/callback/google` and
+`<BETTER_AUTH_URL>/api/auth/callback/facebook`. Each provider is enabled when
+both values are present.
+
 The domain API uses session cookies for writes and private reads. See
 [the endpoint guide](docs/api/domain-endpoints.md) for requests, recurrence,
 availability searches, and local integration tests.

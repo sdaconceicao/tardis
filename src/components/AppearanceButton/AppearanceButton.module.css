@@ -1,0 +1,17 @@
+.appearanceButton {
+	width: 44px;
+	height: 44px;
+	--button-text: var(--text-color);
+}
+
+.themeSun {
+	display: none;
+}
+
+:global(.dark-mode) .themeMoon {
+	display: none;
+}
+
+:global(.dark-mode) .themeSun {
+	display: block;
+}

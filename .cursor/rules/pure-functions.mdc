@@ -1,0 +1,9 @@
+---
+description: Pure Functions Guide
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+
+# Pure Functions
+
+Read and follow '../../docs/rules/pure-functions.md';
