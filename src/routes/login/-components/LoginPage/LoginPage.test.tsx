@@ -119,20 +119,20 @@ describe("LoginPage", () => {
 		);
 	});
 
-	it.each([
-		"Google",
-		"Facebook",
-	])("starts %s login with the requested destination", async (provider) => {
-		const user = userEvent.setup();
-		render(<LoginPage />);
-		await user.click(screen.getByRole("button", { name: provider }));
-		await waitFor(() =>
-			expect(social).toHaveBeenCalledWith({
-				provider: provider.toLowerCase(),
-				callbackURL: "/saved",
-				errorCallbackURL: "/login",
-			}),
-		);
-		await screen.findByRole("alert");
-	});
+	it.each(["Google", "Facebook"])(
+		"starts %s login with the requested destination",
+		async (provider) => {
+			const user = userEvent.setup();
+			render(<LoginPage />);
+			await user.click(screen.getByRole("button", { name: provider }));
+			await waitFor(() =>
+				expect(social).toHaveBeenCalledWith({
+					provider: provider.toLowerCase(),
+					callbackURL: "/saved",
+					errorCallbackURL: "/login",
+				}),
+			);
+			await screen.findByRole("alert");
+		},
+	);
 });
