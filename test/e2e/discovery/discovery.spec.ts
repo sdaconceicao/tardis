@@ -4,6 +4,8 @@ test("keeps discovery navigation and calendar views usable", async ({ page }) =>
 	await page.goto("/");
 	await expect(page.getByRole("heading", { name: "Somewhere worth going" })).toBeVisible();
 	await expect(page.getByRole("complementary", { name: "Events and places" })).toBeVisible();
+	await expect(page.getByRole("region", { name: "Explore map" })).toBeVisible();
+	await expect(page.locator("canvas.maplibregl-canvas")).toBeVisible();
 
 	await page.getByRole("navigation", { name: "Discovery view" }).getByRole("link", { name: "Calendar" }).click();
 	await expect(page.getByRole("heading", { name: "Your week, wide open." })).toBeVisible();

@@ -37,9 +37,17 @@ Calendar (`/calendar?view=week`, `month`, or `agenda`), Saved (`/saved`),
 My events (`/my-events`), About & help (`/about`), and account pages
 (`/login`, `/signup`). Add event leads to signup.
 
-These are placeholder sections: maps, event data, location/date controls,
-saving, and event creation are not connected. The discovery list sits beside the main view on desktop and
-below it on phones.
+The Map page now mounts a MapLibre vector basemap using `VITE_MAP_STYLE_URL`
+(OpenFreeMap Liberty by default). POI markers, event data, location/date
+controls, saving, and event creation are not connected yet. The discovery list
+sits beside the main view on desktop and below it on phones.
+
+Overture POI imports are separate from app startup. Set
+`OVERTURE_SYNC_PROFILE=all` and `OVERTURE_DEPLOYMENT_TARGET=local` for local
+PostGIS, or `neon-free` and `hosted` for the production Neon job. Run
+`pnpm poi:check-config` to validate the target and print the resolved scope
+without showing the database URL. Import and source profiling commands are
+still in development.
 
 Lago reference: [Storybook](https://main--6a4eb38660443c1eee94713d.chromatic.com/).
 

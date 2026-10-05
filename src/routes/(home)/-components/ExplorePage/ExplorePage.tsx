@@ -1,10 +1,10 @@
 import { DiscoveryLayout } from "../../../../components/DiscoveryLayout/DiscoveryLayout";
-import { MapPlaceholder } from "../MapPlaceholder/MapPlaceholder";
+import { MapView } from "../MapView/MapView";
 
 export function ExplorePage() {
 	return (
 		<DiscoveryLayout title="Somewhere worth going">
-			<MapPlaceholder />
+			<MapView />
 		</DiscoveryLayout>
 	);
 }

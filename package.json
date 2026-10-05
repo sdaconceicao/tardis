@@ -27,6 +27,7 @@
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:check": "drizzle-kit check",
+		"poi:check-config": "node --experimental-strip-types src/jobs/check-overture-config.ts",
 		"test:db": "node --env-file-if-exists=.env.local ./node_modules/vitest/vitest.mjs run test/integration/domain.integration.test.ts",
 		"test:e2e": "playwright test"
 	},
