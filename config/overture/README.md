@@ -21,6 +21,10 @@ Caribbean. Europe combines European country polygons except Russia with the
 geographic Europe polygon, which keeps European Russia and Türkiye while
 excluding their Asian portions. The five mapped POI groups are restaurants,
 parks, museums, landmarks, and entertainment.
+The regional source profile counts broad `historic_site` rows, but the importer
+rejects that generic subtype because it frequently labels residences. The
+curation job retires those rows from an existing local catalog and rebuilds
+wide-zoom clusters. Specific landmark taxonomy types remain eligible.
 
 The selected Overture data release is `2026-09-23.1`. The profiler validates
 its STAC file manifest and never reads the PMTiles inspection layer. Category

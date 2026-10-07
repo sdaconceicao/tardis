@@ -64,6 +64,13 @@
       "when": 1791338308474,
       "tag": "0008_catalog_cluster_cells",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1791383897468,
+      "tag": "0009_catalog_discovery_indexes",
+      "breakpoints": true
     }
   ]
 }

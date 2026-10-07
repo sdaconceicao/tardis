@@ -116,7 +116,9 @@ Discovery accepts `west`, `south`, `east`, and `north` as degrees; a west value
 greater than east crosses the antimeridian. `/discovery` accepts `limit` (1–100,
 default 100), a UUID `cursor`, and an optional category. It returns `items`,
 `hasMore`, and `nextCursor`, with source release and `hoursState: "unknown"` on
-each POI. `/discovery/clusters` accepts integer `zoom` (0–22) and the same
+each POI. Items are ordered by distance from the center of the requested map
+bounds, then by ID; a cursor continues that order for the same bounds and
+category. `/discovery/clusters` accepts integer `zoom` (0–22) and the same
 category filter. It returns at most 500 cells and sets `capped` if more exist.
 At zooms 0–5, a completed catalog uses a precomputed fine-cell summary; edge
 cells make those counts approximate, and `approximate` is true. Zoom in for
@@ -126,6 +128,9 @@ during a bootstrap or refresh, and `ready` after a completed import. Results
 can change while the catalog is importing.
 Only active public catalog sources with an open or unspecified operating status
 appear. Unknown hours do not imply that a place is open now.
+The landmarks category excludes generic Overture `historic_site` records because
+many describe ordinary residences; typed landmarks such as monuments, castles,
+forts, and lighthouses remain eligible.
 Tag search returns up to 100 definitions without private assignment counts.
 Event details include rules/templates, tags, location, and default prices.
 Occurrence details include days, location, and edition-specific prices.

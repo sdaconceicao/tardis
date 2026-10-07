@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { Client } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -714,8 +714,8 @@ suite("PostGIS domain integration", () => {
 		);
 	});
 	it("browses catalog POIs with spatial, category, and cursor filters", async () => {
-		const latitude = 36 + Math.random();
-		const longitude = -120 + Math.random();
+		const latitude = 36.25 + Math.random() * 0.01;
+		const longitude = -120.25 + Math.random() * 0.01;
 		const [site] = await db
 			.insert(schema.locations)
 			.values({
@@ -753,6 +753,43 @@ suite("PostGIS domain integration", () => {
 			category: "parks",
 			attribution: "Overture Maps",
 		});
+		const [otherSite] = await db
+			.insert(schema.locations)
+			.values({
+				label: "Second catalog test park",
+				latitude: latitude + 0.0005,
+				longitude: longitude + 0.0005,
+			})
+			.returning();
+		const [otherPlace] = await db
+			.insert(schema.places)
+			.values({
+				name: "Second catalog test park",
+				managementKind: "catalog",
+				visibility: "public",
+				locationId: otherSite.id,
+				timezone: "America/Los_Angeles",
+			})
+			.returning();
+		await db.insert(schema.placeSources).values({
+			placeId: otherPlace.id,
+			appliedRunId: run.id,
+			provider: "overture",
+			externalId: randomUUID(),
+			contentHash: Buffer.alloc(32),
+			category: "parks",
+			attribution: "Overture Maps",
+		});
+		await db.insert(schema.placeSources).values({
+			placeId: otherPlace.id,
+			appliedRunId: run.id,
+			provider: "overture",
+			externalId: randomUUID(),
+			contentHash: Buffer.alloc(32),
+			category: "landmarks",
+			taxonomyPrimary: "historic_site",
+			attribution: "Overture Maps",
+		});
 		try {
 			const bounds = {
 				west: longitude - 0.001,
@@ -778,10 +815,25 @@ suite("PostGIS domain integration", () => {
 				(
 					await listDiscovery(
 						db,
-						discoveryQuerySchema.parse({ ...bounds, cursor: place.id }),
+						discoveryQuerySchema.parse({ ...bounds, category: "landmarks" }),
 					)
 				).items,
 			).toHaveLength(0);
+			const firstPage = await listDiscovery(
+				db,
+				discoveryQuerySchema.parse({ ...bounds, limit: 1 }),
+			);
+			expect(firstPage.items.map((item) => item.id)).toEqual([place.id]);
+			expect(firstPage.nextCursor).toBe(place.id);
+			const secondPage = await listDiscovery(
+				db,
+				discoveryQuerySchema.parse({
+					...bounds,
+					limit: 1,
+					cursor: firstPage.nextCursor,
+				}),
+			);
+			expect(secondPage.items.map((item) => item.id)).toEqual([otherPlace.id]);
 			const grouped = await clusterDiscovery(
 				db,
 				clusterQuerySchema.parse({ ...bounds, zoom: 12 }),
@@ -790,19 +842,19 @@ suite("PostGIS domain integration", () => {
 			expect(grouped.approximate).toBe(false);
 			expect(
 				grouped.clusters.reduce((sum, cluster) => sum + cluster.count, 0),
-			).toBe(1);
+			).toBe(2);
 			await db.insert(schema.placeClusterCells).values({
 				runId: run.id,
 				category: "parks",
 				cellX: Math.floor((longitude + 180) / 0.703125),
 				cellY: Math.floor((latitude + 90) / 0.703125),
-				placeCount: 1,
-				latitudeSum: latitude,
-				longitudeSum: longitude,
+				placeCount: 2,
+				latitudeSum: latitude * 2 + 0.0005,
+				longitudeSum: longitude * 2 + 0.0005,
 				west: longitude,
-				east: longitude,
+				east: longitude + 0.0005,
 				south: latitude,
-				north: latitude,
+				north: latitude + 0.0005,
 			});
 			await db
 				.update(schema.placeImportRuns)
@@ -813,16 +865,20 @@ suite("PostGIS domain integration", () => {
 				clusterQuerySchema.parse({ ...bounds, zoom: 4 }),
 			);
 			expect(cached.approximate).toBe(true);
-			expect(cached.clusters[0]?.count).toBe(1);
+			expect(cached.clusters[0]?.count).toBe(2);
 		} finally {
 			await db
 				.delete(schema.placeClusterCells)
 				.where(eq(schema.placeClusterCells.runId, run.id));
 			await db
 				.delete(schema.placeSources)
-				.where(eq(schema.placeSources.placeId, place.id));
-			await db.delete(schema.places).where(eq(schema.places.id, place.id));
-			await db.delete(schema.locations).where(eq(schema.locations.id, site.id));
+				.where(inArray(schema.placeSources.placeId, [place.id, otherPlace.id]));
+			await db
+				.delete(schema.places)
+				.where(inArray(schema.places.id, [place.id, otherPlace.id]));
+			await db
+				.delete(schema.locations)
+				.where(inArray(schema.locations.id, [site.id, otherSite.id]));
 			await db
 				.delete(schema.placeImportRuns)
 				.where(eq(schema.placeImportRuns.id, run.id));

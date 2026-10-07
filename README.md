@@ -83,7 +83,12 @@ an offline timezone lookup, and checkpoints batches in PostGIS. It stores
 compressed extraction and rejection artifacts under `.data/overture` by
 default. The local `regional-poi` profile selects restaurants, parks, museums,
 landmarks, and entertainment in North America and Europe. Its Natural Earth
-boundaries are checksum pinned. An interrupted run resumes by release
+boundaries are checksum pinned. Generic Overture `historic_site` entries are
+excluded from landmarks because they often describe ordinary residences and
+businesses; specific types such as monuments, castles, forts, and lighthouses
+remain. After upgrading an existing local catalog, run
+`pnpm poi:curate-landmarks` to retire those entries and rebuild map clusters.
+An interrupted run resumes by release
 and selection fingerprint. Measure actual POI storage against the disposable
 test database with `pnpm poi:measure-storage --input <extracted-file>`.
 Production bootstrap checks a matching capacity report and database headroom

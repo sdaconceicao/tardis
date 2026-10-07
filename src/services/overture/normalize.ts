@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { find } from "geo-tz/dist/find-1970";
+import { isLandmarkCandidate } from "./landmark-policy.ts";
 import type { CategoryMapping } from "./taxonomy.ts";
 
 export type ExtractedPlace = {
@@ -84,6 +85,9 @@ export function normalizeOverturePlace(
 			category !== "entertainment")
 	) {
 		return { reject: "outside_category_scope" };
+	}
+	if (!isLandmarkCandidate(category, taxonomyPrimary)) {
+		return { reject: "generic_historic_site" };
 	}
 	const zones = lookup(latitude, longitude);
 	if (zones.length !== 1 || !zones[0] || zones[0].startsWith("Etc/GMT")) {

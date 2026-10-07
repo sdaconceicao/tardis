@@ -1,0 +1,2 @@
+CREATE INDEX "place_sources_active_place_cover_idx" ON "place_sources" USING btree ("place_id","applied_run_id","operating_status","category") WHERE state = 'active';--> statement-breakpoint
+CREATE INDEX "places_catalog_location_cover_idx" ON "places" USING btree ("location_id","id","name") WHERE management_kind = 'catalog' AND visibility = 'public';

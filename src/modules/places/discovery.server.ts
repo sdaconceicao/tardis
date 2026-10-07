@@ -1,6 +1,7 @@
 import { and, desc, eq, gt, gte, inArray, lte, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import type { Connection } from "../../db/client.server";
+import { excludedLandmarkTaxonomy } from "../../services/overture/landmark-policy.ts";
 import {
 	locations,
 	placeClusterCells,
@@ -138,6 +139,14 @@ function spatialBounds(q: Bounds) {
 	);
 }
 
+function boundsCenter(q: Bounds) {
+	const longitude =
+		q.west < q.east
+			? (q.west + q.east) / 2
+			: (((q.west + q.east + 360) / 2 + 180) % 360) - 180;
+	return { latitude: (q.south + q.north) / 2, longitude };
+}
+
 function eligible(categoryFilter?: z.infer<typeof category>) {
 	return sql`EXISTS (
 		SELECT 1 FROM place_sources source
@@ -146,6 +155,7 @@ function eligible(categoryFilter?: z.infer<typeof category>) {
 			AND source.state = 'active'
 			AND run.profile IN ('regional-poi', 'neon-free')
 			AND (source.operating_status IS NULL OR source.operating_status = 'open')
+			AND (source.category <> 'landmarks' OR (source.taxonomy_primary IS NOT NULL AND source.taxonomy_primary <> ${excludedLandmarkTaxonomy}))
 			AND ${categoryFilter ? sql`source.category = ${categoryFilter}` : sql`TRUE`}
 	)`;
 }
@@ -161,6 +171,27 @@ export async function listDiscovery(
 			nextCursor: null,
 			catalogStatus: "empty" as const,
 		};
+	}
+	const center = boundsCenter(q);
+	const centerPoint = sql`ST_SetSRID(ST_MakePoint(${center.longitude}, ${center.latitude}),4326)::geography`;
+	const distance = sql<number>`${locations.point} <-> ${centerPoint}`;
+	let cursorDistance: number | undefined;
+	if (q.cursor) {
+		const [cursor] = await db
+			.select({ distance })
+			.from(places)
+			.innerJoin(locations, eq(places.locationId, locations.id))
+			.where(eq(places.id, q.cursor))
+			.limit(1);
+		if (!cursor) {
+			return {
+				items: [],
+				hasMore: false,
+				nextCursor: null,
+				catalogStatus: await catalogStatus(db),
+			};
+		}
+		cursorDistance = cursor.distance;
 	}
 	const rows = await db
 		.select({
@@ -184,10 +215,15 @@ export async function listDiscovery(
 				eq(places.visibility, "public"),
 				eligible(q.category),
 				spatialBounds(q),
-				q.cursor ? gt(places.id, q.cursor) : undefined,
+				q.cursor !== undefined && cursorDistance !== undefined
+					? or(
+							gt(distance, cursorDistance),
+							and(eq(distance, cursorDistance), gt(places.id, q.cursor)),
+						)
+					: undefined,
 			),
 		)
-		.orderBy(places.id)
+		.orderBy(distance, places.id)
 		.limit(q.limit + 1);
 	const hasMore = rows.length > q.limit;
 	const items = rows.slice(0, q.limit).map((row) => ({

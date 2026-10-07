@@ -1,4 +1,5 @@
 import type { Client } from "pg";
+import { excludedLandmarkTaxonomy } from "../../services/overture/landmark-policy.ts";
 import type { CatalogPlace } from "../../services/overture/normalize.ts";
 
 export type BatchCounts = {
@@ -202,11 +203,12 @@ export async function rebuildCatalogClusters(
 			WHERE source.applied_run_id=$1
 				AND source.state='active'
 				AND source.category IS NOT NULL
+				AND (source.category <> 'landmarks' OR (source.taxonomy_primary IS NOT NULL AND source.taxonomy_primary <> $2))
 				AND (source.operating_status IS NULL OR source.operating_status='open')
 				AND place.management_kind='catalog'
 				AND place.visibility='public'
 			GROUP BY 1, 2, 3, 4`,
-			[runId],
+			[runId, excludedLandmarkTaxonomy],
 		);
 		await client.query("COMMIT");
 	} catch (error) {

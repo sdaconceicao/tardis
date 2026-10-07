@@ -80,6 +80,9 @@ export const places = pgTable(
 		index("places_owner_idx").on(t.ownerId),
 		index("places_location_idx").on(t.locationId),
 		index("places_visibility_idx").on(t.visibility),
+		index("places_catalog_location_cover_idx")
+			.on(t.locationId, t.id, t.name)
+			.where(sql`management_kind = 'catalog' AND visibility = 'public'`),
 	],
 );
 export const placeImportRuns = pgTable(
@@ -126,6 +129,9 @@ export const placeSources = pgTable(
 		unique("place_sources_identity_unique").on(t.provider, t.externalId),
 		index("place_sources_place_idx").on(t.placeId),
 		index("place_sources_state_category_idx").on(t.state, t.category),
+		index("place_sources_active_place_cover_idx")
+			.on(t.placeId, t.appliedRunId, t.operatingStatus, t.category)
+			.where(sql`state = 'active'`),
 	],
 );
 export const placeClusterCells = pgTable(

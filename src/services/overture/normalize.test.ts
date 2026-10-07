@@ -55,6 +55,27 @@ describe("normalizeOverturePlace", () => {
 		).toBe("restaurants");
 	});
 
+	it("rejects generic historic sites while keeping specific landmarks", () => {
+		expect(
+			normalizeOverturePlace(
+				{
+					...museum,
+					name: "Ordinary Apartments",
+					taxonomyPrimary: "historic_site",
+				},
+				"regional-poi",
+				mapping,
+			).reject,
+		).toBe("generic_historic_site");
+		expect(
+			normalizeOverturePlace(
+				{ ...museum, name: "Statue of Liberty", taxonomyPrimary: "monument" },
+				"regional-poi",
+				mapping,
+			).value?.category,
+		).toBe("landmarks");
+	});
+
 	it("removes PostgreSQL-incompatible characters from source text", () => {
 		const result = normalizeOverturePlace(
 			{
