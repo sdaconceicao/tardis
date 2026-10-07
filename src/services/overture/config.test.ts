@@ -3,7 +3,7 @@ import { resolveOvertureSyncConfig } from "./config";
 
 const local = {
 	DATABASE_URL: "postgresql://tardis:local@127.0.0.1:5435/tardis",
-	OVERTURE_SYNC_PROFILE: "all",
+	OVERTURE_SYNC_PROFILE: "regional-poi",
 	OVERTURE_DEPLOYMENT_TARGET: "local",
 };
 const hosted = {
@@ -14,20 +14,16 @@ const hosted = {
 };
 
 describe("resolveOvertureSyncConfig", () => {
-	it("selects the unrestricted local scope regardless of NODE_ENV", () => {
+	it("selects North America and Europe POIs locally regardless of NODE_ENV", () => {
 		const config = resolveOvertureSyncConfig({
 			...local,
 			NODE_ENV: "production",
 		});
 		expect(config.scope.countries).toBe("all");
-		expect(config.scope.categoryGroups).toBe("all");
-		expect(config.limits.placesStorageBytes).toBeNull();
-		expect(config.selectionFingerprint).toMatch(/^[0-9a-f]{64}$/);
-	});
-
-	it("selects the bounded US scope for a hosted database", () => {
-		const config = resolveOvertureSyncConfig(hosted);
-		expect(config.scope.countries).toEqual(["US"]);
+		expect(config.scope.regions).toEqual(["North America", "Europe"]);
+		expect(config.scope.boundarySet).toBe(
+			"natural-earth-north-america-europe-50m-v1",
+		);
 		expect(config.scope.categoryGroups).toEqual([
 			"restaurants",
 			"parks",
@@ -35,6 +31,15 @@ describe("resolveOvertureSyncConfig", () => {
 			"landmarks",
 			"entertainment",
 		]);
+		expect(config.limits.placesStorageBytes).toBeNull();
+		expect(config.selectionFingerprint).toMatch(/^[0-9a-f]{64}$/);
+	});
+
+	it("selects the bounded US scope for a hosted database", () => {
+		const config = resolveOvertureSyncConfig(hosted);
+		expect(config.scope.countries).toEqual(["US"]);
+		expect(config.scope.regions).toBeNull();
+		expect(config.scope.categoryGroups).toEqual(["museums", "entertainment"]);
 		expect(config.limits).toEqual({
 			placesStorageBytes: 150_000_000,
 			databaseStorageBytes: 350_000_000,
@@ -64,8 +69,11 @@ describe("resolveOvertureSyncConfig", () => {
 			}),
 		).toThrow(/loopback/);
 		expect(() =>
-			resolveOvertureSyncConfig({ ...hosted, OVERTURE_SYNC_PROFILE: "all" }),
-		).toThrow(/all profile/);
+			resolveOvertureSyncConfig({
+				...hosted,
+				OVERTURE_SYNC_PROFILE: "regional-poi",
+			}),
+		).toThrow(/regional-poi profile/);
 	});
 
 	it("refuses a hosted profile against local PostGIS", () => {

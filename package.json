@@ -28,6 +28,9 @@
 		"db:migrate": "drizzle-kit migrate",
 		"db:check": "drizzle-kit check",
 		"poi:check-config": "node --experimental-strip-types src/jobs/check-overture-config.ts",
+		"poi:profile": "node --experimental-strip-types src/jobs/profile-overture-places.ts",
+		"poi:sync": "node --experimental-strip-types src/jobs/sync-overture-places.ts",
+		"poi:measure-storage": "node --experimental-strip-types src/jobs/measure-overture-storage.ts",
 		"test:db": "node --env-file-if-exists=.env.local ./node_modules/vitest/vitest.mjs run test/integration/domain.integration.test.ts",
 		"test:e2e": "playwright test"
 	},
@@ -40,6 +43,7 @@
 		"better-auth": "^1.7.6",
 		"clsx": "^2.1.1",
 		"drizzle-orm": "^0.45.3",
+		"geo-tz": "8.1.9",
 		"lucide-react": "^1.49.0",
 		"maplibre-gl": "^6.11.2",
 		"nitro": "3.0.260610-beta",

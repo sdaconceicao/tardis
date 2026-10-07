@@ -6,8 +6,11 @@ import {
 	doublePrecision,
 	index,
 	integer,
+	jsonb,
+	pgEnum,
 	pgTable,
 	text,
+	timestamp,
 	unique,
 	uuid,
 } from "drizzle-orm/pg-core";
@@ -18,6 +21,21 @@ import { user } from "../identity/schema";
 const geography = customType<{ data: string }>({
 	dataType: () => "geography(Point,4326)",
 });
+const bytea = customType<{ data: Buffer }>({ dataType: () => "bytea" });
+export const placeManagementKind = pgEnum("place_management_kind", [
+	"user",
+	"catalog",
+]);
+export const placeSourceState = pgEnum("place_source_state", [
+	"active",
+	"out_of_scope",
+	"removed",
+]);
+export const placeImportState = pgEnum("place_import_state", [
+	"running",
+	"completed",
+	"failed",
+]);
 export const locations = pgTable(
 	"locations",
 	{
@@ -42,9 +60,10 @@ export const places = pgTable(
 	"places",
 	{
 		...entityColumns(),
-		ownerId: text("owner_id")
+		ownerId: text("owner_id").references(() => user.id),
+		managementKind: placeManagementKind("management_kind")
 			.notNull()
-			.references(() => user.id),
+			.default("user"),
 		name: text("name").notNull(),
 		description: text("description"),
 		visibility: visibility("visibility").notNull().default("private"),
@@ -54,9 +73,105 @@ export const places = pgTable(
 		timezone: text("timezone").notNull(),
 	},
 	(t) => [
+		check(
+			"places_management_check",
+			sql`(${t.managementKind} = 'user' AND ${t.ownerId} IS NOT NULL) OR (${t.managementKind} = 'catalog' AND ${t.ownerId} IS NULL AND ${t.visibility} = 'public')`,
+		),
 		index("places_owner_idx").on(t.ownerId),
 		index("places_location_idx").on(t.locationId),
 		index("places_visibility_idx").on(t.visibility),
+	],
+);
+export const placeImportRuns = pgTable(
+	"place_import_runs",
+	{
+		...entityColumns(),
+		release: text("release").notNull(),
+		profile: text("profile").notNull(),
+		selectionFingerprint: text("selection_fingerprint").notNull(),
+		resolvedConfig: jsonb("resolved_config").notNull(),
+		manifestUrl: text("manifest_url").notNull(),
+		state: placeImportState("state").notNull().default("running"),
+		completedAt: timestamp("completed_at", { withTimezone: true }),
+		report: jsonb("report"),
+	},
+	(t) => [
+		unique("place_import_runs_selection_unique").on(
+			t.release,
+			t.selectionFingerprint,
+		),
+	],
+);
+export const placeSources = pgTable(
+	"place_sources",
+	{
+		...entityColumns(),
+		placeId: uuid("place_id")
+			.notNull()
+			.references(() => places.id),
+		appliedRunId: uuid("applied_run_id")
+			.notNull()
+			.references(() => placeImportRuns.id),
+		provider: text("provider").notNull(),
+		externalId: text("external_id").notNull(),
+		contentHash: bytea("content_hash").notNull(),
+		state: placeSourceState("state").notNull().default("active"),
+		category: text("category"),
+		taxonomyPrimary: text("taxonomy_primary"),
+		operatingStatus: text("operating_status"),
+		confidence: doublePrecision("confidence"),
+		attribution: text("attribution").notNull(),
+	},
+	(t) => [
+		unique("place_sources_identity_unique").on(t.provider, t.externalId),
+		index("place_sources_place_idx").on(t.placeId),
+		index("place_sources_state_category_idx").on(t.state, t.category),
+	],
+);
+export const placeClusterCells = pgTable(
+	"place_cluster_cells",
+	{
+		runId: uuid("run_id")
+			.notNull()
+			.references(() => placeImportRuns.id),
+		category: text("category").notNull(),
+		cellX: integer("cell_x").notNull(),
+		cellY: integer("cell_y").notNull(),
+		placeCount: integer("place_count").notNull(),
+		latitudeSum: doublePrecision("latitude_sum").notNull(),
+		longitudeSum: doublePrecision("longitude_sum").notNull(),
+		west: doublePrecision("west").notNull(),
+		east: doublePrecision("east").notNull(),
+		south: doublePrecision("south").notNull(),
+		north: doublePrecision("north").notNull(),
+	},
+	(t) => [
+		unique("place_cluster_cells_key_unique").on(
+			t.runId,
+			t.category,
+			t.cellX,
+			t.cellY,
+		),
+	],
+);
+export const placeImportBatches = pgTable(
+	"place_import_batches",
+	{
+		...entityColumns(),
+		runId: uuid("run_id")
+			.notNull()
+			.references(() => placeImportRuns.id),
+		partition: text("partition").notNull(),
+		batchNumber: integer("batch_number").notNull(),
+		state: placeImportState("state").notNull().default("running"),
+		counts: jsonb("counts"),
+	},
+	(t) => [
+		unique("place_import_batches_key_unique").on(
+			t.runId,
+			t.partition,
+			t.batchNumber,
+		),
 	],
 );
 export const placeHoursSchedules = pgTable(

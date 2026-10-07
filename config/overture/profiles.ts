@@ -1,11 +1,18 @@
 export const overtureProfiles = {
-	all: {
-		version: "2026-09-23.0",
+	"regional-poi": {
+		version: "2026-09-23.1-v1",
 		scope: {
 			countries: "all",
-			boundarySet: null,
-			categoryGroups: "all",
-			exclusionSet: null,
+			regions: ["North America", "Europe"],
+			boundarySet: "natural-earth-north-america-europe-50m-v1",
+			categoryGroups: [
+				"restaurants",
+				"parks",
+				"museums",
+				"landmarks",
+				"entertainment",
+			],
+			exclusionSet: "places-of-interest-exclusions-v1",
 		},
 		limits: {
 			placesStorageBytes: null,
@@ -15,17 +22,12 @@ export const overtureProfiles = {
 		concurrency: 1,
 	},
 	"neon-free": {
-		version: "2026-09-23.0",
+		version: "2026-09-23.1-v2",
 		scope: {
 			countries: ["US"],
+			regions: null,
 			boundarySet: "us-50-states-dc-v1",
-			categoryGroups: [
-				"restaurants",
-				"parks",
-				"museums",
-				"landmarks",
-				"entertainment",
-			],
+			categoryGroups: ["museums", "entertainment"],
 			exclusionSet: "places-of-interest-exclusions-v1",
 		},
 		limits: {

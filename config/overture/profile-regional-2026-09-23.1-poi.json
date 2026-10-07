@@ -1,0 +1,104 @@
+{
+  "release": "2026-09-23.1",
+  "collectionUrl": "https://stac.overturemaps.org/2026-09-23.1/places/place/collection.json",
+  "scope": "regional-poi",
+  "selectionVersion": "2026-09-23.1-v1",
+  "taxonomySha256": "59eecbf9e24859bcdab459e8efeea673b7fcbab06b45bd1c7067f215b3bc25d4",
+  "manifest": {
+    "sha256": "cb86db2579762ec0bff7bb0823e640ca1c64670220c11e86c865ee13d70d5ea9",
+    "files": 16,
+    "rows": 81455423,
+    "compressedBytes": 10996226026
+  },
+  "scanned": {
+    "files": 16,
+    "manifestRows": 81455423,
+    "compressedBytes": 10996226026
+  },
+  "complete": true,
+  "boundarySha256": [
+    "5fed433373581fa648920435f937d95f2d3c0200e067409c6478dcdf1b853139",
+    "a6e7ac257f6f0847ed80e6dc6e776441456652c093cfe90c7bf26dc8069f0d03"
+  ],
+  "elapsedSeconds": 3260.6,
+  "accepted": 4351499,
+  "rejected": 0,
+  "storageScenarios": {
+    "bytesAt400PerPlace": 1740599600,
+    "bytesAt800PerPlace": 3481199200,
+    "placesBudgetBytes": null,
+    "measuredInPostgres": false
+  },
+  "counts": [
+    {
+      "region": "Europe",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 236680,
+      "idNameBytes": 13813573
+    },
+    {
+      "region": "Europe",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 256429,
+      "idNameBytes": 14531632
+    },
+    {
+      "region": "Europe",
+      "category": "museums",
+      "status": "accepted",
+      "count": 59531,
+      "idNameBytes": 3837427
+    },
+    {
+      "region": "Europe",
+      "category": "parks",
+      "status": "accepted",
+      "count": 171918,
+      "idNameBytes": 9907456
+    },
+    {
+      "region": "Europe",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 1430698,
+      "idNameBytes": 77633549
+    },
+    {
+      "region": "North America",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 157977,
+      "idNameBytes": 9173966
+    },
+    {
+      "region": "North America",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 247040,
+      "idNameBytes": 14479109
+    },
+    {
+      "region": "North America",
+      "category": "museums",
+      "status": "accepted",
+      "count": 36713,
+      "idNameBytes": 2326585
+    },
+    {
+      "region": "North America",
+      "category": "parks",
+      "status": "accepted",
+      "count": 241616,
+      "idNameBytes": 13787251
+    },
+    {
+      "region": "North America",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 1512897,
+      "idNameBytes": 81271766
+    }
+  ]
+}

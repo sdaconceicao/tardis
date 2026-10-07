@@ -1,0 +1,1815 @@
+{
+  "release": "2026-09-23.1",
+  "collectionUrl": "https://stac.overturemaps.org/2026-09-23.1/places/place/collection.json",
+  "scope": "neon-free",
+  "selectionVersion": "2026-09-23.1-v1",
+  "taxonomySha256": "59eecbf9e24859bcdab459e8efeea673b7fcbab06b45bd1c7067f215b3bc25d4",
+  "manifest": {
+    "files": 16,
+    "rows": 81455423,
+    "compressedBytes": 10996226026
+  },
+  "scanned": {
+    "files": 16,
+    "manifestRows": 81455423,
+    "compressedBytes": 10996226026
+  },
+  "complete": true,
+  "boundarySha256": "9cbfe171dad1555e11770c981d8f4db9e687a65c86f5bdae684eeb487e2e9b80",
+  "elapsedSeconds": 1776.2,
+  "accepted": 1549433,
+  "rejected": 0,
+  "storageScenarios": {
+    "bytesAt400PerPlace": 619773200,
+    "bytesAt800PerPlace": 1239546400,
+    "placesBudgetBytes": 150000000,
+    "measuredInPostgres": false
+  },
+  "counts": [
+    {
+      "region": "AK",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 247,
+      "idNameBytes": 14245
+    },
+    {
+      "region": "AK",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 599,
+      "idNameBytes": 34469
+    },
+    {
+      "region": "AK",
+      "category": "museums",
+      "status": "accepted",
+      "count": 150,
+      "idNameBytes": 9226
+    },
+    {
+      "region": "AK",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1035,
+      "idNameBytes": 61200
+    },
+    {
+      "region": "AK",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 1975,
+      "idNameBytes": 105171
+    },
+    {
+      "region": "AL",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1924,
+      "idNameBytes": 112865
+    },
+    {
+      "region": "AL",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 3109,
+      "idNameBytes": 180616
+    },
+    {
+      "region": "AL",
+      "category": "museums",
+      "status": "accepted",
+      "count": 412,
+      "idNameBytes": 25818
+    },
+    {
+      "region": "AL",
+      "category": "parks",
+      "status": "accepted",
+      "count": 2417,
+      "idNameBytes": 136989
+    },
+    {
+      "region": "AL",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 14268,
+      "idNameBytes": 754586
+    },
+    {
+      "region": "AR",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1168,
+      "idNameBytes": 68525
+    },
+    {
+      "region": "AR",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 2310,
+      "idNameBytes": 139688
+    },
+    {
+      "region": "AR",
+      "category": "museums",
+      "status": "accepted",
+      "count": 316,
+      "idNameBytes": 19773
+    },
+    {
+      "region": "AR",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1674,
+      "idNameBytes": 96386
+    },
+    {
+      "region": "AR",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 9084,
+      "idNameBytes": 483285
+    },
+    {
+      "region": "AZ",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1996,
+      "idNameBytes": 117306
+    },
+    {
+      "region": "AZ",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 4059,
+      "idNameBytes": 232070
+    },
+    {
+      "region": "AZ",
+      "category": "museums",
+      "status": "accepted",
+      "count": 467,
+      "idNameBytes": 29342
+    },
+    {
+      "region": "AZ",
+      "category": "parks",
+      "status": "accepted",
+      "count": 4371,
+      "idNameBytes": 253735
+    },
+    {
+      "region": "AZ",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 19641,
+      "idNameBytes": 1052923
+    },
+    {
+      "region": "CA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 13681,
+      "idNameBytes": 792829
+    },
+    {
+      "region": "CA",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 17738,
+      "idNameBytes": 1011721
+    },
+    {
+      "region": "CA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 2658,
+      "idNameBytes": 166702
+    },
+    {
+      "region": "CA",
+      "category": "parks",
+      "status": "accepted",
+      "count": 22686,
+      "idNameBytes": 1288426
+    },
+    {
+      "region": "CA",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 121976,
+      "idNameBytes": 6516305
+    },
+    {
+      "region": "CO",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2384,
+      "idNameBytes": 138481
+    },
+    {
+      "region": "CO",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 3615,
+      "idNameBytes": 206984
+    },
+    {
+      "region": "CO",
+      "category": "museums",
+      "status": "accepted",
+      "count": 631,
+      "idNameBytes": 39607
+    },
+    {
+      "region": "CO",
+      "category": "parks",
+      "status": "accepted",
+      "count": 5462,
+      "idNameBytes": 309921
+    },
+    {
+      "region": "CO",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 18371,
+      "idNameBytes": 984678
+    },
+    {
+      "region": "CT",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1271,
+      "idNameBytes": 73943
+    },
+    {
+      "region": "CT",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 1956,
+      "idNameBytes": 115071
+    },
+    {
+      "region": "CT",
+      "category": "museums",
+      "status": "accepted",
+      "count": 510,
+      "idNameBytes": 32276
+    },
+    {
+      "region": "CT",
+      "category": "parks",
+      "status": "accepted",
+      "count": 2444,
+      "idNameBytes": 137622
+    },
+    {
+      "region": "CT",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 11118,
+      "idNameBytes": 602348
+    },
+    {
+      "region": "DC",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 456,
+      "idNameBytes": 26272
+    },
+    {
+      "region": "DC",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 1241,
+      "idNameBytes": 70277
+    },
+    {
+      "region": "DC",
+      "category": "museums",
+      "status": "accepted",
+      "count": 224,
+      "idNameBytes": 14808
+    },
+    {
+      "region": "DC",
+      "category": "parks",
+      "status": "accepted",
+      "count": 437,
+      "idNameBytes": 25120
+    },
+    {
+      "region": "DC",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 3922,
+      "idNameBytes": 204696
+    },
+    {
+      "region": "DE",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 292,
+      "idNameBytes": 17168
+    },
+    {
+      "region": "DE",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 689,
+      "idNameBytes": 40409
+    },
+    {
+      "region": "DE",
+      "category": "museums",
+      "status": "accepted",
+      "count": 110,
+      "idNameBytes": 6900
+    },
+    {
+      "region": "DE",
+      "category": "parks",
+      "status": "accepted",
+      "count": 540,
+      "idNameBytes": 30760
+    },
+    {
+      "region": "DE",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 3068,
+      "idNameBytes": 165608
+    },
+    {
+      "region": "FL",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 7900,
+      "idNameBytes": 463645
+    },
+    {
+      "region": "FL",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 13669,
+      "idNameBytes": 794264
+    },
+    {
+      "region": "FL",
+      "category": "museums",
+      "status": "accepted",
+      "count": 1351,
+      "idNameBytes": 85786
+    },
+    {
+      "region": "FL",
+      "category": "parks",
+      "status": "accepted",
+      "count": 13081,
+      "idNameBytes": 767668
+    },
+    {
+      "region": "FL",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 73270,
+      "idNameBytes": 3974017
+    },
+    {
+      "region": "GA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 4047,
+      "idNameBytes": 235319
+    },
+    {
+      "region": "GA",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 5593,
+      "idNameBytes": 323031
+    },
+    {
+      "region": "GA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 682,
+      "idNameBytes": 43135
+    },
+    {
+      "region": "GA",
+      "category": "parks",
+      "status": "accepted",
+      "count": 4695,
+      "idNameBytes": 270785
+    },
+    {
+      "region": "GA",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 35104,
+      "idNameBytes": 1878236
+    },
+    {
+      "region": "HI",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 597,
+      "idNameBytes": 34501
+    },
+    {
+      "region": "HI",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 1189,
+      "idNameBytes": 65984
+    },
+    {
+      "region": "HI",
+      "category": "museums",
+      "status": "accepted",
+      "count": 158,
+      "idNameBytes": 9927
+    },
+    {
+      "region": "HI",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1822,
+      "idNameBytes": 105122
+    },
+    {
+      "region": "HI",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 5600,
+      "idNameBytes": 300585
+    },
+    {
+      "region": "IA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1510,
+      "idNameBytes": 87939
+    },
+    {
+      "region": "IA",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 2090,
+      "idNameBytes": 124936
+    },
+    {
+      "region": "IA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 556,
+      "idNameBytes": 35163
+    },
+    {
+      "region": "IA",
+      "category": "parks",
+      "status": "accepted",
+      "count": 3083,
+      "idNameBytes": 170979
+    },
+    {
+      "region": "IA",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 8899,
+      "idNameBytes": 469054
+    },
+    {
+      "region": "ID",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 692,
+      "idNameBytes": 40294
+    },
+    {
+      "region": "ID",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 1089,
+      "idNameBytes": 62888
+    },
+    {
+      "region": "ID",
+      "category": "museums",
+      "status": "accepted",
+      "count": 191,
+      "idNameBytes": 12184
+    },
+    {
+      "region": "ID",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1288,
+      "idNameBytes": 72068
+    },
+    {
+      "region": "ID",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 4835,
+      "idNameBytes": 259254
+    },
+    {
+      "region": "IL",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 4646,
+      "idNameBytes": 269118
+    },
+    {
+      "region": "IL",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 4992,
+      "idNameBytes": 291888
+    },
+    {
+      "region": "IL",
+      "category": "museums",
+      "status": "accepted",
+      "count": 1218,
+      "idNameBytes": 77355
+    },
+    {
+      "region": "IL",
+      "category": "parks",
+      "status": "accepted",
+      "count": 9101,
+      "idNameBytes": 505579
+    },
+    {
+      "region": "IL",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 39209,
+      "idNameBytes": 2089422
+    },
+    {
+      "region": "IN",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2641,
+      "idNameBytes": 154429
+    },
+    {
+      "region": "IN",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 3624,
+      "idNameBytes": 213651
+    },
+    {
+      "region": "IN",
+      "category": "museums",
+      "status": "accepted",
+      "count": 600,
+      "idNameBytes": 38486
+    },
+    {
+      "region": "IN",
+      "category": "parks",
+      "status": "accepted",
+      "count": 3680,
+      "idNameBytes": 208338
+    },
+    {
+      "region": "IN",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 18036,
+      "idNameBytes": 958119
+    },
+    {
+      "region": "KS",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1274,
+      "idNameBytes": 74369
+    },
+    {
+      "region": "KS",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 1682,
+      "idNameBytes": 100644
+    },
+    {
+      "region": "KS",
+      "category": "museums",
+      "status": "accepted",
+      "count": 494,
+      "idNameBytes": 31677
+    },
+    {
+      "region": "KS",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1846,
+      "idNameBytes": 103330
+    },
+    {
+      "region": "KS",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 8316,
+      "idNameBytes": 440476
+    },
+    {
+      "region": "KY",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1729,
+      "idNameBytes": 100925
+    },
+    {
+      "region": "KY",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 2404,
+      "idNameBytes": 140138
+    },
+    {
+      "region": "KY",
+      "category": "museums",
+      "status": "accepted",
+      "count": 383,
+      "idNameBytes": 24565
+    },
+    {
+      "region": "KY",
+      "category": "parks",
+      "status": "accepted",
+      "count": 2158,
+      "idNameBytes": 123373
+    },
+    {
+      "region": "KY",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 12230,
+      "idNameBytes": 649474
+    },
+    {
+      "region": "LA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1801,
+      "idNameBytes": 105173
+    },
+    {
+      "region": "LA",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 2502,
+      "idNameBytes": 145706
+    },
+    {
+      "region": "LA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 395,
+      "idNameBytes": 24844
+    },
+    {
+      "region": "LA",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1825,
+      "idNameBytes": 103968
+    },
+    {
+      "region": "LA",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 14185,
+      "idNameBytes": 761003
+    },
+    {
+      "region": "MA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2585,
+      "idNameBytes": 151026
+    },
+    {
+      "region": "MA",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 5173,
+      "idNameBytes": 299692
+    },
+    {
+      "region": "MA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 944,
+      "idNameBytes": 58535
+    },
+    {
+      "region": "MA",
+      "category": "parks",
+      "status": "accepted",
+      "count": 4948,
+      "idNameBytes": 277439
+    },
+    {
+      "region": "MA",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 20012,
+      "idNameBytes": 1073949
+    },
+    {
+      "region": "MD",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1829,
+      "idNameBytes": 107381
+    },
+    {
+      "region": "MD",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 3692,
+      "idNameBytes": 214758
+    },
+    {
+      "region": "MD",
+      "category": "museums",
+      "status": "accepted",
+      "count": 539,
+      "idNameBytes": 34718
+    },
+    {
+      "region": "MD",
+      "category": "parks",
+      "status": "accepted",
+      "count": 3396,
+      "idNameBytes": 197321
+    },
+    {
+      "region": "MD",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 16522,
+      "idNameBytes": 883463
+    },
+    {
+      "region": "ME",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 663,
+      "idNameBytes": 38262
+    },
+    {
+      "region": "ME",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 1299,
+      "idNameBytes": 74520
+    },
+    {
+      "region": "ME",
+      "category": "museums",
+      "status": "accepted",
+      "count": 394,
+      "idNameBytes": 24951
+    },
+    {
+      "region": "ME",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1429,
+      "idNameBytes": 82283
+    },
+    {
+      "region": "ME",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 4207,
+      "idNameBytes": 225644
+    },
+    {
+      "region": "MI",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 3585,
+      "idNameBytes": 209240
+    },
+    {
+      "region": "MI",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 5156,
+      "idNameBytes": 300217
+    },
+    {
+      "region": "MI",
+      "category": "museums",
+      "status": "accepted",
+      "count": 1005,
+      "idNameBytes": 64663
+    },
+    {
+      "region": "MI",
+      "category": "parks",
+      "status": "accepted",
+      "count": 6579,
+      "idNameBytes": 369194
+    },
+    {
+      "region": "MI",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 25178,
+      "idNameBytes": 1341178
+    },
+    {
+      "region": "MN",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2266,
+      "idNameBytes": 131366
+    },
+    {
+      "region": "MN",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 3581,
+      "idNameBytes": 205825
+    },
+    {
+      "region": "MN",
+      "category": "museums",
+      "status": "accepted",
+      "count": 585,
+      "idNameBytes": 37551
+    },
+    {
+      "region": "MN",
+      "category": "parks",
+      "status": "accepted",
+      "count": 5517,
+      "idNameBytes": 305152
+    },
+    {
+      "region": "MN",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 13051,
+      "idNameBytes": 696331
+    },
+    {
+      "region": "MO",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2809,
+      "idNameBytes": 163273
+    },
+    {
+      "region": "MO",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 3281,
+      "idNameBytes": 191548
+    },
+    {
+      "region": "MO",
+      "category": "museums",
+      "status": "accepted",
+      "count": 670,
+      "idNameBytes": 43129
+    },
+    {
+      "region": "MO",
+      "category": "parks",
+      "status": "accepted",
+      "count": 3673,
+      "idNameBytes": 209653
+    },
+    {
+      "region": "MO",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 17422,
+      "idNameBytes": 923456
+    },
+    {
+      "region": "MS",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1059,
+      "idNameBytes": 62009
+    },
+    {
+      "region": "MS",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 1659,
+      "idNameBytes": 95998
+    },
+    {
+      "region": "MS",
+      "category": "museums",
+      "status": "accepted",
+      "count": 277,
+      "idNameBytes": 17877
+    },
+    {
+      "region": "MS",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1127,
+      "idNameBytes": 65096
+    },
+    {
+      "region": "MS",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 8769,
+      "idNameBytes": 466405
+    },
+    {
+      "region": "MT",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 566,
+      "idNameBytes": 32686
+    },
+    {
+      "region": "MT",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 748,
+      "idNameBytes": 43485
+    },
+    {
+      "region": "MT",
+      "category": "museums",
+      "status": "accepted",
+      "count": 252,
+      "idNameBytes": 15728
+    },
+    {
+      "region": "MT",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1393,
+      "idNameBytes": 79666
+    },
+    {
+      "region": "MT",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 3131,
+      "idNameBytes": 166821
+    },
+    {
+      "region": "NC",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 3584,
+      "idNameBytes": 210270
+    },
+    {
+      "region": "NC",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 6259,
+      "idNameBytes": 369768
+    },
+    {
+      "region": "NC",
+      "category": "museums",
+      "status": "accepted",
+      "count": 823,
+      "idNameBytes": 52122
+    },
+    {
+      "region": "NC",
+      "category": "parks",
+      "status": "accepted",
+      "count": 5209,
+      "idNameBytes": 303708
+    },
+    {
+      "region": "NC",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 29682,
+      "idNameBytes": 1593171
+    },
+    {
+      "region": "ND",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 370,
+      "idNameBytes": 21280
+    },
+    {
+      "region": "ND",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 666,
+      "idNameBytes": 41067
+    },
+    {
+      "region": "ND",
+      "category": "museums",
+      "status": "accepted",
+      "count": 155,
+      "idNameBytes": 9972
+    },
+    {
+      "region": "ND",
+      "category": "parks",
+      "status": "accepted",
+      "count": 590,
+      "idNameBytes": 33794
+    },
+    {
+      "region": "ND",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 2187,
+      "idNameBytes": 115973
+    },
+    {
+      "region": "NE",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 864,
+      "idNameBytes": 49406
+    },
+    {
+      "region": "NE",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 1192,
+      "idNameBytes": 68607
+    },
+    {
+      "region": "NE",
+      "category": "museums",
+      "status": "accepted",
+      "count": 345,
+      "idNameBytes": 22083
+    },
+    {
+      "region": "NE",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1369,
+      "idNameBytes": 76690
+    },
+    {
+      "region": "NE",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 5372,
+      "idNameBytes": 283839
+    },
+    {
+      "region": "NH",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 542,
+      "idNameBytes": 31707
+    },
+    {
+      "region": "NH",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 902,
+      "idNameBytes": 52406
+    },
+    {
+      "region": "NH",
+      "category": "museums",
+      "status": "accepted",
+      "count": 260,
+      "idNameBytes": 16353
+    },
+    {
+      "region": "NH",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1309,
+      "idNameBytes": 74776
+    },
+    {
+      "region": "NH",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 3841,
+      "idNameBytes": 209711
+    },
+    {
+      "region": "NJ",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2714,
+      "idNameBytes": 158627
+    },
+    {
+      "region": "NJ",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 4173,
+      "idNameBytes": 239444
+    },
+    {
+      "region": "NJ",
+      "category": "museums",
+      "status": "accepted",
+      "count": 679,
+      "idNameBytes": 43415
+    },
+    {
+      "region": "NJ",
+      "category": "parks",
+      "status": "accepted",
+      "count": 5041,
+      "idNameBytes": 285525
+    },
+    {
+      "region": "NJ",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 32684,
+      "idNameBytes": 1772886
+    },
+    {
+      "region": "NM",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 751,
+      "idNameBytes": 44079
+    },
+    {
+      "region": "NM",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 1224,
+      "idNameBytes": 71010
+    },
+    {
+      "region": "NM",
+      "category": "museums",
+      "status": "accepted",
+      "count": 346,
+      "idNameBytes": 22066
+    },
+    {
+      "region": "NM",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1507,
+      "idNameBytes": 86314
+    },
+    {
+      "region": "NM",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 5850,
+      "idNameBytes": 309594
+    },
+    {
+      "region": "NV",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1460,
+      "idNameBytes": 84647
+    },
+    {
+      "region": "NV",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 1889,
+      "idNameBytes": 107296
+    },
+    {
+      "region": "NV",
+      "category": "museums",
+      "status": "accepted",
+      "count": 232,
+      "idNameBytes": 14453
+    },
+    {
+      "region": "NV",
+      "category": "parks",
+      "status": "accepted",
+      "count": 1651,
+      "idNameBytes": 94065
+    },
+    {
+      "region": "NV",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 11041,
+      "idNameBytes": 593049
+    },
+    {
+      "region": "NY",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 8052,
+      "idNameBytes": 461778
+    },
+    {
+      "region": "NY",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 10003,
+      "idNameBytes": 574895
+    },
+    {
+      "region": "NY",
+      "category": "museums",
+      "status": "accepted",
+      "count": 2121,
+      "idNameBytes": 133275
+    },
+    {
+      "region": "NY",
+      "category": "parks",
+      "status": "accepted",
+      "count": 10865,
+      "idNameBytes": 617818
+    },
+    {
+      "region": "NY",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 68248,
+      "idNameBytes": 3630893
+    },
+    {
+      "region": "OH",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 4557,
+      "idNameBytes": 265159
+    },
+    {
+      "region": "OH",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 6122,
+      "idNameBytes": 356905
+    },
+    {
+      "region": "OH",
+      "category": "museums",
+      "status": "accepted",
+      "count": 1191,
+      "idNameBytes": 76778
+    },
+    {
+      "region": "OH",
+      "category": "parks",
+      "status": "accepted",
+      "count": 7407,
+      "idNameBytes": 419937
+    },
+    {
+      "region": "OH",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 31095,
+      "idNameBytes": 1652110
+    },
+    {
+      "region": "OK",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1799,
+      "idNameBytes": 104568
+    },
+    {
+      "region": "OK",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 2097,
+      "idNameBytes": 120721
+    },
+    {
+      "region": "OK",
+      "category": "museums",
+      "status": "accepted",
+      "count": 485,
+      "idNameBytes": 30709
+    },
+    {
+      "region": "OK",
+      "category": "parks",
+      "status": "accepted",
+      "count": 2050,
+      "idNameBytes": 115766
+    },
+    {
+      "region": "OK",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 12310,
+      "idNameBytes": 656444
+    },
+    {
+      "region": "OR",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1581,
+      "idNameBytes": 91229
+    },
+    {
+      "region": "OR",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 3332,
+      "idNameBytes": 190215
+    },
+    {
+      "region": "OR",
+      "category": "museums",
+      "status": "accepted",
+      "count": 456,
+      "idNameBytes": 28558
+    },
+    {
+      "region": "OR",
+      "category": "parks",
+      "status": "accepted",
+      "count": 4227,
+      "idNameBytes": 239002
+    },
+    {
+      "region": "OR",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 13953,
+      "idNameBytes": 748226
+    },
+    {
+      "region": "PA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 4911,
+      "idNameBytes": 286807
+    },
+    {
+      "region": "PA",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 6602,
+      "idNameBytes": 387879
+    },
+    {
+      "region": "PA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 1373,
+      "idNameBytes": 88451
+    },
+    {
+      "region": "PA",
+      "category": "parks",
+      "status": "accepted",
+      "count": 7850,
+      "idNameBytes": 446087
+    },
+    {
+      "region": "PA",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 35375,
+      "idNameBytes": 1901889
+    },
+    {
+      "region": "RI",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 435,
+      "idNameBytes": 25286
+    },
+    {
+      "region": "RI",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 871,
+      "idNameBytes": 50201
+    },
+    {
+      "region": "RI",
+      "category": "museums",
+      "status": "accepted",
+      "count": 149,
+      "idNameBytes": 9196
+    },
+    {
+      "region": "RI",
+      "category": "parks",
+      "status": "accepted",
+      "count": 792,
+      "idNameBytes": 45346
+    },
+    {
+      "region": "RI",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 3630,
+      "idNameBytes": 195329
+    },
+    {
+      "region": "SC",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1907,
+      "idNameBytes": 112258
+    },
+    {
+      "region": "SC",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 3354,
+      "idNameBytes": 195772
+    },
+    {
+      "region": "SC",
+      "category": "museums",
+      "status": "accepted",
+      "count": 363,
+      "idNameBytes": 23207
+    },
+    {
+      "region": "SC",
+      "category": "parks",
+      "status": "accepted",
+      "count": 2278,
+      "idNameBytes": 131472
+    },
+    {
+      "region": "SC",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 16575,
+      "idNameBytes": 888971
+    },
+    {
+      "region": "SD",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 423,
+      "idNameBytes": 24833
+    },
+    {
+      "region": "SD",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 777,
+      "idNameBytes": 45332
+    },
+    {
+      "region": "SD",
+      "category": "museums",
+      "status": "accepted",
+      "count": 203,
+      "idNameBytes": 12898
+    },
+    {
+      "region": "SD",
+      "category": "parks",
+      "status": "accepted",
+      "count": 777,
+      "idNameBytes": 44496
+    },
+    {
+      "region": "SD",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 2513,
+      "idNameBytes": 134030
+    },
+    {
+      "region": "TN",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2894,
+      "idNameBytes": 168168
+    },
+    {
+      "region": "TN",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 3756,
+      "idNameBytes": 217542
+    },
+    {
+      "region": "TN",
+      "category": "museums",
+      "status": "accepted",
+      "count": 571,
+      "idNameBytes": 36076
+    },
+    {
+      "region": "TN",
+      "category": "parks",
+      "status": "accepted",
+      "count": 3535,
+      "idNameBytes": 206022
+    },
+    {
+      "region": "TN",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 21906,
+      "idNameBytes": 1167420
+    },
+    {
+      "region": "TX",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 10816,
+      "idNameBytes": 625426
+    },
+    {
+      "region": "TX",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 16809,
+      "idNameBytes": 965630
+    },
+    {
+      "region": "TX",
+      "category": "museums",
+      "status": "accepted",
+      "count": 1826,
+      "idNameBytes": 114764
+    },
+    {
+      "region": "TX",
+      "category": "parks",
+      "status": "accepted",
+      "count": 13330,
+      "idNameBytes": 753344
+    },
+    {
+      "region": "TX",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 98513,
+      "idNameBytes": 5278746
+    },
+    {
+      "region": "UT",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1171,
+      "idNameBytes": 67313
+    },
+    {
+      "region": "UT",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 1919,
+      "idNameBytes": 109598
+    },
+    {
+      "region": "UT",
+      "category": "museums",
+      "status": "accepted",
+      "count": 276,
+      "idNameBytes": 17220
+    },
+    {
+      "region": "UT",
+      "category": "parks",
+      "status": "accepted",
+      "count": 2843,
+      "idNameBytes": 162622
+    },
+    {
+      "region": "UT",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 8587,
+      "idNameBytes": 453214
+    },
+    {
+      "region": "VA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2787,
+      "idNameBytes": 162549
+    },
+    {
+      "region": "VA",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 5601,
+      "idNameBytes": 328684
+    },
+    {
+      "region": "VA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 907,
+      "idNameBytes": 57857
+    },
+    {
+      "region": "VA",
+      "category": "parks",
+      "status": "accepted",
+      "count": 4419,
+      "idNameBytes": 256231
+    },
+    {
+      "region": "VA",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 24461,
+      "idNameBytes": 1299983
+    },
+    {
+      "region": "VT",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 348,
+      "idNameBytes": 20250
+    },
+    {
+      "region": "VT",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 499,
+      "idNameBytes": 29490
+    },
+    {
+      "region": "VT",
+      "category": "museums",
+      "status": "accepted",
+      "count": 184,
+      "idNameBytes": 11529
+    },
+    {
+      "region": "VT",
+      "category": "parks",
+      "status": "accepted",
+      "count": 681,
+      "idNameBytes": 38944
+    },
+    {
+      "region": "VT",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 1850,
+      "idNameBytes": 99569
+    },
+    {
+      "region": "WA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2489,
+      "idNameBytes": 143021
+    },
+    {
+      "region": "WA",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 4875,
+      "idNameBytes": 275761
+    },
+    {
+      "region": "WA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 652,
+      "idNameBytes": 40956
+    },
+    {
+      "region": "WA",
+      "category": "parks",
+      "status": "accepted",
+      "count": 6455,
+      "idNameBytes": 369024
+    },
+    {
+      "region": "WA",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 20728,
+      "idNameBytes": 1110283
+    },
+    {
+      "region": "WI",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2471,
+      "idNameBytes": 144741
+    },
+    {
+      "region": "WI",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 3418,
+      "idNameBytes": 200224
+    },
+    {
+      "region": "WI",
+      "category": "museums",
+      "status": "accepted",
+      "count": 763,
+      "idNameBytes": 48869
+    },
+    {
+      "region": "WI",
+      "category": "parks",
+      "status": "accepted",
+      "count": 5876,
+      "idNameBytes": 330002
+    },
+    {
+      "region": "WI",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 16232,
+      "idNameBytes": 874280
+    },
+    {
+      "region": "WV",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 690,
+      "idNameBytes": 40610
+    },
+    {
+      "region": "WV",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 1399,
+      "idNameBytes": 83761
+    },
+    {
+      "region": "WV",
+      "category": "museums",
+      "status": "accepted",
+      "count": 218,
+      "idNameBytes": 13833
+    },
+    {
+      "region": "WV",
+      "category": "parks",
+      "status": "accepted",
+      "count": 917,
+      "idNameBytes": 53559
+    },
+    {
+      "region": "WV",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 4610,
+      "idNameBytes": 244899
+    },
+    {
+      "region": "WY",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 294,
+      "idNameBytes": 17097
+    },
+    {
+      "region": "WY",
+      "category": "landmarks",
+      "status": "accepted",
+      "count": 576,
+      "idNameBytes": 33773
+    },
+    {
+      "region": "WY",
+      "category": "museums",
+      "status": "accepted",
+      "count": 186,
+      "idNameBytes": 11715
+    },
+    {
+      "region": "WY",
+      "category": "parks",
+      "status": "accepted",
+      "count": 824,
+      "idNameBytes": 48504
+    },
+    {
+      "region": "WY",
+      "category": "restaurants",
+      "status": "accepted",
+      "count": 1764,
+      "idNameBytes": 94712
+    }
+  ]
+}

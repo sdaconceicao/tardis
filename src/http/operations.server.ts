@@ -233,6 +233,25 @@ export const operations = [
 		({ db, actor }, _, q) => places.listPlaces(db, actor, q),
 	),
 	operation(
+		"GET",
+		"/discovery",
+		"listDiscovery",
+		"Browse public catalog places in map bounds",
+		{ query: places.discoveryQuerySchema, response: out.discoveryResponse },
+		({ db }, _, q) => places.listDiscovery(db, q),
+	),
+	operation(
+		"GET",
+		"/discovery/clusters",
+		"clusterDiscovery",
+		"Group public catalog places in map bounds",
+		{
+			query: places.clusterQuerySchema,
+			response: out.discoveryClustersResponse,
+		},
+		({ db }, _, q) => places.clusterDiscovery(db, q),
+	),
+	operation(
 		"POST",
 		"/places",
 		"createPlace",

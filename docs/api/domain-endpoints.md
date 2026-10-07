@@ -102,6 +102,8 @@ still be allowed. Auth endpoints retain Better Auth's own CSRF checks.
 | POST | `/api/v1/events/:eventId/recurrences` | Add a recurrence segment |
 | PATCH | `/api/v1/events/:eventId/recurrences/:recurrenceId` | Shorten a segment with `{ "untilDate": "YYYY-MM-DD" }` |
 | GET, POST | `/api/v1/places` | List visible places; create a place |
+| GET | `/api/v1/discovery` | Browse public catalog POIs inside map bounds, with category filter and cursor |
+| GET | `/api/v1/discovery/clusters` | Return bounded POI clusters for a map zoom and bounds |
 | GET, PUT, DELETE | `/api/v1/places/:placeId` | Read, replace metadata/tags/prices, or delete an owned place |
 | PUT | `/api/v1/places/:placeId/hours` | Replace all seasonal weekly schedules |
 | PUT | `/api/v1/places/:placeId/exceptions` | Upsert one dated opening-hours exception |
@@ -110,6 +112,20 @@ still be allowed. Auth endpoints retain Better Auth's own CSRF checks.
 | GET | `/api/v1/availability` | Search events and places available at a concrete instant near a point |
 
 Collections accept `limit` (1–100, default 50) and `offset` (0–10000).
+Discovery accepts `west`, `south`, `east`, and `north` as degrees; a west value
+greater than east crosses the antimeridian. `/discovery` accepts `limit` (1–100,
+default 100), a UUID `cursor`, and an optional category. It returns `items`,
+`hasMore`, and `nextCursor`, with source release and `hoursState: "unknown"` on
+each POI. `/discovery/clusters` accepts integer `zoom` (0–22) and the same
+category filter. It returns at most 500 cells and sets `capped` if more exist.
+At zooms 0–5, a completed catalog uses a precomputed fine-cell summary; edge
+cells make those counts approximate, and `approximate` is true. Zoom in for
+individual POIs and exact list results.
+Both responses include `catalogStatus`: `empty` before any import, `importing`
+during a bootstrap or refresh, and `ready` after a completed import. Results
+can change while the catalog is importing.
+Only active public catalog sources with an open or unspecified operating status
+appear. Unknown hours do not imply that a place is open now.
 Tag search returns up to 100 definitions without private assignment counts.
 Event details include rules/templates, tags, location, and default prices.
 Occurrence details include days, location, and edition-specific prices.

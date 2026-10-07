@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import { overtureProfiles } from "../../../config/overture/profiles.ts";
 
-const profileNameSchema = z.enum(["all", "neon-free"]);
+const profileNameSchema = z.enum(["regional-poi", "neon-free"]);
 const targetSchema = z.enum(["local", "hosted"]);
 const categoryGroupSchema = z.enum([
 	"restaurants",
@@ -17,6 +17,10 @@ const scopeSchema = z.strictObject({
 		z.literal("all"),
 		z.array(z.string().regex(/^[A-Z]{2}$/)).min(1),
 	]),
+	regions: z
+		.array(z.enum(["North America", "Europe"]))
+		.min(1)
+		.nullable(),
 	boundarySet: z.string().min(1).nullable(),
 	categoryGroups: z.union([
 		z.literal("all"),
@@ -84,14 +88,14 @@ export function resolveOvertureSyncConfig(
 	if (target === "hosted" && localHost) {
 		throw new Error("Hosted Overture imports require a remote database host");
 	}
-	if (profile === "all" && (target !== "local" || isNeonHost(host))) {
-		throw new Error("The all profile can only target local PostGIS");
+	if (profile === "regional-poi" && (target !== "local" || isNeonHost(host))) {
+		throw new Error("The regional-poi profile can only target local PostGIS");
 	}
 	if (target === "hosted" && profile !== "neon-free") {
 		throw new Error("Hosted Overture imports require the neon-free profile");
 	}
-	if (target === "local" && profile !== "all") {
-		throw new Error("Local Overture imports require the all profile");
+	if (target === "local" && profile !== "regional-poi") {
+		throw new Error("Local Overture imports require the regional-poi profile");
 	}
 
 	const requested = overrideSchema.parse(overrides);

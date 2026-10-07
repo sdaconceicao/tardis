@@ -12,7 +12,9 @@ describe("OpenAPI contract", () => {
 		expect(
 			new Set(operations.map((operation) => operation.operationId)).size,
 		).toBe(operations.length);
-		expect(Object.values(document.paths).flatMap(Object.keys)).toHaveLength(23);
+		expect(Object.values(document.paths).flatMap(Object.keys)).toHaveLength(
+			operations.length,
+		);
 		for (const operation of operations)
 			expect(
 				document.paths[operation.path][operation.method.toLowerCase()],

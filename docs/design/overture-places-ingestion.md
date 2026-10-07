@@ -1,6 +1,11 @@
 # Configurable Overture Places ingestion
 
-Status: Proposed, 2026-09-10; reviewed against the checkout on 2026-10-02.
+Status: Historical proposal, 2026-09-10. The current import scope and
+implementation are in [map-poi-implementation-plan.md](map-poi-implementation-plan.md):
+local `regional-poi` covers North America and Europe across five POI groups;
+hosted `neon-free` covers US museums and entertainment. The profile examples
+below describe the earlier proposal and are not current setup instructions.
+Reviewed against the checkout on 2026-10-02.
 The configuration and profiles below are design choices, not implemented
 settings. The proposal uses a local all-country/all-category profile and a
 capacity-limited Neon Free profile for selected US destinations. Remaining

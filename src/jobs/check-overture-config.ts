@@ -1,7 +1,7 @@
-import { config } from "dotenv";
+import { config as loadEnv } from "dotenv";
 import { resolveOvertureSyncConfig } from "../services/overture/config.ts";
 
-config({ path: [".env.local", ".env"] });
+loadEnv({ path: [".env.local", ".env"] });
 
 const resolved = resolveOvertureSyncConfig(process.env);
 process.stdout.write(
@@ -12,8 +12,6 @@ process.stdout.write(
 			version: resolved.version,
 			scope: resolved.scope,
 			limits: resolved.limits,
-			batchSize: resolved.batchSize,
-			concurrency: resolved.concurrency,
 			selectionFingerprint: resolved.selectionFingerprint,
 		},
 		null,

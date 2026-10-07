@@ -25,6 +25,72 @@ to both; use a pooled Neon `DATABASE_URL` for deployed environments. Set a
 unique `BETTER_AUTH_SECRET` in `.env.local` before using account features. The
 dev app runs at `http://localhost:3006`, matching the example auth URL.
 
+### Preparing Overture POI imports
+
+Install the DuckDB CLI on macOS and its cloud-file and geometry extensions:
+
+```bash
+brew install duckdb
+duckdb -c "INSTALL httpfs; LOAD httpfs; INSTALL spatial; LOAD spatial;"
+```
+
+Overture requires DuckDB 1.1.0 or newer for GeoParquet. The machine running an
+import needs outbound access to DuckDB's extension downloads and the public S3
+`places/place` files; profiling also reads Overture's STAC catalog. Overture's public S3 examples
+do not require an Overture API key. The importer pins release `2026-09-23.1`
+and validates its [STAC manifest](https://docs.overturemaps.org/getting-data/cloud-sources/);
+see the [DuckDB query examples](https://docs.overturemaps.org/getting-data/duckdb/).
+
+For the local PostGIS database, uncomment these lines in `.env.local` and check
+the resolved scope:
+
+```dotenv
+OVERTURE_SYNC_PROFILE=regional-poi
+OVERTURE_DEPLOYMENT_TARGET=local
+```
+
+```bash
+pnpm poi:check-config
+```
+
+The check prints the profile and selection fingerprint without printing
+`DATABASE_URL`. It does not download or import POIs. Profile the pinned release
+before loading a database:
+
+```bash
+pnpm poi:profile --scope neon-free --output /tmp/tardis-us-poi-profile.json
+# Optional one-file SQL check; its counts are incomplete and cannot size production.
+pnpm poi:profile --scope neon-free --smoke
+# Full local POI scope: North America and Europe across five POI groups.
+pnpm poi:profile --scope regional-poi --output /tmp/tardis-regional-poi-profile.json
+```
+
+`poi:profile` reads Overture GeoParquet with DuckDB and never writes to
+PostgreSQL. It checks the complete STAC file manifest, the pinned taxonomy
+checksum, and, for the US profile, the 50-state-and-DC Census boundary
+checksum. It reports counts by region and category, rejects records without
+an ID or name, and shows illustrative storage scenarios. The complete US scan
+selected 154,464 museum and entertainment POIs across 50 states and DC.
+Restaurants add 1,004,406 POIs and exceed the 150 MB places budget. The scan
+and selection are recorded in `config/overture/profile-us-2026-09-23.1-*.json`.
+`--manifest-only` checks source metadata without scanning Parquet.
+The regional importer requires the complete pinned regional profile report
+before a new run can start; a one-file `--smoke` report cannot size the scope.
+
+Imports run only from an explicit job, never from app startup or a build.
+`pnpm poi:sync` extracts the selected files with DuckDB, normalizes POIs with
+an offline timezone lookup, and checkpoints batches in PostGIS. It stores
+compressed extraction and rejection artifacts under `.data/overture` by
+default. The local `regional-poi` profile selects restaurants, parks, museums,
+landmarks, and entertainment in North America and Europe. Its Natural Earth
+boundaries are checksum pinned. An interrupted run resumes by release
+and selection fingerprint. Measure actual POI storage against the disposable
+test database with `pnpm poi:measure-storage --input <extracted-file>`.
+Production bootstrap checks a matching capacity report and database headroom
+before writing. The real 10,000-row probe projected about 111 MB of places;
+the gate reserves 20% above that estimate. See the
+[implementation plan](docs/design/map-poi-implementation-plan.md).
+
 ## Frontend shell
 
 The Sky Atlas theme uses Lago components and tokens, with Josefin Sans headings,
@@ -37,17 +103,13 @@ Calendar (`/calendar?view=week`, `month`, or `agenda`), Saved (`/saved`),
 My events (`/my-events`), About & help (`/about`), and account pages
 (`/login`, `/signup`). Add event leads to signup.
 
-The Map page now mounts a MapLibre vector basemap using `VITE_MAP_STYLE_URL`
-(OpenFreeMap Liberty by default). POI markers, event data, location/date
-controls, saving, and event creation are not connected yet. The discovery list
-sits beside the main view on desktop and below it on phones.
-
-Overture POI imports are separate from app startup. Set
-`OVERTURE_SYNC_PROFILE=all` and `OVERTURE_DEPLOYMENT_TARGET=local` for local
-PostGIS, or `neon-free` and `hosted` for the production Neon job. Run
-`pnpm poi:check-config` to validate the target and print the resolved scope
-without showing the database URL. Import and source profiling commands are
-still in development.
+The Map page mounts a MapLibre vector basemap using `VITE_MAP_STYLE_URL`
+(OpenFreeMap Liberty by default). It reads public POIs from the discovery API,
+shows clusters at broad zooms, and synchronizes nearby points with a Lago
+results panel. Completed imports build a summary for fast wide-zoom clusters;
+those counts are labeled approximate near viewport edges. The list sits beside
+the map on desktop and below it on phones.
+Event data, saving, and routing are outside this map milestone.
 
 Lago reference: [Storybook](https://main--6a4eb38660443c1eee94713d.chromatic.com/).
 
@@ -137,6 +199,16 @@ static assets. The included `vercel.json` makes framework detection explicit.
 
 Variables prefixed with `VITE_` are included in the browser bundle. Keep secrets
 unprefixed so they remain server-only.
+
+Production POI imports need a separate batch runner with DuckDB and its
+extensions, scratch disk, artifact storage, and a server-only Neon database
+credential. Set `OVERTURE_SYNC_PROFILE=neon-free` and
+`OVERTURE_DEPLOYMENT_TARGET=hosted` in that runner, then run
+`pnpm poi:check-config`. Run `pnpm poi:sync` from the batch runner; it checks
+the release-matched capacity report and current database headroom before any
+write. The pinned release, taxonomy, and 50-state-and-DC boundary are described in
+[config/overture/README.md](config/overture/README.md). A Vercel app deployment
+does not populate POIs.
 
 The public HTTP contract is versioned at `/api/v1`. Open `/api/docs` for
 interactive Swagger documentation or `/api/openapi.json` for the OpenAPI
