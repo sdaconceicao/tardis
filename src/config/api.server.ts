@@ -1,6 +1,21 @@
+export function resolveAuthBaseUrl(
+	environment: NodeJS.ProcessEnv = process.env,
+) {
+	if (environment.BETTER_AUTH_URL) return environment.BETTER_AUTH_URL;
+	if (
+		environment.VERCEL_ENV === "production" &&
+		environment.VERCEL_PROJECT_PRODUCTION_URL
+	)
+		return `https://${environment.VERCEL_PROJECT_PRODUCTION_URL}`;
+	if (environment.VERCEL_BRANCH_URL)
+		return `https://${environment.VERCEL_BRANCH_URL}`;
+	return undefined;
+}
+
 export function allowedOrigins(environment: NodeJS.ProcessEnv = process.env) {
 	const values = [
-		environment.BETTER_AUTH_URL,
+		resolveAuthBaseUrl(environment),
+		environment.VERCEL_URL ? `https://${environment.VERCEL_URL}` : undefined,
 		...(environment.API_ALLOWED_ORIGINS ?? "").split(","),
 	];
 	return [

@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { Client } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createDatabase } from "../../src/db/client.server";
 import * as schema from "../../src/db/schema";
@@ -18,10 +19,20 @@ import {
 } from "../../src/modules/events/service.server";
 import { createAuth } from "../../src/modules/identity/auth.server";
 import {
+	applyCatalogBatch,
+	completeCatalogRun,
+} from "../../src/modules/places/catalog-import.server";
+import {
 	exceptionSchema,
 	placeInputSchema,
 	scheduleSchema,
 } from "../../src/modules/places/contracts";
+import {
+	clusterDiscovery,
+	clusterQuerySchema,
+	discoveryQuerySchema,
+	listDiscovery,
+} from "../../src/modules/places/discovery.server";
 import {
 	getPlace,
 	replaceSchedules,
@@ -701,5 +712,280 @@ suite("PostGIS domain integration", () => {
 				"event_day_availability_idx",
 			]),
 		);
+	});
+	it("browses catalog POIs with spatial, category, and cursor filters", async () => {
+		const latitude = 36.25 + Math.random() * 0.01;
+		const longitude = -120.25 + Math.random() * 0.01;
+		const [site] = await db
+			.insert(schema.locations)
+			.values({
+				label: "Catalog test park",
+				latitude,
+				longitude,
+			})
+			.returning();
+		const [place] = await db
+			.insert(schema.places)
+			.values({
+				name: "Catalog test park",
+				managementKind: "catalog",
+				visibility: "public",
+				locationId: site.id,
+				timezone: "America/Los_Angeles",
+			})
+			.returning();
+		const [run] = await db
+			.insert(schema.placeImportRuns)
+			.values({
+				release: "test",
+				profile: "neon-free",
+				selectionFingerprint: randomUUID(),
+				resolvedConfig: {},
+				manifestUrl: "test",
+			})
+			.returning();
+		await db.insert(schema.placeSources).values({
+			placeId: place.id,
+			appliedRunId: run.id,
+			provider: "overture",
+			externalId: randomUUID(),
+			contentHash: Buffer.alloc(32),
+			category: "parks",
+			attribution: "Overture Maps",
+		});
+		const [otherSite] = await db
+			.insert(schema.locations)
+			.values({
+				label: "Second catalog test park",
+				latitude: latitude + 0.0005,
+				longitude: longitude + 0.0005,
+			})
+			.returning();
+		const [otherPlace] = await db
+			.insert(schema.places)
+			.values({
+				name: "Second catalog test park",
+				managementKind: "catalog",
+				visibility: "public",
+				locationId: otherSite.id,
+				timezone: "America/Los_Angeles",
+			})
+			.returning();
+		await db.insert(schema.placeSources).values({
+			placeId: otherPlace.id,
+			appliedRunId: run.id,
+			provider: "overture",
+			externalId: randomUUID(),
+			contentHash: Buffer.alloc(32),
+			category: "parks",
+			attribution: "Overture Maps",
+		});
+		await db.insert(schema.placeSources).values({
+			placeId: otherPlace.id,
+			appliedRunId: run.id,
+			provider: "overture",
+			externalId: randomUUID(),
+			contentHash: Buffer.alloc(32),
+			category: "landmarks",
+			taxonomyPrimary: "historic_site",
+			attribution: "Overture Maps",
+		});
+		try {
+			const bounds = {
+				west: longitude - 0.001,
+				east: longitude + 0.001,
+				south: latitude - 0.001,
+				north: latitude + 0.001,
+			};
+			const page = await listDiscovery(db, discoveryQuerySchema.parse(bounds));
+			expect(page.catalogStatus).toBe("importing");
+			expect(page.items.map((item) => item.id)).toContain(place.id);
+			expect(page.items.find((item) => item.id === place.id)?.hoursState).toBe(
+				"unknown",
+			);
+			expect(
+				(
+					await listDiscovery(
+						db,
+						discoveryQuerySchema.parse({ ...bounds, category: "restaurants" }),
+					)
+				).items,
+			).toHaveLength(0);
+			expect(
+				(
+					await listDiscovery(
+						db,
+						discoveryQuerySchema.parse({ ...bounds, category: "landmarks" }),
+					)
+				).items,
+			).toHaveLength(0);
+			const firstPage = await listDiscovery(
+				db,
+				discoveryQuerySchema.parse({ ...bounds, limit: 1 }),
+			);
+			expect(firstPage.items.map((item) => item.id)).toEqual([place.id]);
+			expect(firstPage.nextCursor).toBe(place.id);
+			const secondPage = await listDiscovery(
+				db,
+				discoveryQuerySchema.parse({
+					...bounds,
+					limit: 1,
+					cursor: firstPage.nextCursor,
+				}),
+			);
+			expect(secondPage.items.map((item) => item.id)).toEqual([otherPlace.id]);
+			const grouped = await clusterDiscovery(
+				db,
+				clusterQuerySchema.parse({ ...bounds, zoom: 12 }),
+			);
+			expect(grouped.catalogStatus).toBe("importing");
+			expect(grouped.approximate).toBe(false);
+			expect(
+				grouped.clusters.reduce((sum, cluster) => sum + cluster.count, 0),
+			).toBe(2);
+			await db.insert(schema.placeClusterCells).values({
+				runId: run.id,
+				category: "parks",
+				cellX: Math.floor((longitude + 180) / 0.703125),
+				cellY: Math.floor((latitude + 90) / 0.703125),
+				placeCount: 2,
+				latitudeSum: latitude * 2 + 0.0005,
+				longitudeSum: longitude * 2 + 0.0005,
+				west: longitude,
+				east: longitude + 0.0005,
+				south: latitude,
+				north: latitude + 0.0005,
+			});
+			await db
+				.update(schema.placeImportRuns)
+				.set({ state: "completed" })
+				.where(eq(schema.placeImportRuns.id, run.id));
+			const cached = await clusterDiscovery(
+				db,
+				clusterQuerySchema.parse({ ...bounds, zoom: 4 }),
+			);
+			expect(cached.approximate).toBe(true);
+			expect(cached.clusters[0]?.count).toBe(2);
+		} finally {
+			await db
+				.delete(schema.placeClusterCells)
+				.where(eq(schema.placeClusterCells.runId, run.id));
+			await db
+				.delete(schema.placeSources)
+				.where(inArray(schema.placeSources.placeId, [place.id, otherPlace.id]));
+			await db
+				.delete(schema.places)
+				.where(inArray(schema.places.id, [place.id, otherPlace.id]));
+			await db
+				.delete(schema.locations)
+				.where(inArray(schema.locations.id, [site.id, otherSite.id]));
+			await db
+				.delete(schema.placeImportRuns)
+				.where(eq(schema.placeImportRuns.id, run.id));
+		}
+	});
+	it("replays a catalog batch and preserves old venue locations after a source move", async () => {
+		const client = new Client({ connectionString: databaseUrl });
+		await client.connect();
+		const externalId = randomUUID();
+		const fingerprint = randomUUID();
+		const firstRun = await client.query(
+			`INSERT INTO place_import_runs (release, profile, selection_fingerprint, resolved_config, manifest_url)
+			VALUES ('test-1','neon-free',$1,'{}'::jsonb,'test') RETURNING id`,
+			[fingerprint],
+		);
+		const firstRunId = firstRun.rows[0].id as string;
+		let secondRunId: string | null = null;
+		let originalLocationId: string | null = null;
+		const source = {
+			externalId,
+			name: "Test Museum",
+			latitude: 40.7,
+			longitude: -74,
+			address: null,
+			timezone: "America/New_York",
+			category: "museums",
+			taxonomyPrimary: "museum",
+			operatingStatus: "open",
+			confidence: 0.9,
+			contentHash: Buffer.alloc(32, 1),
+		};
+		try {
+			expect(
+				await applyCatalogBatch(client, firstRunId, "sample", 0, [source]),
+			).toEqual({ inserted: 1, updated: 0, unchanged: 0 });
+			expect(
+				await applyCatalogBatch(client, firstRunId, "sample", 0, [source]),
+			).toEqual({ inserted: 1, updated: 0, unchanged: 0 });
+			const original = await client.query(
+				"SELECT place_id, location_id FROM place_sources JOIN places ON places.id=place_sources.place_id WHERE external_id=$1",
+				[externalId],
+			);
+			originalLocationId = original.rows[0].location_id;
+			await completeCatalogRun(client, firstRunId, 1, { accepted: 1 });
+			const secondRun = await client.query(
+				`INSERT INTO place_import_runs (release, profile, selection_fingerprint, resolved_config, manifest_url)
+				VALUES ('test-2','neon-free',$1,'{}'::jsonb,'test') RETURNING id`,
+				[fingerprint],
+			);
+			secondRunId = secondRun.rows[0].id as string;
+			const moved = {
+				...source,
+				longitude: -73.9,
+				contentHash: Buffer.alloc(32, 2),
+			};
+			expect(
+				await applyCatalogBatch(client, secondRunId, "sample", 0, [moved]),
+			).toEqual({ inserted: 0, updated: 1, unchanged: 0 });
+			const current = await client.query(
+				"SELECT place_id, location_id FROM place_sources JOIN places ON places.id=place_sources.place_id WHERE external_id=$1",
+				[externalId],
+			);
+			expect(current.rows[0].place_id).toBe(original.rows[0].place_id);
+			expect(current.rows[0].location_id).not.toBe(
+				original.rows[0].location_id,
+			);
+			expect(
+				(
+					await client.query("SELECT 1 FROM locations WHERE id=$1", [
+						original.rows[0].location_id,
+					])
+				).rowCount,
+			).toBe(1);
+			await completeCatalogRun(client, secondRunId, 1, { accepted: 1 });
+		} finally {
+			const linked = await client.query(
+				"SELECT place_id FROM place_sources WHERE external_id=$1",
+				[externalId],
+			);
+			if (linked.rows[0]) {
+				const placeId = linked.rows[0].place_id;
+				const locations = await client.query(
+					"SELECT location_id FROM places WHERE id=$1",
+					[placeId],
+				);
+				await client.query("DELETE FROM place_sources WHERE external_id=$1", [
+					externalId,
+				]);
+				await client.query("DELETE FROM places WHERE id=$1", [placeId]);
+				if (locations.rows[0])
+					await client.query("DELETE FROM locations WHERE id=$1", [
+						locations.rows[0].location_id,
+					]);
+			}
+			if (originalLocationId)
+				await client.query("DELETE FROM locations WHERE id=$1", [
+					originalLocationId,
+				]);
+			await client.query(
+				"DELETE FROM place_import_batches WHERE run_id IN ($1,$2)",
+				[firstRunId, secondRunId],
+			);
+			await client.query("DELETE FROM place_import_runs WHERE id IN ($1,$2)", [
+				firstRunId,
+				secondRunId,
+			]);
+			await client.end();
+		}
 	});
 });

@@ -4,20 +4,20 @@
 
 Tardis is a modular monolith built as one TanStack Start application for Vercel.
 TanStack server routes form the backend-for-frontend (BFF). Event, place,
-identity, planning, and HTTP API modules are implemented; the browser map and
-calendar remain placeholders. Routing has a provider-neutral contract but no
-live provider. The diagram and planning flow below include planned pieces.
+identity, planning, and HTTP API modules are implemented. The browser has a
+MapLibre POI map; the calendar remains a placeholder. Routing has a
+provider-neutral contract but no live provider. The planning flow below includes
+planned pieces.
 
 ```text
-Browser (React + Lago styles; MapLibre planned)
+Browser (React + Lago + MapLibre)
                  |
         TanStack BFF endpoints
                  |
        Application/domain modules
           |                 |
-    Neon/PostGIS      RoutingService
-                           |
-                 OpenRouteService adapter
+  PostgreSQL/PostGIS  RoutingService
+                      (provider pending)
 ```
 
 The BFF endpoint layer owns HTTP concerns: authentication, input parsing,
@@ -110,9 +110,12 @@ tokens. Do not add a local wrapper component for every Lago primitive; add an
 application component only when it carries real product behavior or repeated
 composition.
 
-MapLibre is the planned interactive map renderer; the current map is a
-placeholder. Map style URLs are public browser configuration, while database
-credentials and routing API keys remain server-only.
+MapLibre renders the POI map from bounded places-module discovery responses.
+The basemap uses a configurable vector style URL; POI data comes from PostGIS,
+not from the tile provider. Broad views show clusters and close views show
+individual places. Map style URLs are public browser configuration, while
+database credentials and routing API keys remain server-only. See
+[ADR 0004](adr/0004-map-poi-discovery.md).
 
 ## Initial domain implementation
 

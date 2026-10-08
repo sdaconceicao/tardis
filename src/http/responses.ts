@@ -43,6 +43,42 @@ export const placeResponse = z.object({
 	description: text,
 	visibility,
 });
+export const discoveryResponse = z.object({
+	items: z.array(
+		z.object({
+			id,
+			name: z.string(),
+			latitude: z.number(),
+			longitude: z.number(),
+			address: text,
+			category: text,
+			sourceRelease: text,
+			source: z.string(),
+			hoursState: z.literal("unknown"),
+		}),
+	),
+	hasMore: z.boolean(),
+	nextCursor: id.nullable(),
+	catalogStatus: z.enum(["empty", "importing", "ready"]),
+});
+export const discoveryClustersResponse = z.object({
+	clusters: z.array(
+		z.object({
+			cellX: z.number(),
+			cellY: z.number(),
+			count: z.number().int(),
+			latitude: z.number(),
+			longitude: z.number(),
+			west: z.number(),
+			east: z.number(),
+			south: z.number(),
+			north: z.number(),
+		}),
+	),
+	capped: z.boolean(),
+	approximate: z.boolean(),
+	catalogStatus: z.enum(["empty", "importing", "ready"]),
+});
 export const occurrenceResponse = z.object({
 	...entity,
 	...venue,

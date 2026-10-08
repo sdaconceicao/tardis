@@ -1,0 +1,77 @@
+.panel {
+	background: var(--atlas-sidebar);
+	border-top: 5px solid var(--tint);
+	border-right: 1px solid var(--atlas-trim);
+	padding: 27px 24px;
+	overflow-y: auto;
+	max-height: calc(100vh - 120px);
+}
+
+.eyebrow {
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.18em;
+	color: var(--atlas-muted);
+}
+
+.panel h2 {
+	font-size: 1.6rem;
+	text-transform: uppercase;
+	margin: 10px 0 22px;
+}
+
+.filter {
+	width: 100%;
+}
+
+.status,
+.empty {
+	color: var(--atlas-muted);
+	font-size: 0.85rem;
+	line-height: 1.5;
+	margin: 20px 0;
+}
+
+.list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.list li {
+	border-top: 1px solid var(--atlas-trim);
+}
+
+.card {
+	width: 100%;
+	height: auto;
+	padding: 14px 0;
+	text-align: left;
+	display: grid;
+	gap: 5px;
+	justify-content: start;
+}
+
+.selected {
+	color: var(--tint);
+}
+.card strong {
+	font-size: 0.95rem;
+}
+.card span,
+.card small {
+	color: var(--atlas-muted);
+	line-height: 1.4;
+}
+.more {
+	margin-top: 15px;
+	width: 100%;
+}
+
+@media (max-width: 650px) {
+	.panel {
+		max-height: none;
+		border-right: 0;
+		padding: 24px 20px;
+	}
+}

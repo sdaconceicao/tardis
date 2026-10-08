@@ -8,7 +8,7 @@ import {
 } from "@code-x/lago";
 import { useNavigate } from "@tanstack/react-router";
 import { LogOut, UserRound } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { signOut } from "../../modules/identity/auth-client";
 import { AppLink } from "../AppLink/AppLink";
 import css from "./AccountMenu.module.css";
@@ -44,7 +44,8 @@ export function AccountMenu({ user }: AccountMenuProps) {
 			document.removeEventListener("pointerdown", closeOnOutsidePointer);
 	}, [isOpen]);
 
-	async function handleSignOut() {
+	const closeMenu = useCallback(() => setIsOpen(false), []);
+	const handleSignOut = useCallback(async () => {
 		setIsSigningOut(true);
 		setError("");
 		try {
@@ -59,7 +60,7 @@ export function AccountMenu({ user }: AccountMenuProps) {
 		} finally {
 			setIsSigningOut(false);
 		}
-	}
+	}, [navigate]);
 
 	return (
 		<DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
@@ -81,11 +82,7 @@ export function AccountMenu({ user }: AccountMenuProps) {
 						</div>
 					</div>
 					<nav className={css.actions} aria-label="Account menu">
-						<AppLink
-							to="/account"
-							className={css.action}
-							onPress={() => setIsOpen(false)}
-						>
+						<AppLink to="/account" className={css.action} onPress={closeMenu}>
 							<UserRound aria-hidden="true" />
 							Account
 						</AppLink>

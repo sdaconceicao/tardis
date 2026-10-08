@@ -83,6 +83,30 @@ it("rejects mismatched passwords before calling auth", async () => {
 	expect(changePassword).not.toHaveBeenCalled();
 });
 
+it("shows an auth error and keeps the entered passwords for correction", async () => {
+	changePassword.mockResolvedValue({
+		error: { message: "Current password is incorrect" },
+	});
+	render(<ChangePasswordPage />);
+	fireEvent.change(screen.getByLabelText("Current password"), {
+		target: { value: "wrong-password" },
+	});
+	fireEvent.change(screen.getByLabelText("New password"), {
+		target: { value: "new-password" },
+	});
+	fireEvent.change(screen.getByLabelText("Confirm new password"), {
+		target: { value: "new-password" },
+	});
+	fireEvent.click(screen.getByRole("button", { name: "Change password" }));
+	expect(await screen.findByRole("alert")).toHaveProperty(
+		"textContent",
+		"Current password is incorrect",
+	);
+	expect(
+		(screen.getByLabelText("New password") as HTMLInputElement).value,
+	).toBe("new-password");
+});
+
 it("prompts guests to sign in", () => {
 	session.data = null;
 	render(<ChangePasswordPage />);

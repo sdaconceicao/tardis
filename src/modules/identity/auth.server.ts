@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { bearer, openAPI } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
-import { allowedOrigins } from "../../config/api.server";
+import { allowedOrigins, resolveAuthBaseUrl } from "../../config/api.server";
 import { getServerEnv } from "../../config/env.server";
 import { type Database, getDatabase } from "../../db/client.server";
 import { DomainError } from "../../shared/errors";
@@ -14,7 +14,7 @@ import { sendVerificationEmail } from "./verification-email.server";
 export function createAuth(
 	db: Database,
 	config: {
-		baseURL: string;
+		baseURL?: string;
 		secret: string;
 		verificationEmail?: (to: string, url: string) => Promise<void>;
 		passwordResetEmail?: (to: string, url: string) => Promise<void>;
@@ -72,7 +72,7 @@ export function createAuth(
 let auth: ReturnType<typeof createAuth> | undefined;
 export function getAuth() {
 	const env = getServerEnv();
-	if (!env.BETTER_AUTH_URL || !env.BETTER_AUTH_SECRET)
+	if (!env.BETTER_AUTH_SECRET)
 		throw new DomainError(503, "Authentication is not configured");
 	if (!env.RESEND_API_KEY || !env.RESEND_FROM_EMAIL)
 		throw new DomainError(503, "Verification email is not configured");
@@ -81,7 +81,10 @@ export function getAuth() {
 		from: env.RESEND_FROM_EMAIL,
 	};
 	auth ??= createAuth(getDatabase(), {
-		baseURL: env.BETTER_AUTH_URL,
+		baseURL: resolveAuthBaseUrl({
+			...process.env,
+			BETTER_AUTH_URL: env.BETTER_AUTH_URL,
+		}),
 		secret: env.BETTER_AUTH_SECRET,
 		verificationEmail: (to, url) => sendVerificationEmail(emailConfig, to, url),
 		passwordResetEmail: (to, url) =>

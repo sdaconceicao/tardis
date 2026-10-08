@@ -1,52 +1,12 @@
 import { Alert, Button, Form, Password, Skeleton } from "@code-x/lago";
-import { type FormEvent, useState } from "react";
 import { AppLink } from "../../../../../components/AppLink/AppLink";
-import {
-	authClient,
-	useSession,
-} from "../../../../../modules/identity/auth-client";
+import { useSession } from "../../../../../modules/identity/auth-client";
+import { useChangePasswordForm } from "./ChangePasswordPage.hooks";
 import css from "./ChangePasswordPage.module.css";
 
 export function ChangePasswordPage() {
 	const { data: session, isPending, error: sessionError } = useSession();
-	const [currentPassword, setCurrentPassword] = useState("");
-	const [newPassword, setNewPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
-	const [pending, setPending] = useState(false);
-	const [message, setMessage] = useState("");
-	const [messageKind, setMessageKind] = useState<"error" | "success">("error");
-
-	async function submit(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault();
-		setMessage("");
-		setMessageKind("error");
-		if (newPassword !== confirmPassword) {
-			setMessage("Passwords do not match.");
-			return;
-		}
-		setPending(true);
-		try {
-			const result = await authClient.changePassword({
-				currentPassword,
-				newPassword,
-				revokeOtherSessions: true,
-			});
-			if (result.error) throw new Error(result.error.message);
-			setCurrentPassword("");
-			setNewPassword("");
-			setConfirmPassword("");
-			setMessageKind("success");
-			setMessage("Password updated. Use it next time you sign in.");
-		} catch (error) {
-			setMessage(
-				error instanceof Error
-					? error.message
-					: "Could not change your password.",
-			);
-		} finally {
-			setPending(false);
-		}
-	}
+	const form = useChangePasswordForm();
 
 	return (
 		<section className={css.page}>
@@ -70,45 +30,45 @@ export function ChangePasswordPage() {
 			) : (
 				<div className={css.panel}>
 					<p>Enter your current password, then choose a new one.</p>
-					<Form className={css.form} onSubmit={submit}>
+					<Form className={css.form} onSubmit={form.submit}>
 						<Password
 							label="Current password"
 							name="current-password"
 							autoComplete="current-password"
-							value={currentPassword}
-							onChange={setCurrentPassword}
+							value={form.currentPassword}
+							onChange={form.setCurrentPassword}
 							isRequired
-							isDisabled={pending}
+							isDisabled={form.pending}
 						/>
 						<Password
 							label="New password"
 							name="new-password"
 							autoComplete="new-password"
-							value={newPassword}
-							onChange={setNewPassword}
+							value={form.newPassword}
+							onChange={form.setNewPassword}
 							minLength={8}
 							isRequired
-							isDisabled={pending}
+							isDisabled={form.pending}
 						/>
 						<Password
 							label="Confirm new password"
 							name="confirm-password"
 							autoComplete="new-password"
-							value={confirmPassword}
-							onChange={setConfirmPassword}
+							value={form.confirmPassword}
+							onChange={form.setConfirmPassword}
 							minLength={8}
 							isRequired
-							isDisabled={pending}
+							isDisabled={form.pending}
 						/>
-						{message && (
+						{form.message && (
 							<Alert
-								variant={messageKind}
-								role={messageKind === "error" ? "alert" : "status"}
+								variant={form.messageKind}
+								role={form.messageKind === "error" ? "alert" : "status"}
 							>
-								<Alert.Body>{message}</Alert.Body>
+								<Alert.Body>{form.message}</Alert.Body>
 							</Alert>
 						)}
-						<Button type="submit" isPending={pending}>
+						<Button type="submit" isPending={form.pending}>
 							Change password
 						</Button>
 					</Form>

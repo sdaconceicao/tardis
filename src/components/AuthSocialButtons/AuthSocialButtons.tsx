@@ -1,4 +1,5 @@
 import { Button } from "@code-x/lago";
+import { useCallback } from "react";
 import type { SocialProvider } from "../../modules/identity/auth-client-actions";
 import css from "./AuthSocialButtons.module.css";
 
@@ -9,6 +10,11 @@ export function AuthSocialButtons({
 	pending: boolean;
 	onSignIn: (provider: SocialProvider) => void;
 }) {
+	const signInWithGoogle = useCallback(() => onSignIn("google"), [onSignIn]);
+	const signInWithFacebook = useCallback(
+		() => onSignIn("facebook"),
+		[onSignIn],
+	);
 	return (
 		<div className={css.authSocialButtons}>
 			<div className={css.divider}>
@@ -19,7 +25,7 @@ export function AuthSocialButtons({
 					variant="secondary"
 					size="lg"
 					isDisabled={pending}
-					onPress={() => onSignIn("google")}
+					onPress={signInWithGoogle}
 				>
 					<span className={css.googleMark} aria-hidden="true">
 						G
@@ -30,7 +36,7 @@ export function AuthSocialButtons({
 					variant="secondary"
 					size="lg"
 					isDisabled={pending}
-					onPress={() => onSignIn("facebook")}
+					onPress={signInWithFacebook}
 				>
 					<span className={css.facebookMark} aria-hidden="true">
 						f

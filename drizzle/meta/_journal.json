@@ -36,6 +36,41 @@
       "when": 1789060751021,
       "tag": "0004_aggregate_constraints",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791237784286,
+      "tag": "0005_catalog_places",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791258998435,
+      "tag": "0006_catalog_source_storage",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791292395127,
+      "tag": "0007_indexed_timezone_validation",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1791338308474,
+      "tag": "0008_catalog_cluster_cells",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1791383897468,
+      "tag": "0009_catalog_discovery_indexes",
+      "breakpoints": true
     }
   ]
 }

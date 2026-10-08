@@ -1,0 +1,749 @@
+{
+  "release": "2026-09-23.1",
+  "scope": "neon-free",
+  "selectionVersion": "2026-09-23.1-v2",
+  "derivedFrom": {
+    "file": "profile-us-2026-09-23.1-five-groups.json",
+    "sha256": "681279805787169ab779352dc813e598c1629a1915e6744e29c51437d1e2bdf5",
+    "method": "Filter the complete v1 US profile to museums and entertainment groups; geography, taxonomy and source manifest are identical."
+  },
+  "taxonomySha256": "59eecbf9e24859bcdab459e8efeea673b7fcbab06b45bd1c7067f215b3bc25d4",
+  "boundarySha256": "9cbfe171dad1555e11770c981d8f4db9e687a65c86f5bdae684eeb487e2e9b80",
+  "manifest": {
+    "files": 16,
+    "rows": 81455423,
+    "compressedBytes": 10996226026,
+    "sha256": "cb86db2579762ec0bff7bb0823e640ca1c64670220c11e86c865ee13d70d5ea9"
+  },
+  "scanned": {
+    "files": 16,
+    "manifestRows": 81455423,
+    "compressedBytes": 10996226026
+  },
+  "complete": true,
+  "accepted": 154464,
+  "rejected": 0,
+  "counts": [
+    {
+      "region": "AK",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 247,
+      "idNameBytes": 14245
+    },
+    {
+      "region": "AK",
+      "category": "museums",
+      "status": "accepted",
+      "count": 150,
+      "idNameBytes": 9226
+    },
+    {
+      "region": "AL",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1924,
+      "idNameBytes": 112865
+    },
+    {
+      "region": "AL",
+      "category": "museums",
+      "status": "accepted",
+      "count": 412,
+      "idNameBytes": 25818
+    },
+    {
+      "region": "AR",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1168,
+      "idNameBytes": 68525
+    },
+    {
+      "region": "AR",
+      "category": "museums",
+      "status": "accepted",
+      "count": 316,
+      "idNameBytes": 19773
+    },
+    {
+      "region": "AZ",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1996,
+      "idNameBytes": 117306
+    },
+    {
+      "region": "AZ",
+      "category": "museums",
+      "status": "accepted",
+      "count": 467,
+      "idNameBytes": 29342
+    },
+    {
+      "region": "CA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 13681,
+      "idNameBytes": 792829
+    },
+    {
+      "region": "CA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 2658,
+      "idNameBytes": 166702
+    },
+    {
+      "region": "CO",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2384,
+      "idNameBytes": 138481
+    },
+    {
+      "region": "CO",
+      "category": "museums",
+      "status": "accepted",
+      "count": 631,
+      "idNameBytes": 39607
+    },
+    {
+      "region": "CT",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1271,
+      "idNameBytes": 73943
+    },
+    {
+      "region": "CT",
+      "category": "museums",
+      "status": "accepted",
+      "count": 510,
+      "idNameBytes": 32276
+    },
+    {
+      "region": "DC",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 456,
+      "idNameBytes": 26272
+    },
+    {
+      "region": "DC",
+      "category": "museums",
+      "status": "accepted",
+      "count": 224,
+      "idNameBytes": 14808
+    },
+    {
+      "region": "DE",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 292,
+      "idNameBytes": 17168
+    },
+    {
+      "region": "DE",
+      "category": "museums",
+      "status": "accepted",
+      "count": 110,
+      "idNameBytes": 6900
+    },
+    {
+      "region": "FL",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 7900,
+      "idNameBytes": 463645
+    },
+    {
+      "region": "FL",
+      "category": "museums",
+      "status": "accepted",
+      "count": 1351,
+      "idNameBytes": 85786
+    },
+    {
+      "region": "GA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 4047,
+      "idNameBytes": 235319
+    },
+    {
+      "region": "GA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 682,
+      "idNameBytes": 43135
+    },
+    {
+      "region": "HI",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 597,
+      "idNameBytes": 34501
+    },
+    {
+      "region": "HI",
+      "category": "museums",
+      "status": "accepted",
+      "count": 158,
+      "idNameBytes": 9927
+    },
+    {
+      "region": "IA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1510,
+      "idNameBytes": 87939
+    },
+    {
+      "region": "IA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 556,
+      "idNameBytes": 35163
+    },
+    {
+      "region": "ID",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 692,
+      "idNameBytes": 40294
+    },
+    {
+      "region": "ID",
+      "category": "museums",
+      "status": "accepted",
+      "count": 191,
+      "idNameBytes": 12184
+    },
+    {
+      "region": "IL",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 4646,
+      "idNameBytes": 269118
+    },
+    {
+      "region": "IL",
+      "category": "museums",
+      "status": "accepted",
+      "count": 1218,
+      "idNameBytes": 77355
+    },
+    {
+      "region": "IN",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2641,
+      "idNameBytes": 154429
+    },
+    {
+      "region": "IN",
+      "category": "museums",
+      "status": "accepted",
+      "count": 600,
+      "idNameBytes": 38486
+    },
+    {
+      "region": "KS",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1274,
+      "idNameBytes": 74369
+    },
+    {
+      "region": "KS",
+      "category": "museums",
+      "status": "accepted",
+      "count": 494,
+      "idNameBytes": 31677
+    },
+    {
+      "region": "KY",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1729,
+      "idNameBytes": 100925
+    },
+    {
+      "region": "KY",
+      "category": "museums",
+      "status": "accepted",
+      "count": 383,
+      "idNameBytes": 24565
+    },
+    {
+      "region": "LA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1801,
+      "idNameBytes": 105173
+    },
+    {
+      "region": "LA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 395,
+      "idNameBytes": 24844
+    },
+    {
+      "region": "MA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2585,
+      "idNameBytes": 151026
+    },
+    {
+      "region": "MA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 944,
+      "idNameBytes": 58535
+    },
+    {
+      "region": "MD",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1829,
+      "idNameBytes": 107381
+    },
+    {
+      "region": "MD",
+      "category": "museums",
+      "status": "accepted",
+      "count": 539,
+      "idNameBytes": 34718
+    },
+    {
+      "region": "ME",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 663,
+      "idNameBytes": 38262
+    },
+    {
+      "region": "ME",
+      "category": "museums",
+      "status": "accepted",
+      "count": 394,
+      "idNameBytes": 24951
+    },
+    {
+      "region": "MI",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 3585,
+      "idNameBytes": 209240
+    },
+    {
+      "region": "MI",
+      "category": "museums",
+      "status": "accepted",
+      "count": 1005,
+      "idNameBytes": 64663
+    },
+    {
+      "region": "MN",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2266,
+      "idNameBytes": 131366
+    },
+    {
+      "region": "MN",
+      "category": "museums",
+      "status": "accepted",
+      "count": 585,
+      "idNameBytes": 37551
+    },
+    {
+      "region": "MO",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2809,
+      "idNameBytes": 163273
+    },
+    {
+      "region": "MO",
+      "category": "museums",
+      "status": "accepted",
+      "count": 670,
+      "idNameBytes": 43129
+    },
+    {
+      "region": "MS",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1059,
+      "idNameBytes": 62009
+    },
+    {
+      "region": "MS",
+      "category": "museums",
+      "status": "accepted",
+      "count": 277,
+      "idNameBytes": 17877
+    },
+    {
+      "region": "MT",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 566,
+      "idNameBytes": 32686
+    },
+    {
+      "region": "MT",
+      "category": "museums",
+      "status": "accepted",
+      "count": 252,
+      "idNameBytes": 15728
+    },
+    {
+      "region": "NC",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 3584,
+      "idNameBytes": 210270
+    },
+    {
+      "region": "NC",
+      "category": "museums",
+      "status": "accepted",
+      "count": 823,
+      "idNameBytes": 52122
+    },
+    {
+      "region": "ND",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 370,
+      "idNameBytes": 21280
+    },
+    {
+      "region": "ND",
+      "category": "museums",
+      "status": "accepted",
+      "count": 155,
+      "idNameBytes": 9972
+    },
+    {
+      "region": "NE",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 864,
+      "idNameBytes": 49406
+    },
+    {
+      "region": "NE",
+      "category": "museums",
+      "status": "accepted",
+      "count": 345,
+      "idNameBytes": 22083
+    },
+    {
+      "region": "NH",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 542,
+      "idNameBytes": 31707
+    },
+    {
+      "region": "NH",
+      "category": "museums",
+      "status": "accepted",
+      "count": 260,
+      "idNameBytes": 16353
+    },
+    {
+      "region": "NJ",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2714,
+      "idNameBytes": 158627
+    },
+    {
+      "region": "NJ",
+      "category": "museums",
+      "status": "accepted",
+      "count": 679,
+      "idNameBytes": 43415
+    },
+    {
+      "region": "NM",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 751,
+      "idNameBytes": 44079
+    },
+    {
+      "region": "NM",
+      "category": "museums",
+      "status": "accepted",
+      "count": 346,
+      "idNameBytes": 22066
+    },
+    {
+      "region": "NV",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1460,
+      "idNameBytes": 84647
+    },
+    {
+      "region": "NV",
+      "category": "museums",
+      "status": "accepted",
+      "count": 232,
+      "idNameBytes": 14453
+    },
+    {
+      "region": "NY",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 8052,
+      "idNameBytes": 461778
+    },
+    {
+      "region": "NY",
+      "category": "museums",
+      "status": "accepted",
+      "count": 2121,
+      "idNameBytes": 133275
+    },
+    {
+      "region": "OH",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 4557,
+      "idNameBytes": 265159
+    },
+    {
+      "region": "OH",
+      "category": "museums",
+      "status": "accepted",
+      "count": 1191,
+      "idNameBytes": 76778
+    },
+    {
+      "region": "OK",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1799,
+      "idNameBytes": 104568
+    },
+    {
+      "region": "OK",
+      "category": "museums",
+      "status": "accepted",
+      "count": 485,
+      "idNameBytes": 30709
+    },
+    {
+      "region": "OR",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1581,
+      "idNameBytes": 91229
+    },
+    {
+      "region": "OR",
+      "category": "museums",
+      "status": "accepted",
+      "count": 456,
+      "idNameBytes": 28558
+    },
+    {
+      "region": "PA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 4911,
+      "idNameBytes": 286807
+    },
+    {
+      "region": "PA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 1373,
+      "idNameBytes": 88451
+    },
+    {
+      "region": "RI",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 435,
+      "idNameBytes": 25286
+    },
+    {
+      "region": "RI",
+      "category": "museums",
+      "status": "accepted",
+      "count": 149,
+      "idNameBytes": 9196
+    },
+    {
+      "region": "SC",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1907,
+      "idNameBytes": 112258
+    },
+    {
+      "region": "SC",
+      "category": "museums",
+      "status": "accepted",
+      "count": 363,
+      "idNameBytes": 23207
+    },
+    {
+      "region": "SD",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 423,
+      "idNameBytes": 24833
+    },
+    {
+      "region": "SD",
+      "category": "museums",
+      "status": "accepted",
+      "count": 203,
+      "idNameBytes": 12898
+    },
+    {
+      "region": "TN",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2894,
+      "idNameBytes": 168168
+    },
+    {
+      "region": "TN",
+      "category": "museums",
+      "status": "accepted",
+      "count": 571,
+      "idNameBytes": 36076
+    },
+    {
+      "region": "TX",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 10816,
+      "idNameBytes": 625426
+    },
+    {
+      "region": "TX",
+      "category": "museums",
+      "status": "accepted",
+      "count": 1826,
+      "idNameBytes": 114764
+    },
+    {
+      "region": "UT",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 1171,
+      "idNameBytes": 67313
+    },
+    {
+      "region": "UT",
+      "category": "museums",
+      "status": "accepted",
+      "count": 276,
+      "idNameBytes": 17220
+    },
+    {
+      "region": "VA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2787,
+      "idNameBytes": 162549
+    },
+    {
+      "region": "VA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 907,
+      "idNameBytes": 57857
+    },
+    {
+      "region": "VT",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 348,
+      "idNameBytes": 20250
+    },
+    {
+      "region": "VT",
+      "category": "museums",
+      "status": "accepted",
+      "count": 184,
+      "idNameBytes": 11529
+    },
+    {
+      "region": "WA",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2489,
+      "idNameBytes": 143021
+    },
+    {
+      "region": "WA",
+      "category": "museums",
+      "status": "accepted",
+      "count": 652,
+      "idNameBytes": 40956
+    },
+    {
+      "region": "WI",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 2471,
+      "idNameBytes": 144741
+    },
+    {
+      "region": "WI",
+      "category": "museums",
+      "status": "accepted",
+      "count": 763,
+      "idNameBytes": 48869
+    },
+    {
+      "region": "WV",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 690,
+      "idNameBytes": 40610
+    },
+    {
+      "region": "WV",
+      "category": "museums",
+      "status": "accepted",
+      "count": 218,
+      "idNameBytes": 13833
+    },
+    {
+      "region": "WY",
+      "category": "entertainment",
+      "status": "accepted",
+      "count": 294,
+      "idNameBytes": 17097
+    },
+    {
+      "region": "WY",
+      "category": "museums",
+      "status": "accepted",
+      "count": 186,
+      "idNameBytes": 11715
+    }
+  ],
+  "storageProbe": {
+    "kind": "synthetic-10k-rolled-back",
+    "bytesPerPlace": 824.1152,
+    "projectedPlacesBytes": 127296130,
+    "placesBudgetBytes": 150000000,
+    "representativeSourceRows": false
+  }
+}

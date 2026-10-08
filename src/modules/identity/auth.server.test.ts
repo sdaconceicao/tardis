@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
 	createAuth,
 	getActor,
@@ -45,6 +45,7 @@ beforeEach(() => {
 		RESEND_FROM_EMAIL: "hello@app.test",
 	};
 });
+afterEach(() => vi.unstubAllEnvs());
 
 describe("session headers", () => {
 	it("keeps cookies for browser sessions", async () => {
@@ -114,6 +115,18 @@ describe("session headers", () => {
 		environment.current.BETTER_AUTH_SECRET = "secret";
 		environment.current.RESEND_API_KEY = undefined;
 		expect(() => getAuth()).toThrow(/Verification email is not configured/);
+	});
+
+	it("uses the preview branch URL when BETTER_AUTH_URL is absent", async () => {
+		vi.stubEnv("VERCEL_ENV", "preview");
+		vi.stubEnv("VERCEL_BRANCH_URL", "preview.example");
+		environment.current.BETTER_AUTH_URL = undefined;
+		vi.resetModules();
+		const { getAuth: freshGetAuth } = await import("./auth.server");
+		freshGetAuth();
+		expect(mocks.betterAuth).toHaveBeenCalledWith(
+			expect.objectContaining({ baseURL: "https://preview.example" }),
+		);
 	});
 
 	it("configures verification and optional social providers", () => {
