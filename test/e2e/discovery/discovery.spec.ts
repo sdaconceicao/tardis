@@ -1,13 +1,20 @@
 import { expect, test } from "@playwright/test";
 
 test("keeps discovery navigation and calendar views usable", async ({ page }) => {
+	await page.route("https://tiles.openfreemap.org/styles/liberty", async (route) => {
+		await route.fulfill({ json: { version: 8, sources: {}, layers: [] } });
+	});
 	await page.goto("/");
 	await expect(page.getByRole("heading", { name: "Somewhere worth going" })).toBeVisible();
 	await expect(page.getByRole("complementary", { name: "Places to explore" })).toBeVisible();
 	await expect(page.getByRole("combobox", { name: "Category" })).toBeVisible();
-	await expect(page.getByRole("region", { name: "Explore map" })).toBeVisible();
+	await expect(page.getByRole("region", { name: "Explore map" })).toHaveAttribute(
+		"aria-busy",
+		"false",
+	);
 
 	await page.getByRole("navigation", { name: "Discovery view" }).getByRole("link", { name: "Calendar" }).click();
+	await expect(page).toHaveURL(/\/calendar\?view=week$/);
 	await expect(page.getByRole("heading", { name: "Your week, wide open." })).toBeVisible();
 	await page.getByRole("navigation", { name: "Calendar view" }).getByRole("link", { name: "agenda" }).click();
 	await expect(page.getByRole("heading", { name: "Make a little time to explore." })).toBeVisible();

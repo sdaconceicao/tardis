@@ -116,38 +116,62 @@ async function importAsset(
 
 async function main() {
 	const resolved = resolveOvertureSyncConfig(process.env);
-	const mapping = resolveCategoryMapping(await readFile(taxonomyPath, "utf8"));
-	const manifest = await loadPinnedPlaceManifest();
-	const regionalRows =
-		resolved.profile === "regional-poi"
-			? await regionalExpectedRows(manifest)
-			: null;
-	const root = resolve(process.env.OVERTURE_ARTIFACT_DIR || ".data/overture");
-	const directory = join(root, overtureRelease, resolved.selectionFingerprint);
-	await mkdir(directory, { recursive: true });
-	const manifestPath = join(directory, "manifest.json");
-	const manifestJson = `${JSON.stringify(manifest, null, 2)}\n`;
-	try {
-		const frozen = await readFile(manifestPath, "utf8");
-		if (frozen !== manifestJson)
-			throw new Error("Overture manifest changed during resume");
-	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-		await writeFile(manifestPath, manifestJson);
-	}
-	const boundaryFiles =
-		resolved.profile === "neon-free"
-			? { us: await boundaryFile(directory, "neon-free") }
-			: {
-					countries: await boundaryFile(directory, "regional-poi"),
-					regions: await boundaryFile(directory, "regional-poi-continents"),
-				};
 	const client = new Client({ connectionString: process.env.DATABASE_URL });
 	client.on("error", (error) => {
 		process.stderr.write(`PostGIS connection lost: ${error.message}\n`);
 	});
 	await client.connect();
 	try {
+		const existing = await client.query(
+			"SELECT id, state, resolved_config FROM place_import_runs WHERE release=$1 AND selection_fingerprint=$2",
+			[overtureRelease, resolved.selectionFingerprint],
+		);
+		if (existing.rows[0]?.state === "completed") {
+			process.stdout.write(
+				"This Overture release and selection are already imported.\n",
+			);
+			return;
+		}
+		if (
+			existing.rows[0] &&
+			!isDeepStrictEqual(existing.rows[0].resolved_config, resolved)
+		) {
+			throw new Error(
+				"Cannot resume with a different resolved import configuration",
+			);
+		}
+		const mapping = resolveCategoryMapping(
+			await readFile(taxonomyPath, "utf8"),
+		);
+		const manifest = await loadPinnedPlaceManifest();
+		const regionalRows =
+			resolved.profile === "regional-poi"
+				? await regionalExpectedRows(manifest)
+				: null;
+		const root = resolve(process.env.OVERTURE_ARTIFACT_DIR || ".data/overture");
+		const directory = join(
+			root,
+			overtureRelease,
+			resolved.selectionFingerprint,
+		);
+		await mkdir(directory, { recursive: true });
+		const manifestPath = join(directory, "manifest.json");
+		const manifestJson = `${JSON.stringify(manifest, null, 2)}\n`;
+		try {
+			const frozen = await readFile(manifestPath, "utf8");
+			if (frozen !== manifestJson)
+				throw new Error("Overture manifest changed during resume");
+		} catch (error) {
+			if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+			await writeFile(manifestPath, manifestJson);
+		}
+		const boundaryFiles =
+			resolved.profile === "neon-free"
+				? { us: await boundaryFile(directory, "neon-free") }
+				: {
+						countries: await boundaryFile(directory, "regional-poi"),
+						regions: await boundaryFile(directory, "regional-poi-continents"),
+					};
 		let expectedRows = regionalRows;
 		if (resolved.target === "hosted") {
 			const { reservedBytes, sourceRows } = await hostedCapacityReserve(
@@ -169,24 +193,6 @@ async function main() {
 			}
 			process.stderr.write(
 				`Hosted Overture capacity check passed: ${reservedBytes} reserved place bytes, ${size} current database bytes\n`,
-			);
-		}
-		const existing = await client.query(
-			"SELECT id, state, resolved_config FROM place_import_runs WHERE release=$1 AND selection_fingerprint=$2",
-			[overtureRelease, resolved.selectionFingerprint],
-		);
-		if (existing.rows[0]?.state === "completed") {
-			process.stdout.write(
-				"This Overture release and selection are already imported.\n",
-			);
-			return;
-		}
-		if (
-			existing.rows[0] &&
-			!isDeepStrictEqual(existing.rows[0].resolved_config, resolved)
-		) {
-			throw new Error(
-				"Cannot resume with a different resolved import configuration",
 			);
 		}
 		const runId: string =

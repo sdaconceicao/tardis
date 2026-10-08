@@ -27,10 +27,8 @@
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:check": "drizzle-kit check",
-		"poi:check-config": "node --experimental-strip-types src/jobs/check-overture-config.ts",
 		"poi:profile": "node --experimental-strip-types src/jobs/profile-overture-places.ts",
 		"poi:sync": "node --experimental-strip-types src/jobs/sync-overture-places.ts",
-		"poi:curate-landmarks": "node --experimental-strip-types src/jobs/curate-overture-landmarks.ts",
 		"poi:measure-storage": "node --experimental-strip-types src/jobs/measure-overture-storage.ts",
 		"test:db": "node --env-file-if-exists=.env.local ./node_modules/vitest/vitest.mjs run test/integration/domain.integration.test.ts",
 		"test:e2e": "playwright test"

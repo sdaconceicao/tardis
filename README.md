@@ -41,21 +41,16 @@ do not require an Overture API key. The importer pins release `2026-09-23.1`
 and validates its [STAC manifest](https://docs.overturemaps.org/getting-data/cloud-sources/);
 see the [DuckDB query examples](https://docs.overturemaps.org/getting-data/duckdb/).
 
-For the local PostGIS database, uncomment these lines in `.env.local` and check
-the resolved scope:
+For the local PostGIS database, uncomment these lines in `.env.local`:
 
 ```dotenv
 OVERTURE_SYNC_PROFILE=regional-poi
 OVERTURE_DEPLOYMENT_TARGET=local
 ```
 
-```bash
-pnpm poi:check-config
-```
-
-The check prints the profile and selection fingerprint without printing
-`DATABASE_URL`. It does not download or import POIs. Profile the pinned release
-before loading a database:
+`poi:sync` validates the profile and database target before importing. The
+pinned release has already been profiled; rerun `poi:profile` only when changing
+the release, selection, or sizing report:
 
 ```bash
 pnpm poi:profile --scope neon-free --output /tmp/tardis-us-poi-profile.json
@@ -86,15 +81,20 @@ landmarks, and entertainment in North America and Europe. Its Natural Earth
 boundaries are checksum pinned. Generic Overture `historic_site` entries are
 excluded from landmarks because they often describe ordinary residences and
 businesses; specific types such as monuments, castles, forts, and lighthouses
-remain. After upgrading an existing local catalog, run
-`pnpm poi:curate-landmarks` to retire those entries and rebuild map clusters.
-An interrupted run resumes by release
-and selection fingerprint. Measure actual POI storage against the disposable
-test database with `pnpm poi:measure-storage --input <extracted-file>`.
+remain. An interrupted run resumes by release and selection fingerprint.
+Measure actual POI storage against the disposable test database with
+`pnpm poi:measure-storage --input <extracted-file>`.
 Production bootstrap checks a matching capacity report and database headroom
 before writing. The real 10,000-row probe projected about 111 MB of places;
 the gate reserves 20% above that estimate. See the
-[implementation plan](docs/design/map-poi-implementation-plan.md).
+[map and POI decision record](docs/adr/0004-map-poi-discovery.md).
+
+Once a release and selection are complete in a database, rerunning `poi:sync`
+only checks its import record and exits; it does not download Overture data or
+rebuild clusters. A first import still scans the source files and writes the
+catalog, so run it from a long-lived batch machine with DuckDB installed.
+`poi:profile` and `poi:measure-storage` are release and capacity maintenance
+tools, not deployment steps.
 
 ## Frontend shell
 
@@ -190,9 +190,10 @@ availability searches, and local integration tests.
 - `docs/operations`: cost and operational guardrails
 
 See [docs/architecture.md](docs/architecture.md) for module rules, request
-flows, and the routing extraction path. The files in `docs/design` record design
-choices; [the API guide](docs/api/domain-endpoints.md) describes the implemented
-HTTP contract.
+flows, and the routing extraction path. Accepted decisions are in `docs/adr`;
+`docs/design` holds proposals for future work. The
+[API guide](docs/api/domain-endpoints.md) describes the implemented HTTP
+contract.
 
 ## Deploy to Vercel
 
@@ -219,12 +220,15 @@ unprefixed so they remain server-only.
 Production POI imports need a separate batch runner with DuckDB and its
 extensions, scratch disk, artifact storage, and a server-only Neon database
 credential. Set `OVERTURE_SYNC_PROFILE=neon-free` and
-`OVERTURE_DEPLOYMENT_TARGET=hosted` in that runner, then run
-`pnpm poi:check-config`. Run `pnpm poi:sync` from the batch runner; it checks
+`OVERTURE_DEPLOYMENT_TARGET=hosted` in that runner, then run `pnpm poi:sync`
+against the persistent production Neon branch. It checks
 the release-matched capacity report and current database headroom before any
 write. The pinned release, taxonomy, and 50-state-and-DC boundary are described in
 [config/overture/README.md](config/overture/README.md). A Vercel app deployment
-does not populate POIs.
+does not populate POIs. Configure Neon to create branches for Preview deployments
+from the populated production branch. A deployment-specific Production branch
+would require a fresh import for each deployment, so Production should use the
+persistent branch.
 
 The public HTTP contract is versioned at `/api/v1`. Open `/api/docs` for
 interactive Swagger documentation or `/api/openapi.json` for the OpenAPI

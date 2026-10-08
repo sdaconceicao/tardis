@@ -1,10 +1,10 @@
 # Public discovery frontend — initial layout plan
 
-Status: Design proposal, 2026-09-10. The layouts use fictional sample listings;
-they are not a working frontend or live event data. The current app has map and
-calendar placeholders. The [event/place design](event-place-schema.md) and
-[API guide](../api/domain-endpoints.md) describe the implemented schema and
-HTTP endpoints. Date-range discovery and national map browsing remain proposed.
+Status: Historical layout proposal, 2026-09-10. The examples use fictional
+listings and describe future event and calendar discovery. The implemented POI
+map is documented in [ADR 0004](../adr/0004-map-poi-discovery.md) and the
+[API guide](../api/domain-endpoints.md). The calendar and date-range discovery
+remain future work.
 
 Earlier interactive wireframes (not stored in this repository) cover mobile and
 desktop, with alternate
