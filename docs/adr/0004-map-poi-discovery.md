@@ -59,9 +59,12 @@ usable data without a separate import on every deployment.
 ### Deployment
 
 - Run Drizzle migrations during the Vercel build, before compiling the app.
-  Run POI sync separately on a machine with DuckDB, scratch space, and a
-  credential for the persistent production Neon branch. A new selection can
-  take substantial time; it must not run on every build or request.
+  Run POI sync in GitHub Actions with DuckDB and the Neon project credentials.
+  A branch push bootstraps the current Preview catalog; after merge, scheduled
+  quarterly runs target the persistent production Neon branch and apply pending
+  migrations first. A new selection can take substantial time, so the import
+  must not run on every build or request. The schedule alone does not advance
+  the pinned Overture release.
 - Use the persistent Neon branch for Production. Preview branches should fork
   from its populated data, then receive their own migrations. Production POIs
   still require an explicit first import; migrations create schema only.

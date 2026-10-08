@@ -1,0 +1,79 @@
+name: Sync Overture POIs
+
+on:
+  push:
+    branches: [feat-map-view]
+    paths:
+      - .github/workflows/sync-overture-pois.yml
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Neon branch to import
+        required: true
+        type: choice
+        default: preview
+        options: [preview, production]
+  schedule:
+    - cron: "0 10 8 1,4,7,10 *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: overture-poi-sync-${{ (github.event_name == 'schedule' || inputs.target == 'production') && 'production' || 'preview' }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Migrate and import POIs
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Select Neon branch
+        id: target
+        env:
+          REQUESTED_TARGET: ${{ inputs.target }}
+        run: |
+          if [[ "$GITHUB_EVENT_NAME" == schedule || "$REQUESTED_TARGET" == production ]]; then
+            echo 'branch=main' >> "$GITHUB_OUTPUT"
+          else
+            echo 'branch=preview/feat-map-view' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Connect to Neon branch
+        id: neon
+        uses: neondatabase/create-branch-action@v6
+        with:
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          branch_name: ${{ steps.target.outputs.branch }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+      - name: Apply database migrations
+        run: pnpm db:migrate
+        env:
+          DATABASE_URL: ${{ steps.neon.outputs.db_url }}
+      - name: Install DuckDB CLI
+        run: |
+          curl --fail --location --silent --show-error \
+            https://github.com/duckdb/duckdb/releases/download/v1.4.5/duckdb_cli-linux-amd64.zip \
+            --output "$RUNNER_TEMP/duckdb.zip"
+          echo "ff4ef9ec59fe3e1a1f3dd1004c6218d1fd59c0533c185c968c4403fd0240d02b  $RUNNER_TEMP/duckdb.zip" | sha256sum --check --status
+          mkdir "$RUNNER_TEMP/duckdb-bin"
+          unzip -q "$RUNNER_TEMP/duckdb.zip" -d "$RUNNER_TEMP/duckdb-bin"
+          echo "$RUNNER_TEMP/duckdb-bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/duckdb-bin/duckdb" -c "INSTALL httpfs; LOAD httpfs; INSTALL spatial; LOAD spatial;"
+      - name: Import pinned Overture POIs
+        run: pnpm poi:sync
+        env:
+          DATABASE_URL: ${{ steps.neon.outputs.db_url }}
+          OVERTURE_SYNC_PROFILE: neon-free
+          OVERTURE_DEPLOYMENT_TARGET: hosted
+          OVERTURE_ARTIFACT_DIR: ${{ runner.temp }}/overture

@@ -217,18 +217,31 @@ supplied to that deployment; local `pnpm build` does not run migrations.
 Variables prefixed with `VITE_` are included in the browser bundle. Keep secrets
 unprefixed so they remain server-only.
 
-Production POI imports need a separate batch runner with DuckDB and its
-extensions, scratch disk, artifact storage, and a server-only Neon database
-credential. Set `OVERTURE_SYNC_PROFILE=neon-free` and
-`OVERTURE_DEPLOYMENT_TARGET=hosted` in that runner, then run `pnpm poi:sync`
-against the persistent production Neon branch. It checks
-the release-matched capacity report and current database headroom before any
-write. The pinned release, taxonomy, and 50-state-and-DC boundary are described in
-[config/overture/README.md](config/overture/README.md). A Vercel app deployment
-does not populate POIs. Configure Neon to create branches for Preview deployments
-from the populated production branch. A deployment-specific Production branch
-would require a fresh import for each deployment, so Production should use the
-persistent branch.
+POI imports run in [the GitHub Actions batch workflow](.github/workflows/sync-overture-pois.yml),
+not in Vercel Functions. The workflow uses the existing `NEON_API_KEY` and
+`NEON_PROJECT_ID` GitHub Actions secrets to connect to a named Neon branch. It
+runs migrations, installs DuckDB and its extensions, then runs `pnpm poi:sync`
+with the hosted `neon-free` profile. The importer checks the release-matched
+capacity report and database headroom before writing. The pinned release,
+taxonomy, and 50-state-and-DC boundary are described in
+[config/overture/README.md](config/overture/README.md).
+
+The first push of the workflow on `feat-map-view` imports the existing
+`preview/feat-map-view` Neon branch. Later, use **Actions > Sync Overture POIs >
+Run workflow** to retry that Preview import. Manual runs are available after
+the workflow reaches the default GitHub branch. The quarterly schedule runs at
+10:00 UTC on January 8, April 8, July 8, and October 8, and targets the
+persistent `main` Neon branch after the workflow is merged. It applies any
+pending migrations there first. Keep Neon deployment branching enabled for
+Preview; new Preview branches created from a populated `main` inherit the
+catalog.
+
+The job is idempotent for the pinned Overture release. Once that release is
+complete, quarterly runs exit quickly. To load a newer release, update and
+validate the pinned manifest, profile, and capacity report before the next run.
+The workflow requires GitHub Actions access to the Neon project and outbound
+access to Overture's public data. A Vercel deployment alone does not populate
+POIs.
 
 The public HTTP contract is versioned at `/api/v1`. Open `/api/docs` for
 interactive Swagger documentation or `/api/openapi.json` for the OpenAPI
