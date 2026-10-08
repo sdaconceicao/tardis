@@ -207,8 +207,11 @@ HTTP contract.
 5. Deploy or redeploy after changing environment variables; existing deployments
    keep their previous values.
 
-Vercel runs the build script and deploys Nitro's output as Vercel Functions and
-static assets. The included `vercel.json` makes framework detection explicit.
+Vercel runs `pnpm db:migrate` before `pnpm build`, then deploys Nitro's output
+as Vercel Functions and static assets. A migration failure stops the deployment.
+Keep Neon deployment branching enabled for Preview so preview migrations run
+against preview database branches. The Vercel build uses the `DATABASE_URL`
+supplied to that deployment; local `pnpm build` does not run migrations.
 
 Variables prefixed with `VITE_` are included in the browser bundle. Keep secrets
 unprefixed so they remain server-only.
