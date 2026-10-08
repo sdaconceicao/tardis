@@ -9,8 +9,9 @@ and session checks at protected operations. The reference project was read only.
 
 1. Copy `.env.example` to `.env.local`.
 2. Set `DATABASE_URL` to your PostgreSQL/Neon pooled connection string.
-3. Set `BETTER_AUTH_URL` to the exact app origin and `BETTER_AUTH_SECRET` to a
-   securely generated secret of at least 32 characters.
+3. Set `BETTER_AUTH_SECRET` to a securely generated secret of at least 32
+   characters. Set `BETTER_AUTH_URL` only for a local or custom-host override;
+   Vercel provides the production domain and preview branch alias automatically.
 4. Run `pnpm db:migrate`, then `pnpm dev`.
 
 The migration role needs permission to create PostGIS and `btree_gist`.
@@ -57,8 +58,9 @@ operations; its bearer authorization is not persisted across reloads.
 
 Set `API_ALLOWED_ORIGINS=https://frontend.example,https://admin.example` to
 allow browser clients. Only exact HTTP(S) origins are accepted; no wildcard,
-path, credentials, query, or fragment. The origin in `BETTER_AUTH_URL` is
-always included. The same allowlist is passed to Better Auth. OPTIONS
+path, credentials, query, or fragment. The resolved auth origin and Vercel
+deployment origin are always included. The same allowlist is passed to Better
+Auth. OPTIONS
 preflight does not require authentication. Responses to allowed origins
 include credential support and expose `set-auth-token`; other origins are
 rejected. CORS does not grant access to private data.

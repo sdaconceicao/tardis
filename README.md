@@ -160,8 +160,10 @@ set in the shell. Its database name must end in `_test`. `docker compose down`
 stops Postgres and keeps both databases; `docker compose down -v` removes the
 local database volume and all its data.
 
-Set `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, `RESEND_API_KEY`, and
-`RESEND_FROM_EMAIL` to enable email/password auth. Signups send a verification
+Set `BETTER_AUTH_SECRET`, `RESEND_API_KEY`, and `RESEND_FROM_EMAIL` to enable
+email/password auth. `BETTER_AUTH_URL` is an optional local or custom-host
+override. On Vercel, auth uses the production domain or preview branch alias
+from Vercel's system environment variables. Signups send a verification
 link through Resend; users must verify before signing in. The signup page can
 resend the link. The login page links to a password reset request form, and
 one-time reset links are sent through Resend. Use a sender address on a domain
@@ -169,8 +171,8 @@ verified in Resend.
 
 For social login, add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, or
 `FACEBOOK_CLIENT_ID` and `FACEBOOK_CLIENT_SECRET`. Register these exact callback
-URLs with the providers: `<BETTER_AUTH_URL>/api/auth/callback/google` and
-`<BETTER_AUTH_URL>/api/auth/callback/facebook`. Each provider is enabled when
+URLs with the providers: `<app origin>/api/auth/callback/google` and
+`<app origin>/api/auth/callback/facebook`. Each provider is enabled when
 both values are present.
 
 The domain API uses session cookies for writes and private reads. See
@@ -197,8 +199,13 @@ HTTP contract.
 1. Push this repo to GitHub, GitLab, or Bitbucket
 2. In Vercel, choose **Add New > Project** and import the repo
 3. Keep the detected TanStack Start framework settings
-4. Add production values from `.env.example` under **Settings > Environment Variables**
-5. Deploy
+4. Add values from `.env.example` under **Settings > Environment Variables** for
+   each environment you deploy. Vercel supplies the auth origin automatically;
+   `BETTER_AUTH_URL` is optional. Include `DATABASE_URL`, `BETTER_AUTH_SECRET`,
+   `RESEND_API_KEY`, and `RESEND_FROM_EMAIL` for both Production and Preview when
+   both are used.
+5. Deploy or redeploy after changing environment variables; existing deployments
+   keep their previous values.
 
 Vercel runs the build script and deploys Nitro's output as Vercel Functions and
 static assets. The included `vercel.json` makes framework detection explicit.

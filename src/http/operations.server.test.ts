@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import * as places from "../modules/places/index.server";
 import { dispatch, operations } from "./operations.server";
 
-afterEach(() => vi.unstubAllEnvs());
+afterEach(() => {
+	vi.unstubAllEnvs();
+	vi.restoreAllMocks();
+});
 
 describe("API dispatch", () => {
 	it("returns 404 for unknown endpoints", async () => {
@@ -68,5 +72,32 @@ describe("API dispatch", () => {
 		} finally {
 			operation.handle = original;
 		}
+	});
+
+	it("serves public clusters with a cookie when auth is not configured", async () => {
+		vi.stubEnv("DATABASE_URL", "postgresql://example.test/tardis");
+		vi.stubEnv("BETTER_AUTH_URL", "");
+		const clusterDiscovery = vi
+			.spyOn(places, "clusterDiscovery")
+			.mockResolvedValue({
+				clusters: [],
+				capped: false,
+				approximate: false,
+				catalogStatus: "empty",
+			});
+		const response = await dispatch(
+			new Request(
+				"https://app.test/api/v1/discovery/clusters?west=-90&south=35&east=-70&north=45&zoom=6",
+				{ headers: { cookie: "better-auth.session_token=old-session" } },
+			),
+		);
+		expect(response.status).toBe(200);
+		expect(await response.json()).toEqual({
+			clusters: [],
+			capped: false,
+			approximate: false,
+			catalogStatus: "empty",
+		});
+		expect(clusterDiscovery).toHaveBeenCalledOnce();
 	});
 });

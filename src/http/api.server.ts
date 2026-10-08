@@ -103,10 +103,15 @@ export async function api<W extends boolean>(
 		actor: W extends true ? Actor : Actor | null,
 	) => Promise<unknown>,
 	status = 200,
+	authenticate = true,
 ) {
 	try {
 		checkCorsOrigin(request);
-		const actor = write ? await requireActor(request) : await getActor(request);
+		const actor = write
+			? await requireActor(request)
+			: authenticate
+				? await getActor(request)
+				: null;
 		if (write && !request.headers.has("authorization"))
 			checkWriteOrigin(request);
 		const result = await handler(

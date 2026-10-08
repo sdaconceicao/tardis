@@ -41,7 +41,13 @@ function operation<B extends z.ZodType, Q extends z.ZodObject>(
 	path: string,
 	operationId: string,
 	summary: string,
-	options: { body?: B; query?: Q; response?: z.ZodType; status?: number },
+	options: {
+		body?: B;
+		query?: Q;
+		response?: z.ZodType;
+		status?: number;
+		public?: boolean;
+	},
 	run: (
 		context: Context,
 		body: z.output<B>,
@@ -87,6 +93,7 @@ function operation<B extends z.ZodType, Q extends z.ZodObject>(
 					return parsed.data;
 				},
 				status,
+				!options.public,
 			),
 	};
 }
@@ -237,7 +244,11 @@ export const operations = [
 		"/discovery",
 		"listDiscovery",
 		"Browse public catalog places in map bounds",
-		{ query: places.discoveryQuerySchema, response: out.discoveryResponse },
+		{
+			query: places.discoveryQuerySchema,
+			response: out.discoveryResponse,
+			public: true,
+		},
 		({ db }, _, q) => places.listDiscovery(db, q),
 	),
 	operation(
@@ -248,6 +259,7 @@ export const operations = [
 		{
 			query: places.clusterQuerySchema,
 			response: out.discoveryClustersResponse,
+			public: true,
 		},
 		({ db }, _, q) => places.clusterDiscovery(db, q),
 	),
