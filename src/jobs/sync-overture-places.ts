@@ -60,6 +60,21 @@ function addCounts(total: BatchCounts, batch: BatchCounts): void {
 	total.unchanged += batch.unchanged;
 }
 
+async function withPostgis<T>(
+	work: (client: Client) => Promise<T>,
+): Promise<T> {
+	const client = new Client({ connectionString: process.env.DATABASE_URL });
+	client.on("error", (error) => {
+		process.stderr.write(`PostGIS connection lost: ${error.message}\n`);
+	});
+	await client.connect();
+	try {
+		return await work(client);
+	} finally {
+		await client.end();
+	}
+}
+
 async function importAsset(
 	client: Client,
 	runId: string,
@@ -116,69 +131,60 @@ async function importAsset(
 
 async function main() {
 	const resolved = resolveOvertureSyncConfig(process.env);
-	const client = new Client({ connectionString: process.env.DATABASE_URL });
-	client.on("error", (error) => {
-		process.stderr.write(`PostGIS connection lost: ${error.message}\n`);
-	});
-	await client.connect();
-	try {
-		const existing = await client.query(
+	const existing = await withPostgis((client) =>
+		client.query(
 			"SELECT id, state, resolved_config FROM place_import_runs WHERE release=$1 AND selection_fingerprint=$2",
 			[overtureRelease, resolved.selectionFingerprint],
+		),
+	);
+	if (existing.rows[0]?.state === "completed") {
+		process.stdout.write(
+			"This Overture release and selection are already imported.\n",
 		);
-		if (existing.rows[0]?.state === "completed") {
-			process.stdout.write(
-				"This Overture release and selection are already imported.\n",
-			);
-			return;
-		}
-		if (
-			existing.rows[0] &&
-			!isDeepStrictEqual(existing.rows[0].resolved_config, resolved)
-		) {
-			throw new Error(
-				"Cannot resume with a different resolved import configuration",
-			);
-		}
-		const mapping = resolveCategoryMapping(
-			await readFile(taxonomyPath, "utf8"),
+		return;
+	}
+	if (
+		existing.rows[0] &&
+		!isDeepStrictEqual(existing.rows[0].resolved_config, resolved)
+	) {
+		throw new Error(
+			"Cannot resume with a different resolved import configuration",
 		);
-		const manifest = await loadPinnedPlaceManifest();
-		const regionalRows =
-			resolved.profile === "regional-poi"
-				? await regionalExpectedRows(manifest)
-				: null;
-		const root = resolve(process.env.OVERTURE_ARTIFACT_DIR || ".data/overture");
-		const directory = join(
-			root,
-			overtureRelease,
-			resolved.selectionFingerprint,
-		);
-		await mkdir(directory, { recursive: true });
-		const manifestPath = join(directory, "manifest.json");
-		const manifestJson = `${JSON.stringify(manifest, null, 2)}\n`;
-		try {
-			const frozen = await readFile(manifestPath, "utf8");
-			if (frozen !== manifestJson)
-				throw new Error("Overture manifest changed during resume");
-		} catch (error) {
-			if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-			await writeFile(manifestPath, manifestJson);
-		}
-		const boundaryFiles =
-			resolved.profile === "neon-free"
-				? { us: await boundaryFile(directory, "neon-free") }
-				: {
-						countries: await boundaryFile(directory, "regional-poi"),
-						regions: await boundaryFile(directory, "regional-poi-continents"),
-					};
-		let expectedRows = regionalRows;
-		if (resolved.target === "hosted") {
-			const { reservedBytes, sourceRows } = await hostedCapacityReserve(
-				manifest,
-				resolved,
-			);
-			expectedRows = sourceRows;
+	}
+	const mapping = resolveCategoryMapping(await readFile(taxonomyPath, "utf8"));
+	const manifest = await loadPinnedPlaceManifest();
+	const regionalRows =
+		resolved.profile === "regional-poi"
+			? await regionalExpectedRows(manifest)
+			: null;
+	const root = resolve(process.env.OVERTURE_ARTIFACT_DIR || ".data/overture");
+	const directory = join(root, overtureRelease, resolved.selectionFingerprint);
+	await mkdir(directory, { recursive: true });
+	const manifestPath = join(directory, "manifest.json");
+	const manifestJson = `${JSON.stringify(manifest, null, 2)}\n`;
+	try {
+		const frozen = await readFile(manifestPath, "utf8");
+		if (frozen !== manifestJson)
+			throw new Error("Overture manifest changed during resume");
+	} catch (error) {
+		if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+		await writeFile(manifestPath, manifestJson);
+	}
+	const boundaryFiles =
+		resolved.profile === "neon-free"
+			? { us: await boundaryFile(directory, "neon-free") }
+			: {
+					countries: await boundaryFile(directory, "regional-poi"),
+					regions: await boundaryFile(directory, "regional-poi-continents"),
+				};
+	let expectedRows = regionalRows;
+	const hostedReserve =
+		resolved.target === "hosted"
+			? await hostedCapacityReserve(manifest, resolved)
+			: null;
+	if (hostedReserve) expectedRows = hostedReserve.sourceRows;
+	const runId: string = await withPostgis(async (client) => {
+		if (hostedReserve) {
 			const size = Number(
 				(
 					await client.query(
@@ -186,16 +192,19 @@ async function main() {
 					)
 				).rows[0].bytes,
 			);
-			if (size + reservedBytes > (resolved.limits.databaseStorageBytes ?? 0)) {
+			if (
+				size + hostedReserve.reservedBytes >
+				(resolved.limits.databaseStorageBytes ?? 0)
+			) {
 				throw new Error(
-					`Hosted Overture projected database size ${size + reservedBytes} exceeds the configured budget`,
+					`Hosted Overture projected database size ${size + hostedReserve.reservedBytes} exceeds the configured budget`,
 				);
 			}
 			process.stderr.write(
-				`Hosted Overture capacity check passed: ${reservedBytes} reserved place bytes, ${size} current database bytes\n`,
+				`Hosted Overture capacity check passed: ${hostedReserve.reservedBytes} reserved place bytes, ${size} current database bytes\n`,
 			);
 		}
-		const runId: string =
+		return (
 			existing.rows[0]?.id ??
 			(
 				await client.query(
@@ -209,42 +218,45 @@ async function main() {
 						manifestPath,
 					],
 				)
-			).rows[0].id;
-		const report = {
-			release: overtureRelease,
-			profile: resolved.profile,
-			assets: manifest.length,
-			seen: 0,
-			accepted: 0,
-			reasons: {} as Record<string, number>,
-			counts: { inserted: 0, updated: 0, unchanged: 0 } as BatchCounts,
-		};
-		for (const asset of manifest) {
-			const compressed = join(directory, `${asset.id}.json.gz`);
-			const legacy = join(directory, `${asset.id}.json`);
-			let output = compressed;
+			).rows[0].id
+		);
+	});
+	const report = {
+		release: overtureRelease,
+		profile: resolved.profile,
+		assets: manifest.length,
+		seen: 0,
+		accepted: 0,
+		reasons: {} as Record<string, number>,
+		counts: { inserted: 0, updated: 0, unchanged: 0 } as BatchCounts,
+	};
+	for (const asset of manifest) {
+		const compressed = join(directory, `${asset.id}.json.gz`);
+		const legacy = join(directory, `${asset.id}.json`);
+		let output = compressed;
+		try {
+			await stat(output);
+		} catch {
 			try {
-				await stat(output);
+				await stat(legacy);
+				output = legacy;
 			} catch {
-				try {
-					await stat(legacy);
-					output = legacy;
-				} catch {
-					const temporary = `${output}.tmp`;
-					process.stderr.write(`Extracting ${asset.id} from Overture...\n`);
-					await extract(
-						buildExtractSql(
-							asset.url,
-							temporary,
-							resolved.profile,
-							mapping,
-							boundaryFiles,
-						),
-					);
-					await rename(temporary, output);
-				}
+				const temporary = `${output}.tmp`;
+				process.stderr.write(`Extracting ${asset.id} from Overture...\n`);
+				await extract(
+					buildExtractSql(
+						asset.url,
+						temporary,
+						resolved.profile,
+						mapping,
+						boundaryFiles,
+					),
+				);
+				await rename(temporary, output);
 			}
-			const result = await importAsset(
+		}
+		const result = await withPostgis((client) =>
+			importAsset(
 				client,
 				runId,
 				asset.id,
@@ -253,36 +265,36 @@ async function main() {
 				resolved.profile,
 				mapping,
 				join(directory, `${asset.id}.rejects.json`),
-			);
-			report.seen += result.seen;
-			report.accepted += result.accepted;
-			addCounts(report.counts, result.counts);
-			for (const [reason, count] of Object.entries(result.reasons)) {
-				report.reasons[reason] = (report.reasons[reason] ?? 0) + count;
-			}
-			await writeFile(
-				join(directory, "progress.json"),
-				`${JSON.stringify(report, null, 2)}\n`,
-			);
+			),
+		);
+		report.seen += result.seen;
+		report.accepted += result.accepted;
+		addCounts(report.counts, result.counts);
+		for (const [reason, count] of Object.entries(result.reasons)) {
+			report.reasons[reason] = (report.reasons[reason] ?? 0) + count;
 		}
-		if (expectedRows !== null && report.seen !== expectedRows) {
-			throw new Error(
-				`Incomplete Overture snapshot: read ${report.seen} rows, expected ${expectedRows}`,
-			);
-		}
-		process.stderr.write("Building wide-zoom POI clusters...\n");
-		await rebuildCatalogClusters(client, runId);
-		await completeCatalogRun(client, runId, manifest.length, report);
 		await writeFile(
-			join(directory, "report.json"),
+			join(directory, "progress.json"),
 			`${JSON.stringify(report, null, 2)}\n`,
 		);
-		process.stdout.write(
-			`Imported ${report.accepted} valid POIs. Report: ${join(directory, "report.json")}\n`,
-		);
-	} finally {
-		await client.end();
 	}
+	if (expectedRows !== null && report.seen !== expectedRows) {
+		throw new Error(
+			`Incomplete Overture snapshot: read ${report.seen} rows, expected ${expectedRows}`,
+		);
+	}
+	process.stderr.write("Building wide-zoom POI clusters...\n");
+	await withPostgis(async (client) => {
+		await rebuildCatalogClusters(client, runId);
+		await completeCatalogRun(client, runId, manifest.length, report);
+	});
+	await writeFile(
+		join(directory, "report.json"),
+		`${JSON.stringify(report, null, 2)}\n`,
+	);
+	process.stdout.write(
+		`Imported ${report.accepted} valid POIs. Report: ${join(directory, "report.json")}\n`,
+	);
 }
 
 main().catch((error: unknown) => {

@@ -5,6 +5,7 @@ on:
     branches: [feat-map-view]
     paths:
       - .github/workflows/sync-overture-pois.yml
+      - src/jobs/sync-overture-places.ts
   workflow_dispatch:
     inputs:
       target:

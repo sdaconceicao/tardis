@@ -226,9 +226,11 @@ capacity report and database headroom before writing. The pinned release,
 taxonomy, and 50-state-and-DC boundary are described in
 [config/overture/README.md](config/overture/README.md).
 
-The first push of the workflow on `feat-map-view` imports the existing
-`preview/feat-map-view` Neon branch. Later, use **Actions > Sync Overture POIs >
-Run workflow** to retry that Preview import. Manual runs are available after
+Pushing the workflow or importer on `feat-map-view` imports the existing
+`preview/feat-map-view` Neon branch. The importer records completed batches in
+PostGIS, so a failed run resumes without duplicating places. Later, use
+**Actions > Sync Overture POIs > Run workflow** to retry that Preview import.
+Manual runs are available after
 the workflow reaches the default GitHub branch. The quarterly schedule runs at
 10:00 UTC on January 8, April 8, July 8, and October 8, and targets the
 persistent `main` Neon branch after the workflow is merged. It applies any
