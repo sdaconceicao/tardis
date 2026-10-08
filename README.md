@@ -113,7 +113,8 @@ The Map page mounts a MapLibre vector basemap using `VITE_MAP_STYLE_URL`
 shows clusters at broad zooms, and synchronizes nearby points with a Lago
 results panel. Completed imports build a summary for fast wide-zoom clusters;
 those counts are labeled approximate near viewport edges. The list sits beside
-the map on desktop and below it on phones.
+the map on desktop and below it on phones. Clicking a cluster zooms into it;
+zooming automatically refreshes clusters or individual POIs for the new area.
 Event data, saving, and routing are outside this map milestone.
 
 Lago reference: [Storybook](https://main--6a4eb38660443c1eee94713d.chromatic.com/).

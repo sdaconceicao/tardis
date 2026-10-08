@@ -65,3 +65,18 @@ it("shows an update error", async () => {
 		"Could not save",
 	);
 });
+
+it("rejects a blank name without sending an update", async () => {
+	render(<AccountProfile user={{ name: "Ada", email: "ada@example.com" }} />);
+	fireEvent.change(screen.getByRole("textbox", { name: "Name" }), {
+		target: { value: "   " },
+	});
+	fireEvent.submit(
+		document.getElementById("account-profile-form") as HTMLFormElement,
+	);
+	expect(await screen.findByRole("alert")).toHaveProperty(
+		"textContent",
+		"Enter a name.",
+	);
+	expect(updateUser).not.toHaveBeenCalled();
+});

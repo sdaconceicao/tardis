@@ -23,6 +23,37 @@ test("stacks the discovery panel on a narrow screen", async ({ page }) => {
 	await expect(page.getByRole("complementary", { name: "Places to explore" })).toBeVisible();
 });
 
+test("shows a centered loading toast while the map updates", async ({ page }) => {
+	let finishRequest = () => {};
+	const requestPaused = new Promise<void>((resolve) => {
+		finishRequest = resolve;
+	});
+	await page.route("https://tiles.openfreemap.org/styles/liberty", async (route) => {
+		await route.fulfill({ json: { version: 8, sources: {}, layers: [] } });
+	});
+	await page.route("**/api/v1/discovery/clusters?*", async (route) => {
+		await requestPaused;
+		await route.fulfill({
+			json: { clusters: [], capped: false, approximate: false, catalogStatus: "ready" },
+		});
+	});
+	await page.goto("/");
+	const toast = page.getByText("Updating map…", { exact: true });
+	try {
+		await expect(toast).toBeVisible();
+		const region = page.locator(".react-aria-ToastRegion");
+		const box = await region.boundingBox();
+		if (!box) throw new Error("Loading toast has no bounds");
+		const viewport = page.viewportSize();
+		if (!viewport) throw new Error("Browser viewport has no bounds");
+		expect(box.y).toBeLessThan(40);
+		expect(Math.abs(box.x + box.width / 2 - viewport.width / 2)).toBeLessThan(15);
+	} finally {
+		finishRequest();
+	}
+	await expect(toast).toHaveCount(0);
+});
+
 test("shows a discovered POI in the map results and selects it", async ({ page }) => {
 	await page.route("https://tiles.openfreemap.org/styles/liberty", async (route) => {
 		await route.fulfill({ json: { version: 8, sources: {}, layers: [] } });
@@ -60,14 +91,18 @@ test("shows a discovered POI in the map results and selects it", async ({ page }
 			},
 		});
 	});
-	await page.goto("/");
+	await page.goto("/?west=-110&south=31&east=-86&north=47&zoom=3");
 	await expect(page.getByRole("status")).toContainText("1 place in this map area");
 	await expect(page.getByRole("region", { name: "Explore map" })).toHaveAttribute("aria-busy", "false");
-	for (let index = 0; index < 7; index++) {
+	const canvas = page.locator("canvas.maplibregl-canvas");
+	const box = await canvas.boundingBox();
+	if (!box) throw new Error("Map canvas has no bounds");
+	await canvas.click({ position: { x: box.width / 2, y: box.height / 2 } });
+	await expect(page).toHaveURL(/zoom=5/);
+	for (let index = 0; index < 3; index++) {
 		await page.getByRole("button", { name: "Zoom in" }).click();
-		await page.waitForTimeout(350);
+		await expect(page).toHaveURL(new RegExp(`zoom=${index + 6}`));
 	}
-	await page.getByRole("button", { name: "Search this area" }).click();
 	const result = page.getByRole("button", { name: /National Museum/ });
 	await expect(result).toBeVisible();
 	await result.click();

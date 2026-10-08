@@ -1,5 +1,6 @@
 import { Button, Select, SelectItem } from "@code-x/lago";
 import clsx from "clsx";
+import { useCallback } from "react";
 import type {
 	CatalogStatus,
 	Poi,
@@ -35,6 +36,11 @@ type Props = {
 };
 
 export function PoiResultsPanel(props: Props) {
+	const changeCategory = useCallback(
+		(key: React.Key | null) =>
+			props.onCategoryChange(key === "all" || key === null ? "" : String(key)),
+		[props.onCategoryChange],
+	);
 	const count = props.broad
 		? props.clusters.reduce((sum, cluster) => sum + cluster.count, 0)
 		: props.items.length;
@@ -47,11 +53,7 @@ export function PoiResultsPanel(props: Props) {
 				label="Category"
 				items={categories}
 				selectedKey={props.category || "all"}
-				onSelectionChange={(key) =>
-					props.onCategoryChange(
-						key === "all" || key === null ? "" : String(key),
-					)
-				}
+				onSelectionChange={changeCategory}
 				className={css.filter}
 			>
 				{(item) => <SelectItem id={item.id}>{item.name}</SelectItem>}

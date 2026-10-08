@@ -1,0 +1,9 @@
+:global(.react-aria-ToastRegion) {
+	top: 16px;
+	bottom: auto;
+	left: 50%;
+	right: auto;
+	transform: translateX(-50%);
+	flex-direction: column;
+	z-index: 1000;
+}
