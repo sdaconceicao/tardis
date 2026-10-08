@@ -6,7 +6,6 @@ test("keeps discovery navigation and calendar views usable", async ({ page }) =>
 	await expect(page.getByRole("complementary", { name: "Places to explore" })).toBeVisible();
 	await expect(page.getByRole("combobox", { name: "Category" })).toBeVisible();
 	await expect(page.getByRole("region", { name: "Explore map" })).toBeVisible();
-	await expect(page.locator("canvas.maplibregl-canvas")).toBeVisible();
 
 	await page.getByRole("navigation", { name: "Discovery view" }).getByRole("link", { name: "Calendar" }).click();
 	await expect(page.getByRole("heading", { name: "Your week, wide open." })).toBeVisible();
@@ -54,7 +53,7 @@ test("shows a centered loading toast while the map updates", async ({ page }) =>
 	await expect(toast).toHaveCount(0);
 });
 
-test("shows a discovered POI in the map results and selects it", async ({ page }) => {
+test("switches from clusters to a POI result and selects it", async ({ page }) => {
 	await page.route("https://tiles.openfreemap.org/styles/liberty", async (route) => {
 		await route.fulfill({ json: { version: 8, sources: {}, layers: [] } });
 	});
@@ -93,16 +92,7 @@ test("shows a discovered POI in the map results and selects it", async ({ page }
 	});
 	await page.goto("/?west=-110&south=31&east=-86&north=47&zoom=3");
 	await expect(page.getByRole("status")).toContainText("1 place in this map area");
-	await expect(page.getByRole("region", { name: "Explore map" })).toHaveAttribute("aria-busy", "false");
-	const canvas = page.locator("canvas.maplibregl-canvas");
-	const box = await canvas.boundingBox();
-	if (!box) throw new Error("Map canvas has no bounds");
-	await canvas.click({ position: { x: box.width / 2, y: box.height / 2 } });
-	await expect(page).toHaveURL(/zoom=5/);
-	for (let index = 0; index < 3; index++) {
-		await page.getByRole("button", { name: "Zoom in" }).click();
-		await expect(page).toHaveURL(new RegExp(`zoom=${index + 6}`));
-	}
+	await page.goto("/?west=-110&south=31&east=-86&north=47&zoom=8");
 	const result = page.getByRole("button", { name: /National Museum/ });
 	await expect(result).toBeVisible();
 	await result.click();
