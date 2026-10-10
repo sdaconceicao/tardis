@@ -1,9 +1,45 @@
 .mapView {
+	--map-control-icon-filter: none;
 	position: relative;
 	min-height: 530px;
 	flex: 1;
 	background: var(--atlas-map);
 	border-top: 1px solid var(--border-color);
+}
+
+:global(.dark-mode) .mapView {
+	--map-control-icon-filter: invert(1);
+}
+
+.mapView :global(.maplibregl-ctrl-group),
+.mapView :global(.maplibregl-ctrl-attrib) {
+	background: var(--overlay-background);
+	color: var(--text-color);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius);
+}
+
+.mapView :global(.maplibregl-ctrl-group button + button) {
+	border-top-color: var(--border-color);
+}
+
+.mapView :global(.maplibregl-ctrl-group button:hover) {
+	background: var(--atlas-soft);
+}
+
+.mapView :global(.maplibregl-ctrl-icon),
+.mapView :global(.maplibregl-ctrl-attrib-button) {
+	filter: var(--map-control-icon-filter);
+}
+
+.mapView :global(.maplibregl-ctrl-attrib a) {
+	color: var(--link-color);
+}
+
+.mapView :global(.maplibregl-ctrl-group button:focus-visible),
+.mapView :global(.maplibregl-ctrl-attrib-button:focus-visible) {
+	outline: 2px solid var(--focus-ring-color);
+	outline-offset: 2px;
 }
 
 .mapCanvas {

@@ -1,5 +1,41 @@
 import { expect, test } from "@playwright/test";
 
+test("keeps the map area readable when switching themes", async ({ page }) => {
+	await page.addInitScript(() => localStorage.setItem("tardis-theme", "light"));
+	const requestedStyles: string[] = [];
+	await page.route(/https:\/\/tiles\.openfreemap\.org\/styles\/(liberty|dark)$/, async (route) => {
+		requestedStyles.push(route.request().url());
+		await route.fulfill({ json: { version: 8, sources: {}, layers: [] } });
+	});
+	await page.goto("/");
+	const map = page.getByRole("region", { name: "Explore map" });
+	await expect(map).toHaveAttribute("aria-busy", "false");
+	await expect(map).toHaveCSS("background-color", "rgb(195, 211, 208)");
+	const fallback = map.getByText("Map tiles are unavailable. Browse places in the results list.");
+	const hasMap = (await fallback.count()) === 0;
+	const controls = map.locator(".maplibregl-ctrl-group");
+	if (hasMap) {
+		await expect(map.locator("canvas")).toBeVisible();
+		await expect(controls).toHaveCSS("background-color", "rgb(247, 240, 223)");
+	} else {
+		await expect(fallback).toBeVisible();
+	}
+	await page.getByRole("button", { name: "Toggle light and dark mode" }).click();
+	await expect(page.locator("html")).toHaveClass(/dark-mode/);
+	await expect(map).toHaveCSS("background-color", "rgb(26, 53, 62)");
+	await expect(map).toHaveAttribute("aria-busy", "false");
+	if (hasMap) {
+		await expect(controls).toHaveCSS("background-color", "rgb(26, 48, 56)");
+		await expect(map.locator("canvas")).toBeVisible();
+		expect(requestedStyles).toEqual([
+			"https://tiles.openfreemap.org/styles/liberty",
+			"https://tiles.openfreemap.org/styles/dark",
+		]);
+	} else {
+		await expect(fallback).toBeVisible();
+	}
+});
+
 test("keeps discovery navigation and calendar views usable", async ({ page }) => {
 	await page.route("https://tiles.openfreemap.org/styles/liberty", async (route) => {
 		await route.fulfill({ json: { version: 8, sources: {}, layers: [] } });
