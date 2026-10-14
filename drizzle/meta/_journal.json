@@ -71,6 +71,13 @@
       "when": 1791383897468,
       "tag": "0009_catalog_discovery_indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1791836788080,
+      "tag": "0010_poi_trigram_search",
+      "breakpoints": true
     }
   ]
 }

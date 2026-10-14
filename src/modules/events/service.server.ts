@@ -44,6 +44,19 @@ export async function listEvents(
 		.limit(q.limit)
 		.offset(q.offset);
 }
+export async function listOwnedEvents(
+	db: Connection,
+	actor: Actor,
+	q: { limit: number; offset: number },
+) {
+	return db
+		.select()
+		.from(events)
+		.where(eq(events.ownerId, actor.subject))
+		.orderBy(events.id)
+		.limit(q.limit)
+		.offset(q.offset);
+}
 export async function getEvent(
 	db: Connection,
 	actor: Actor | null,

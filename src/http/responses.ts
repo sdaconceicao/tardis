@@ -1,4 +1,8 @@
 import { z } from "zod";
+import {
+	addressMatchSchema,
+	postalAddressSchema,
+} from "../modules/places/geocoding";
 
 const id = z.uuid();
 const date = z.iso.date();
@@ -14,6 +18,8 @@ export const locationResponse = z.object({
 	latitude: z.number(),
 	longitude: z.number(),
 });
+export const addressSearchResponse = z.array(addressMatchSchema);
+export const poiAddressResponse = postalAddressSchema;
 export const tagResponse = z.object({ id, slug: z.string(), name: z.string() });
 export const priceResponse = z.object({
 	...entity,
@@ -61,6 +67,16 @@ export const discoveryResponse = z.object({
 	nextCursor: id.nullable(),
 	catalogStatus: z.enum(["empty", "importing", "ready"]),
 });
+export const poiSearchResponse = z.array(
+	z.object({
+		id,
+		name: z.string(),
+		address: text,
+		latitude: z.number(),
+		longitude: z.number(),
+		timezone: z.string(),
+	}),
+);
 export const discoveryClustersResponse = z.object({
 	clusters: z.array(
 		z.object({

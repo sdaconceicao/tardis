@@ -12,7 +12,10 @@ and session checks at protected operations. The reference project was read only.
 3. Set `BETTER_AUTH_SECRET` to a securely generated secret of at least 32
    characters. Set `BETTER_AUTH_URL` only for a local or custom-host override;
    Vercel provides the production domain and preview branch alias automatically.
-4. Run `pnpm db:migrate`, then `pnpm dev`.
+4. Set `OPENROUTESERVICE_API_KEY` locally and in Vercel to enable address lookup
+   when creating an event. The key stays on the server; selected catalog POIs
+   can still be used if address lookup is unavailable.
+5. Run `pnpm db:migrate`, then `pnpm dev`.
 
 The migration role needs permission to create PostGIS and `btree_gist`.
 Drizzle uses `pg` for interactive transactions. Each process has a pool capped
@@ -97,6 +100,7 @@ still be allowed. Auth endpoints retain Better Auth's own CSRF checks.
 | --- | --- | --- |
 | GET, POST | `/api/auth/*` | Better Auth handler |
 | GET, POST | `/api/v1/events` | List visible event identities; create an event |
+| GET | `/api/v1/events/mine` | List events owned by the signed-in user |
 | GET, PUT, DELETE | `/api/v1/events/:eventId` | Read, replace metadata/tags/default prices, or delete an owned event |
 | GET, POST | `/api/v1/events/:eventId/occurrences` | List stored editions; create an exact edition, placeholder, or recurrence override |
 | GET, PUT | `/api/v1/events/:eventId/occurrences/:occurrenceId` | Read or replace an edition and its days/prices; preserve its ID |
@@ -105,6 +109,9 @@ still be allowed. Auth endpoints retain Better Auth's own CSRF checks.
 | PATCH | `/api/v1/events/:eventId/recurrences/:recurrenceId` | Shorten a segment with `{ "untilDate": "YYYY-MM-DD" }` |
 | GET, POST | `/api/v1/places` | List visible places; create a place |
 | GET | `/api/v1/discovery` | Browse public catalog POIs inside map bounds, with category filter and cursor |
+| GET | `/api/v1/discovery/search?q=...` | Search public catalog POIs by name or address for venue selection (3–100 characters; up to 20 results) |
+| GET | `/api/v1/addresses/search` | Find candidate coordinates for entered address fields; requires sign-in |
+| GET | `/api/v1/addresses/poi` | Fill address fields from a selected POI's address or coordinates; requires sign-in |
 | GET | `/api/v1/discovery/clusters` | Return bounded POI clusters for a map zoom and bounds |
 | GET, PUT, DELETE | `/api/v1/places/:placeId` | Read, replace metadata/tags/prices, or delete an owned place |
 | PUT | `/api/v1/places/:placeId/hours` | Replace all seasonal weekly schedules |

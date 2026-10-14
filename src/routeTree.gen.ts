@@ -24,6 +24,8 @@ import { Route as ApiAvailabilityRouteRouteImport } from './routes/api/availabil
 import { Route as ApiDocsRouteRouteImport } from './routes/api/docs/route'
 import { Route as ApiOpenapiDotjsonRouteRouteImport } from './routes/api/openapi[.]json/route'
 import { Route as ApiTagsRouteRouteImport } from './routes/api/tags/route'
+import { Route as MyEventsIndexRouteImport } from './routes/my-events/index'
+import { Route as MyEventsNewRouteRouteImport } from './routes/my-events/new/route'
 import { Route as ApiAuthSplatRouteRouteImport } from './routes/api/auth/$/route'
 import { Route as ApiEventsIndexRouteImport } from './routes/api/events/index'
 import { Route as ApiEventsEventIdRouteRouteImport } from './routes/api/events/$eventId/route'
@@ -113,6 +115,16 @@ const ApiTagsRouteRoute = ApiTagsRouteRouteImport.update({
   path: '/api/tags',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MyEventsIndexRoute = MyEventsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MyEventsRouteRoute,
+} as any)
+const MyEventsNewRouteRoute = MyEventsNewRouteRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => MyEventsRouteRoute,
+} as any)
 const ApiAuthSplatRouteRoute = ApiAuthSplatRouteRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -191,7 +203,7 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof CalendarRouteRoute
   '/forgot-password': typeof ForgotPasswordRouteRoute
   '/login': typeof LoginRouteRoute
-  '/my-events': typeof MyEventsRouteRoute
+  '/my-events': typeof MyEventsRouteRouteWithChildren
   '/reset-password': typeof ResetPasswordRouteRoute
   '/saved': typeof SavedRouteRoute
   '/signup': typeof SignupRouteRoute
@@ -200,8 +212,10 @@ export interface FileRoutesByFullPath {
   '/api/docs': typeof ApiDocsRouteRoute
   '/api/openapi.json': typeof ApiOpenapiDotjsonRouteRoute
   '/api/tags': typeof ApiTagsRouteRoute
+  '/my-events/new': typeof MyEventsNewRouteRoute
   '/': typeof homeIndexRoute
   '/account/': typeof AccountIndexRoute
+  '/my-events/': typeof MyEventsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRouteRoute
   '/api/events/$eventId': typeof ApiEventsEventIdRouteRouteWithChildren
   '/api/places/$placeId': typeof ApiPlacesPlaceIdRouteRouteWithChildren
@@ -220,7 +234,6 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarRouteRoute
   '/forgot-password': typeof ForgotPasswordRouteRoute
   '/login': typeof LoginRouteRoute
-  '/my-events': typeof MyEventsRouteRoute
   '/reset-password': typeof ResetPasswordRouteRoute
   '/saved': typeof SavedRouteRoute
   '/signup': typeof SignupRouteRoute
@@ -229,8 +242,10 @@ export interface FileRoutesByTo {
   '/api/docs': typeof ApiDocsRouteRoute
   '/api/openapi.json': typeof ApiOpenapiDotjsonRouteRoute
   '/api/tags': typeof ApiTagsRouteRoute
+  '/my-events/new': typeof MyEventsNewRouteRoute
   '/': typeof homeIndexRoute
   '/account': typeof AccountIndexRoute
+  '/my-events': typeof MyEventsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRouteRoute
   '/api/events/$eventId': typeof ApiEventsEventIdRouteRouteWithChildren
   '/api/places/$placeId': typeof ApiPlacesPlaceIdRouteRouteWithChildren
@@ -251,7 +266,7 @@ export interface FileRoutesById {
   '/calendar': typeof CalendarRouteRoute
   '/forgot-password': typeof ForgotPasswordRouteRoute
   '/login': typeof LoginRouteRoute
-  '/my-events': typeof MyEventsRouteRoute
+  '/my-events': typeof MyEventsRouteRouteWithChildren
   '/reset-password': typeof ResetPasswordRouteRoute
   '/saved': typeof SavedRouteRoute
   '/signup': typeof SignupRouteRoute
@@ -260,8 +275,10 @@ export interface FileRoutesById {
   '/api/docs': typeof ApiDocsRouteRoute
   '/api/openapi.json': typeof ApiOpenapiDotjsonRouteRoute
   '/api/tags': typeof ApiTagsRouteRoute
+  '/my-events/new': typeof MyEventsNewRouteRoute
   '/(home)/': typeof homeIndexRoute
   '/account/': typeof AccountIndexRoute
+  '/my-events/': typeof MyEventsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRouteRoute
   '/api/events/$eventId': typeof ApiEventsEventIdRouteRouteWithChildren
   '/api/places/$placeId': typeof ApiPlacesPlaceIdRouteRouteWithChildren
@@ -292,8 +309,10 @@ export interface FileRouteTypes {
     | '/api/docs'
     | '/api/openapi.json'
     | '/api/tags'
+    | '/my-events/new'
     | '/'
     | '/account/'
+    | '/my-events/'
     | '/api/auth/$'
     | '/api/events/$eventId'
     | '/api/places/$placeId'
@@ -312,7 +331,6 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/forgot-password'
     | '/login'
-    | '/my-events'
     | '/reset-password'
     | '/saved'
     | '/signup'
@@ -321,8 +339,10 @@ export interface FileRouteTypes {
     | '/api/docs'
     | '/api/openapi.json'
     | '/api/tags'
+    | '/my-events/new'
     | '/'
     | '/account'
+    | '/my-events'
     | '/api/auth/$'
     | '/api/events/$eventId'
     | '/api/places/$placeId'
@@ -351,8 +371,10 @@ export interface FileRouteTypes {
     | '/api/docs'
     | '/api/openapi.json'
     | '/api/tags'
+    | '/my-events/new'
     | '/(home)/'
     | '/account/'
+    | '/my-events/'
     | '/api/auth/$'
     | '/api/events/$eventId'
     | '/api/places/$placeId'
@@ -373,7 +395,7 @@ export interface RootRouteChildren {
   CalendarRouteRoute: typeof CalendarRouteRoute
   ForgotPasswordRouteRoute: typeof ForgotPasswordRouteRoute
   LoginRouteRoute: typeof LoginRouteRoute
-  MyEventsRouteRoute: typeof MyEventsRouteRoute
+  MyEventsRouteRoute: typeof MyEventsRouteRouteWithChildren
   ResetPasswordRouteRoute: typeof ResetPasswordRouteRoute
   SavedRouteRoute: typeof SavedRouteRoute
   SignupRouteRoute: typeof SignupRouteRoute
@@ -497,6 +519,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTagsRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/my-events/': {
+      id: '/my-events/'
+      path: '/'
+      fullPath: '/my-events/'
+      preLoaderRoute: typeof MyEventsIndexRouteImport
+      parentRoute: typeof MyEventsRouteRoute
+    }
+    '/my-events/new': {
+      id: '/my-events/new'
+      path: '/new'
+      fullPath: '/my-events/new'
+      preLoaderRoute: typeof MyEventsNewRouteRouteImport
+      parentRoute: typeof MyEventsRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -605,6 +641,20 @@ const AccountRouteRouteWithChildren = AccountRouteRoute._addFileChildren(
   AccountRouteRouteChildren,
 )
 
+interface MyEventsRouteRouteChildren {
+  MyEventsNewRouteRoute: typeof MyEventsNewRouteRoute
+  MyEventsIndexRoute: typeof MyEventsIndexRoute
+}
+
+const MyEventsRouteRouteChildren: MyEventsRouteRouteChildren = {
+  MyEventsNewRouteRoute: MyEventsNewRouteRoute,
+  MyEventsIndexRoute: MyEventsIndexRoute,
+}
+
+const MyEventsRouteRouteWithChildren = MyEventsRouteRoute._addFileChildren(
+  MyEventsRouteRouteChildren,
+)
+
 interface ApiEventsEventIdRouteRouteChildren {
   ApiEventsEventIdOccurrencesOccurrenceIdRouteRoute: typeof ApiEventsEventIdOccurrencesOccurrenceIdRouteRoute
   ApiEventsEventIdRecurrencesRecurrenceIdRouteRoute: typeof ApiEventsEventIdRecurrencesRecurrenceIdRouteRoute
@@ -649,7 +699,7 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarRouteRoute: CalendarRouteRoute,
   ForgotPasswordRouteRoute: ForgotPasswordRouteRoute,
   LoginRouteRoute: LoginRouteRoute,
-  MyEventsRouteRoute: MyEventsRouteRoute,
+  MyEventsRouteRoute: MyEventsRouteRouteWithChildren,
   ResetPasswordRouteRoute: ResetPasswordRouteRoute,
   SavedRouteRoute: SavedRouteRoute,
   SignupRouteRoute: SignupRouteRoute,

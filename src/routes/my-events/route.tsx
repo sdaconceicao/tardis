@@ -1,7 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { MyEventsPage } from "./-components/MyEventsPage/MyEventsPage";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/my-events")({
-	head: () => ({ meta: [{ title: "My events · Tardis" }] }),
-	component: MyEventsPage,
+	component: Outlet,
 });

@@ -27,6 +27,7 @@
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:check": "drizzle-kit check",
+		"db:poi-search-indexes": "node --env-file-if-exists=.env.local scripts/create-poi-search-indexes.mjs",
 		"poi:profile": "node --experimental-strip-types src/jobs/profile-overture-places.ts",
 		"poi:sync": "node --experimental-strip-types src/jobs/sync-overture-places.ts",
 		"poi:measure-storage": "node --experimental-strip-types src/jobs/measure-overture-storage.ts",
@@ -35,6 +36,7 @@
 	},
 	"dependencies": {
 		"@code-x/lago": "^0.9.1",
+		"@internationalized/date": "3.12.4",
 		"@js-temporal/polyfill": "^0.5.1",
 		"@neondatabase/serverless": "^1.1.0",
 		"@tanstack/react-router": "1.170.41",

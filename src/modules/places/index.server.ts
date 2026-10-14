@@ -5,5 +5,12 @@ export {
 	clusterQuerySchema,
 	discoveryQuerySchema,
 	listDiscovery,
+	poiSearchQuerySchema,
+	searchPois,
 } from "./discovery.server";
+export {
+	addressSearchQuerySchema,
+	poiAddressQuerySchema,
+} from "./geocoding";
+export { lookupPoiAddress, searchAddresses } from "./geocoding.server";
 export * from "./service.server";

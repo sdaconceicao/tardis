@@ -52,6 +52,9 @@ describe("AppHeader account control", () => {
 	it("keeps the sign-in link for guests", () => {
 		render(<AppHeader />);
 		expect(
+			screen.getByRole("link", { name: "Add Event" }).getAttribute("href"),
+		).toBe("/my-events/new");
+		expect(
 			screen.getByRole("link", { name: "Sign in" }).getAttribute("href"),
 		).toBe("/login?next=%2Fcalendar%3Fview%3Dweek");
 		expect(screen.queryByRole("img", { name: "Ada Lovelace" })).toBeNull();
@@ -66,6 +69,9 @@ describe("AppHeader account control", () => {
 			},
 		};
 		render(<AppHeader />);
+		expect(
+			screen.getByRole("link", { name: "Add Event" }).getAttribute("href"),
+		).toBe("/my-events/new");
 		const button = screen.getByRole("button", {
 			name: "Open account menu for Ada Lovelace",
 		});

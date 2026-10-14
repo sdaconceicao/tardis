@@ -1,4 +1,16 @@
-import { and, desc, eq, gt, gte, inArray, lte, or, sql } from "drizzle-orm";
+import {
+	and,
+	desc,
+	eq,
+	gt,
+	gte,
+	ilike,
+	inArray,
+	lte,
+	or,
+	sql,
+} from "drizzle-orm";
+import { union } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import type { Connection } from "../../db/client.server";
 import { excludedLandmarkTaxonomy } from "../../services/overture/landmark-policy.ts";
@@ -106,6 +118,54 @@ export const clusterQuerySchema = z
 		(q) => q.south < q.north && q.west !== q.east,
 		"Discovery bounds must have an area",
 	);
+export const poiSearchQuerySchema = z.strictObject({
+	q: z.string().trim().min(3).max(100),
+	limit: z.coerce.number().int().min(1).max(20).default(10),
+});
+
+export function buildPoiSearchQuery(
+	db: Connection,
+	query: z.infer<typeof poiSearchQuerySchema>,
+) {
+	const pattern = `%${query.q.replace(/[\\%_]/g, "\\$&")}%`;
+	const catalog = and(
+		eq(places.managementKind, "catalog"),
+		eq(places.visibility, "public"),
+	);
+	const matches = union(
+		db
+			.select({ id: places.id })
+			.from(places)
+			.where(and(catalog, ilike(places.name, pattern))),
+		db
+			.select({ id: places.id })
+			.from(locations)
+			.innerJoin(places, eq(places.locationId, locations.id))
+			.where(and(catalog, ilike(locations.address, pattern))),
+	).as("matches");
+	return db
+		.select({
+			id: places.id,
+			name: places.name,
+			address: locations.address,
+			latitude: locations.latitude,
+			longitude: locations.longitude,
+			timezone: places.timezone,
+		})
+		.from(matches)
+		.innerJoin(places, eq(matches.id, places.id))
+		.innerJoin(locations, eq(places.locationId, locations.id))
+		.where(eligible())
+		.orderBy(places.name, places.id)
+		.limit(query.limit);
+}
+
+export async function searchPois(
+	db: Connection,
+	query: z.infer<typeof poiSearchQuerySchema>,
+) {
+	return buildPoiSearchQuery(db, query);
+}
 
 type Bounds = Pick<
 	z.infer<typeof discoveryQuerySchema>,

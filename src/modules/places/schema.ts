@@ -54,6 +54,9 @@ export const locations = pgTable(
 			sql`${t.latitude} BETWEEN -90 AND 90 AND ${t.longitude} BETWEEN -180 AND 180`,
 		),
 		index("locations_point_idx").using("gist", t.point),
+		index("locations_address_trgm_idx")
+			.using("gin", sql`${t.address} gin_trgm_ops`)
+			.where(sql`${t.address} IS NOT NULL`),
 	],
 );
 export const places = pgTable(
@@ -82,6 +85,9 @@ export const places = pgTable(
 		index("places_visibility_idx").on(t.visibility),
 		index("places_catalog_location_cover_idx")
 			.on(t.locationId, t.id, t.name)
+			.where(sql`management_kind = 'catalog' AND visibility = 'public'`),
+		index("places_catalog_name_trgm_idx")
+			.using("gin", sql`${t.name} gin_trgm_ops`)
 			.where(sql`management_kind = 'catalog' AND visibility = 'public'`),
 	],
 );

@@ -115,6 +115,14 @@ export const operations = [
 		({ db, actor }, _, q) => events.listEvents(db, actor, q),
 	),
 	operation(
+		"GET",
+		"/events/mine",
+		"listOwnedEvents",
+		"List the signed-in user's events",
+		{ query: listSchema, response: z.array(out.eventResponse) },
+		({ db, actor }, _, q) => events.listOwnedEvents(db, owner(actor), q),
+	),
+	operation(
 		"POST",
 		"/events",
 		"createEvent",
@@ -250,6 +258,46 @@ export const operations = [
 			public: true,
 		},
 		({ db }, _, q) => places.listDiscovery(db, q),
+	),
+	operation(
+		"GET",
+		"/discovery/search",
+		"searchPois",
+		"Search public points of interest by name or address",
+		{
+			query: places.poiSearchQuerySchema,
+			response: out.poiSearchResponse,
+			public: true,
+		},
+		({ db }, _, q) => places.searchPois(db, q),
+	),
+	operation(
+		"GET",
+		"/addresses/search",
+		"searchAddresses",
+		"Find coordinates for an entered address",
+		{
+			query: places.addressSearchQuerySchema,
+			response: out.addressSearchResponse,
+		},
+		({ actor }, _, q) => {
+			owner(actor);
+			return places.searchAddresses(q);
+		},
+	),
+	operation(
+		"GET",
+		"/addresses/poi",
+		"lookupPoiAddress",
+		"Fill address fields for a selected point of interest",
+		{
+			query: places.poiAddressQuerySchema,
+			response: out.poiAddressResponse,
+		},
+		({ actor }, _, q) => {
+			owner(actor);
+			return places.lookupPoiAddress(q);
+		},
 	),
 	operation(
 		"GET",

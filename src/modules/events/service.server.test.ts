@@ -20,6 +20,7 @@ import {
 	getOccurrence,
 	listEvents,
 	listOccurrences,
+	listOwnedEvents,
 	ownEvent,
 	saveEvent,
 	saveOccurrence,
@@ -97,6 +98,18 @@ describe("event service ownership and recurrence boundaries", () => {
 		expect(query.sql).toContain('"events"."visibility"');
 		expect(query.sql).toContain('"events"."owner_id"');
 		expect(query.params).toContain("owner");
+		expect(db.paging).toEqual([7, 14]);
+	});
+
+	it("lists only the signed-in owner's events", async () => {
+		const db = capturedSelect([event]);
+		await expect(
+			listOwnedEvents(db as never, actor, { limit: 7, offset: 14 }),
+		).resolves.toEqual([event]);
+		const query = dialect.sqlToQuery(db.conditions[0] as never);
+		expect(query.sql).toContain('"events"."owner_id"');
+		expect(query.sql).not.toContain('"events"."visibility"');
+		expect(query.params).toEqual(["owner"]);
 		expect(db.paging).toEqual([7, 14]);
 	});
 

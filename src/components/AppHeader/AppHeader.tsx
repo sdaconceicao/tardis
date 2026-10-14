@@ -43,13 +43,9 @@ export function AppHeader() {
 					</AppLink>
 				</nav>
 				<div className={css.headerActions}>
-					<AppLink
-						to="/signup"
-						search={{ next: "/my-events" }}
-						className={actionCss.primaryLink}
-					>
+					<AppLink to="/my-events/new" className={actionCss.primaryLink}>
 						<Plus className={css.addEventIcon} aria-hidden="true" />
-						Add event
+						Add Event
 					</AppLink>
 					<AppearanceButton />
 					{session?.user ? (

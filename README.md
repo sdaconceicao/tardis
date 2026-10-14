@@ -145,9 +145,14 @@ Database migrations use Drizzle:
 pnpm db:migrate
 ```
 
-Migrations enable PostGIS and `btree_gist`, then create the domain and Better Auth
+Migrations enable PostGIS, `btree_gist`, and `pg_trgm`, then create the domain and Better Auth
 tables. The migration role must be allowed to create these extensions. Drizzle
 loads `.env.local` and `.env`; application startup never migrates implicitly.
+For an existing large POI catalog, run `pnpm db:poi-search-indexes` before
+`pnpm db:migrate`. It builds the POI name and address trigram indexes
+concurrently, avoiding a long write lock. The migration then records the
+indexes without rebuilding them. New small databases can use `db:migrate`
+directly. The migration role also needs permission to create `pg_trgm`.
 
 Run the integration suite against the separate test database:
 
